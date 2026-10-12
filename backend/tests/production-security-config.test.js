@@ -72,13 +72,23 @@ test("AI keeps its deterministic response path without calling the provider by d
   }
 });
 
-test("production database failure logs do not contain the thrown error message", async () => {
+test("production database failure logs only validated diagnostic fields", async () => {
   const originalConnect = mongoose.connect;
   const originalConsoleError = console.error;
   const logs = [];
-  const failure = new Error(`mongodb://user:${crypto.randomUUID()}@private-host.invalid`);
+  const sensitiveText = `mongodb://user:${crypto.randomUUID()}@private-host.invalid`;
+  const failure = new Error(sensitiveText);
+  failure.name = "MongoServerSelectionError";
+  failure.code = 18;
+  failure.errno = -3008;
+  failure.codeName = "AuthenticationFailed";
+  failure.syscall = "getaddrinfo";
+  failure.cause = Object.assign(new Error(sensitiveText), {
+    code: "ENOTFOUND",
+    syscall: sensitiveText,
+  });
   mongoose.connect = async () => { throw failure; };
-  console.error = (...values) => logs.push(values.join(" "));
+  console.error = (...values) => logs.push(values);
 
   try {
     await assert.rejects(database.connectDatabase(), failure);
@@ -88,8 +98,51 @@ test("production database failure logs do not contain the thrown error message",
   }
 
   assert.equal(logs.length, 1);
-  assert.equal(logs[0], "[database] Connection failed.");
-  assert.equal(logs.some((entry) => entry.includes(failure.message)), false);
+  assert.deepEqual(logs[0], [
+    "[database] Connection failed.",
+    {
+      name: "MongoServerSelectionError",
+      code: 18,
+      errno: -3008,
+      codeName: "AuthenticationFailed",
+      syscall: "getaddrinfo",
+      cause: { name: "Error", code: "ENOTFOUND" },
+    },
+  ]);
+  assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
+});
+
+test("Vercel Preview uses safe database failure logging when NODE_ENV is not production", async () => {
+  const originalConnect = mongoose.connect;
+  const originalConsoleError = console.error;
+  const originalNodeEnv = env.NODE_ENV;
+  const originalVercel = process.env.VERCEL;
+  const logs = [];
+  const sensitiveText = `mongodb://user:${crypto.randomUUID()}@private-host.invalid`;
+  const failure = Object.assign(new Error(sensitiveText), {
+    name: "MongoServerSelectionError",
+    cause: Object.assign(new Error(sensitiveText), { code: "ENOTFOUND" }),
+  });
+  env.NODE_ENV = "development";
+  process.env.VERCEL = "1";
+  mongoose.connect = async () => { throw failure; };
+  console.error = (...values) => logs.push(values);
+
+  try {
+    await assert.rejects(database.connectDatabase(), failure);
+  } finally {
+    mongoose.connect = originalConnect;
+    console.error = originalConsoleError;
+    env.NODE_ENV = originalNodeEnv;
+    if (originalVercel === undefined) delete process.env.VERCEL;
+    else process.env.VERCEL = originalVercel;
+  }
+
+  assert.deepEqual(logs, [[
+    "[database] Connection failed.",
+    { name: "MongoServerSelectionError", cause: { name: "Error", code: "ENOTFOUND" } },
+  ]]);
+  assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
 });
 
 test("production database success logs do not reveal Atlas host or database name", async () => {
