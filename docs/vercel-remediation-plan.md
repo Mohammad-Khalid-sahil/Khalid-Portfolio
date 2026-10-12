@@ -1,0 +1,100 @@
+# Vercel Remediation Plan — Current Re-audit
+
+**Updated:** 2026-10-12  
+**Scope:** Evidence-based review of the current frontend/backend code and deployment docs. Documentation only. No application code, media, environment values, databases, dependencies, Git index, or remote services were changed or operated.
+
+## Executive summary
+
+The previous remediation phases implemented a Vite SPA configuration, centralized production API base, a Vercel-compatible Express default export, strict production CORS/auth settings, and authenticated direct-to-S3-compatible uploads. The current source has a credible two-project Vercel shape, but there is no hosted preview evidence or real production configuration. The existing local upload directory is not migrated, full production build and backend test-suite completion are unverified, and several operator decisions remain.
+
+**Current gate: NOT READY for production.** Proceed first with owner decisions and isolated staging preparation; do not migrate or delete any current files during planning.
+
+## Implemented compatibility fixes confirmed
+
+- **Frontend project:** `frontend/vercel.json` sets Vite, `npm ci`, `npm run build`, output `dist`, SPA fallback, and report-only CSP/security headers. `frontend/src/config/apiBaseUrl.js` centralizes `VITE_API_URL`; localhost is a development-only fallback. The production build validator requires real HTTPS `VITE_API_URL` and `VITE_SITE_URL`.
+- **Backend project:** `backend/src/server.js` exports an Express app by default and does not call `listen()`. Local scripts still use `backend/src/start.js`. `backend/src/app.js` mounts the route index once at `/api`; the index mounts child routers without another `/api` segment. `backend/vercel.json` does not exist; current source relies on Vercel's Express framework detection when `backend/` is the project root. The entry test passed in the prior verification, but Vercel project detection/runtime has not been exercised.
+- **MongoDB connection reuse:** `backend/src/config/database.js` keeps an in-process connection promise and returns an already-open Mongoose connection; `app.js` connects before processing API requests. This is warm-instance reuse, not proof of Atlas networking, cold-start behavior, concurrency, or database availability on Vercel.
+- **Authentication/security:** production CORS requires explicit HTTPS origins and credentialed requests; production refresh cookies are HttpOnly, Secure, SameSite=None, and host-only. Logout clears the refresh hash and increments `sessionVersion`; tests are recorded in `docs/vercel-remediation-progress.md`. Browser acceptance across the eventual domains is unverified. Frontend CSP is report-only and includes broad HTTPS resource sources until real hosts are known.
+- **Direct upload flow:** frontend calls `/api/uploads/sign`, uploads bytes directly to the configured object store, then calls `/api/uploads/complete`. The backend's existing S3-compatible adapter signs short-lived PUT requests with a one-write condition. Completion checks owner/token, provider object size/type and signature, prevents replay, creates the existing Media record, and returns the existing response envelope. Unit/integration tests are documented in the progress report; no live provider upload was performed.
+- **Production feature switches:** `AI_PROVIDER_ENABLED` defaults false in production, but local deterministic chat remains. Process-local request rate limits and AI concurrency are not global controls.
+
+## Prioritized blockers and plan
+
+| Priority | Finding and code evidence | Minimal next step | Verification / approval gate |
+| --- | --- | --- | --- |
+| **P0 — Existing media unavailable on Vercel** | `backend/src/app.js` serves `/uploads` from `getLocalStorageDirectory()`; `backend/src/utils/storage.js` writes local files when provider is local. Vercel Function filesystem is not durable shared media storage, and `backend/uploads/` is excluded from Git. Existing database URL records may point to the old backend host. | Choose a public/durable object-store policy and destination. Back up the 68 existing files; map each filename to database records and references; copy without overwriting; verify every old/new URL and public access; only then plan URL updates/cutover. Preserve old copies and rollback path. Do not run `backfill-media` as a migration: it only reconstructs Media catalog entries/URLs and does not copy objects or prove stored references. | Owner approves provider, access/public-read policy, migration/rollback approach, and the database/source backup. Use a disposable clone first. Test 68-file inventory reconciliation, duplicate URL/reference cases, missing/corrupt objects, rollback, and preview rendering. No database records were queried in this audit, so actual reference mapping is unknown. |
+| **P0 — Real deployment configuration and build absent** | Frontend validator requires `VITE_API_URL` and `VITE_SITE_URL`; backend production validation requires a real Atlas URI, independent JWT secrets, exact HTTPS origins, and S3 settings on Vercel. No production values are supplied or tested. The last frontend production build was blocked by missing `VITE_API_URL` (see final verification section in the audit). | Owner provisions the actual frontend/API domains and private Vercel environment settings; do not add placeholder hosts or credentials to code. Keep all backend secrets in the backend project; VITE values are public. | Build with owner-provided valid values in a private environment, inspect bundle for secrets, and test deployment preview. Approval needed for domain topology and account/service setup. |
+| **P0 — Atlas connection/networking unverified** | `backend/src/config/database.js` uses Mongoose timeouts and reuses the current in-process promise; no Atlas or Vercel connection has been verified. | Create a least-privilege Atlas application user and supported restricted Vercel network path; choose an appropriate region and configure `MONGO_URI` only in backend settings. Do not use broad `0.0.0.0/0` by default. | Owner needs MongoDB Atlas and Vercel account access. Test health/readiness, query behavior, cold/warm invocation, connection concurrency, and outage response against a disposable non-production database. |
+| **P0 — Multipart compatibility and size boundary** | `backend/src/middlewares/upload.js` permits 5 MiB and both `/api/media` and `/api/projects/upload` still accept multipart bodies. Vercel Functions cap the entire request body at 4.5 MB, including multipart overhead. The current frontend uses direct uploads when S3 is configured; legacy multipart routes remain callable and may fail at the platform limit before app validation. | Keep direct-to-provider as the production browser flow and ensure Vercel production has required S3 configuration. Decide whether legacy multipart routes should be disabled only in Vercel production or retained for small compatibility requests; do not simply increase the body limit. | Test direct upload at size/type boundaries and provider failure paths. Test that legacy oversized requests have a safe, understood response and do not create a partial object/Media record. Vercel preview required. |
+| **P1 — Upload validation is signature-based, not full decoding** | `hasValidSignature()` checks leading magic bytes (JPEG/PNG/WebP/GIF/PDF); tests accept short signature fixtures. No full image decoder/re-encoder, dimension/pixel ceiling, or malware scanner is present. A signed PUT verifies declared size only after the object reaches storage, so provider quotas matter. | Decide whether image decoding/re-encoding and pixel limits are required, including whether animated GIFs must remain animated. Choose provider-side quotas/limits. Keep current API/schema stable if possible. | Approval for animation/metadata handling and any new dependency/provider. Add malformed/truncated image, decompression/pixel-bomb, PDF and storage-cost cases to tests before changing the validation policy. |
+| **P1 — Media deletion misses testimonial avatar references** | `Testimonial.avatar` is a persisted URL field (`backend/src/models/Testimonial.js`), but `findMediaUsage()` and `clearMediaReferences()` in `backend/src/utils/media.js` do not query or clear it. Other current fields are handled. | Include `Testimonial.avatar` in media usage and reference cleanup if testimonials can contain uploaded Media URLs. Preserve external-avatar URLs and existing API contract. | Add tests for usage reporting and cleanup for every reference field, including testimonials, and ensure failed object deletion does not leave inconsistent records/references. This is a confirmed referential-integrity gap, not a reason to delete media now. |
+| **P1 — Shared abuse/cost controls absent** | `express-rate-limit` uses the in-memory default store; AI concurrency is process-local. `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` are mentioned as a candidate in progress docs but are not implemented/read by runtime code. | Keep `AI_PROVIDER_ENABLED` false until provider-side budget/kill-switch controls and a shared quota/rate-limit design are selected and implemented. Decide whether Redis is needed for shared counters. | Owner approval/account needed for a shared service and provider budget controls. Test multi-instance limits and provider failure/cost boundaries; never claim global limits before then. |
+| **P1 — Browser CORS/cookie/CSP integration unverified** | API uses credentialed exact-origin CORS; refresh cookie uses `SameSite=None; Secure`. CSP is report-only, uses broad HTTPS sources, and has no report collector. | Choose actual related frontend/API domains, configure exact CORS origins, review CSP against actual API/media/video/font origins, and keep report-only until browser reports are clean. | Real browser staging tests required for login, refresh, logout, admin, preflight, third-party-cookie restrictions, CSP console/reports, PDF/media/embed/font loading. User must supply/approve domains and a reporting endpoint if desired. |
+| **P1 — Full test/build evidence incomplete** | Previous final verification records the full backend suite as stalled/interrupted; focused tests passed. Frontend lint passed with 18 warnings; production build blocked on absent real API URL. Live Atlas/S3/browser tests were not run. | Re-run backend tests in isolated test DBs and fix/understand suite hangs without weakening controls. Run production build only with real owner-supplied frontend values. | No credentials or production data in tests. Add preview end-to-end tests for auth/admin, contact, AI, media, and health before production approval. |
+
+## Existing upload files — read-only inventory
+
+`backend/uploads/` was inspected without opening files in an image viewer, changing metadata, moving or deleting files, or querying a database. The directory contains **68 files, 3,958,460 bytes total**: **55 PNG and 13 JPEG/JPG** files; all have nonzero lengths (12–121,660 bytes) and their leading bytes match those declared image formats. SHA-256 grouping found **14 unique byte-identical content groups**, including **54 repeated copies**. These duplicate bytes may have distinct URL/Media/database references; do not deduplicate without a reference map and explicit approval. This is a file-format/header check, not full image decoding or a safety/content review.
+
+The actual database records and which filenames are referenced were not read. The upload directory remains intact and `.gitignore` excludes it. Before migration, produce a filename/hash manifest and correlate it read-only with `Media.filename`, `storageKey`, `url`, and all URL-bearing content fields. Preserve all original copies and URLs until verified rollback is possible.
+
+## Upload API and response contracts
+
+- **Sign:** `POST /api/uploads/sign`; `protect` plus `media:write`; JSON metadata `originalName`, `mimeType`, `size`, `usedIn`, `uploadTarget`. On S3 config, success envelope contains `data.mode: "direct"`, method, presigned URL, required headers/fields and short-lived `uploadToken`. Local non-Vercel fallback returns `data.mode: "multipart"`; production Vercel rejects missing S3 configuration.
+- **Complete:** `POST /api/uploads/complete`; `protect` plus `media:write`; JSON `{ uploadToken }`. It validates token owner/expiry, object key, size, MIME and leading signature, then responds HTTP 201 in `{ success, message, data }` with the Media document including public `url`.
+- **Legacy Media Library upload:** `POST /api/media`, multipart field `file` plus `usedIn`; requires `media:read` and `media:write`; responds HTTP 201 with the same envelope and Media document.
+- **Legacy project image upload:** `POST /api/projects/upload`, multipart field `file` plus optional `usedIn`; requires `media:write`; responds HTTP 201 with `{ success, message, data: { url, mediaId } }`.
+- **Admin consumption:** `GET /api/media`, `GET /api/media/:id/usage`, and `DELETE /api/media/:id` retain the current list/usage/delete contract. Delete clears known URL fields and deletes the stored object. The missing testimonial reference is noted above.
+- Current validation accepts JPG/JPEG, PNG, WEBP, GIF for image uploads, with PDF allowed for media-library/resume use. The route middleware checks MIME/extension/signature and the 5 MiB cap. Frontend admin callers remain `frontend/src/services/uploadService.js`, `mediaService.js`, `ImageUploadField.jsx`, `GalleryUploadField.jsx`, `PdfUploadField.jsx`, and `AdminMedia.jsx`.
+
+## Media URL storage and consumption map
+
+All resource URLs are plain strings, not foreign keys. The media catalog stores `Media.url`, `filename`, `storageProvider`, and `storageKey`; project upload returns `{url, mediaId}` for compatibility. Current model fields and consumers are:
+
+| Stored field | Schema | Current consumer / handling |
+| --- | --- | --- |
+| `Project.thumbnail`, `Project.gallery[]` | `backend/src/models/Project.js` | Project cards/details, gallery and SEO in `frontend/src/components/cards/ProjectCard.jsx`, `frontend/src/pages/ProjectDetails.jsx`; these use `resolveMediaUrl()` for legacy localhost links. |
+| `Profile.avatar`, `Profile.resumeUrl` | `backend/src/models/Profile.js` | About/hero/profile photo, SEO image, resume download/PDF preview and admin settings (`frontend/src/pages/About.jsx`, `sections/about/AboutPreview.jsx`, `sections/hero/Hero.jsx`, `pages/Resume.jsx`, `pages/admin/AdminSettings.jsx`, `components/seo/Seo.jsx`). |
+| `Certification.image` | `backend/src/models/Certification.js` | Certification content/cards and admin resource form. |
+| `BlogPost.cover` | `backend/src/models/BlogPost.js` | Blog list/detail and SEO (`frontend/src/pages/Blog.jsx`, `pages/BlogDetails.jsx`, `components/seo/Seo.jsx`). |
+| `Settings.seo.ogImage` | `backend/src/models/Settings.js` | SEO/Open Graph fallback (`frontend/src/components/seo/Seo.jsx`). |
+| `User.avatar` | `backend/src/models/User.js` | Admin user profile field (`frontend/src/pages/admin/AdminUsers.jsx`); media reference cleanup already includes it. |
+| `Testimonial.avatar` | `backend/src/models/Testimonial.js` | Persisted URL field; no public frontend avatar consumer was found in the source search. Media usage/cleanup also omits it, so future/current records can be left dangling if uploaded URL references exist. |
+| `Media.url` | `backend/src/models/Media.js` | Admin media listing/preview/link (`frontend/src/pages/admin/AdminMedia.jsx`); used as the exact URL key for usage scan and resource cleanup. |
+
+`backend/src/utils/media.js` checks/clears project thumbnail/gallery, certification image, profile avatar/resume, blog cover, settings Open Graph image and user avatar. User-entered external URLs are also valid in several admin fields; migration must not rewrite unrelated external URLs. `backend/src/utils/media.js` reconstructs local URLs as `<request origin>/uploads/<filename>`, and `backend/src/app.js` serves that path from local disk. No migration may assume the current database's origin or references without inspecting a safe database copy.
+
+## Recommended project topology
+
+Use **two Vercel projects connected to the same Git repository**, with project root directories `frontend/` and `backend/`. The frontend project uses the existing Vite config (`npm ci`, `npm run build`, `dist`) and SPA rewrite. The backend project relies on the current default-export Express entry at `backend/src/server.js`; do not add a listener or duplicate `/api` prefix. This is the minimal topology that retains independent frontend build-time public variables and backend secrets. It is a recommendation only; no projects/repository/remote service were created, and actual framework detection must be confirmed in a non-production preview.
+
+## Environment-variable names only
+
+- **Frontend Vercel project (public build-time values):** `VITE_API_URL`, `VITE_SITE_URL`.
+- **Backend Vercel project (required production configuration):** `NODE_ENV`, `MONGO_URI`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `CLIENT_URL`, `ALLOWED_ORIGINS`, `STORAGE_PROVIDER`, `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_PUBLIC_URL`.
+- **Optional S3-compatible storage:** `S3_ENDPOINT`, `S3_SESSION_TOKEN`.
+- **Optional AI/provider integration:** `AI_ENABLED`, `AI_PROVIDER_ENABLED`, `AI_API_KEY`, `AI_MODEL`, `AI_TIMEOUT_MS`, `AI_MAX_CONCURRENT`.
+- **Optional contact email:** `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `CONTACT_RECEIVER_EMAIL`.
+- **Optional GitHub integration:** `GITHUB_USERNAME`, `GITHUB_TOKEN`, `GITHUB_CACHE_TTL_SECONDS`.
+- **Migration script only:** `PUBLIC_API_URL`; do not set this unless an approved migration/backfill operation specifically needs it. It does not configure normal frontend API requests.
+- `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are **not runtime-supported variables today**; the rate-limit integration must be implemented and tested before configuring them.
+
+## Decisions requiring external accounts or owner approval
+
+1. Choose frontend/API domain topology; cookie compatibility and exact allowlist depend on it.
+2. Provision MongoDB Atlas and approve app-user/network/region settings; no DB account or access was used in this audit.
+3. Choose/provision the S3-compatible provider, public-vs-private media access, bucket policy, provider CORS and scoped credential policy.
+4. Approve migration of the existing 68 files and database URL/reference remapping, backup, test environment, cutover and rollback. Do not migrate, deduplicate or rewrite production records automatically.
+5. Decide image decoding/resource limits, GIF preservation, provider-side size quotas and whether a scanner is required.
+6. Choose shared rate-limit/AI-spend controls and provider budgets before enabling provider AI calls.
+7. Review CV, portrait files, `QA/`, agent configuration, workspace files and debug artifacts before public GitHub visibility.
+
+## Verification order after approval
+
+1. Inspect a read-only database backup and reconcile all media URLs to the preserved filename/hash manifest; prepare migration with rollback, without touching production.
+2. Create isolated Vercel preview projects and verify backend detection, `/api/health`, route prefixes, Mongo connection reuse/failure behavior, and CORS.
+3. Run the full backend suite in isolated databases; frontend lint and production build with real private-project configuration; inspect Vite output for server secrets.
+4. Test browser auth lifecycle, admin role restrictions, contact email, AI disabled/failure/cost behavior, upload size/auth/type/signature/provider failures, media consumption, localization/RTL and route refresh.
+5. Test the migration on a non-production database/bucket; reconcile each file/reference and verify rollback before requesting a separate explicit production-migration approval.
+
+No further implementation is authorized by this plan. Wait for owner approval of the decisions above before changing application code or performing any migration, service configuration, deployment, or GitHub action.

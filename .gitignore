@@ -1,0 +1,32 @@
+# Dependencies and generated output
+**/node_modules/
+frontend/dist/
+frontend/dist-*/
+**/coverage/
+**/.vercel/
+**/.cache/
+**/tmp/
+**/*.tmp
+**/*.temp
+/out.txt
+/backend/out.txt
+/backend/debug-public.mjs
+/frontend/src/assets/MyProfileImage/ChatGPT Image Oct 6, 2026, 09_47_16 AM.png
+/frontend/src/assets/MyProfileImage/Cinematic Software Engineer Workspace Portrait.png
+
+# Local secrets and environment files; keep safe templates versionable
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local uploads, logs, and timestamped pre-change backups
+backend/uploads/
+**/logs/
+**/*.log
+**/*.preprod-*.bak
+**/*.bak
+**/*.bak.*
+**/*.bson
+**/*.bson.gz
+**/*.dump
+**/*.archive

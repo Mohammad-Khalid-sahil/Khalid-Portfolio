@@ -1,0 +1,57 @@
+name: Portfolio CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:8.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Verify backend dependency tree
+        working-directory: backend
+        run: npm ls --depth=0
+      - name: Run backend tests against disposable MongoDB
+        working-directory: backend
+        env:
+          NODE_ENV: test
+          MONGO_URI: mongodb://127.0.0.1:27017/portfolio_ci
+          JWT_SECRET: ci-only-access-secret-not-for-deployment
+          JWT_REFRESH_SECRET: ci-only-refresh-secret-not-for-deployment
+        run: npm test
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Run frontend lint
+        working-directory: frontend
+        run: npm run lint
+      - name: Verify frontend bundling
+        working-directory: frontend
+        env:
+          VITE_API_URL: https://api.ci.invalid/api
+          VITE_SITE_URL: https://portfolio.ci.invalid
+        run: npx vite build --outDir dist-ci

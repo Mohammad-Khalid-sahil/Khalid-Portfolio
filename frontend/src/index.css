@@ -1,0 +1,1676 @@
+@import "tailwindcss";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* =====================================================================
+     "Nebula" palette — deep ink surfaces, indigo/violet primary, electric
+     blue secondary and cyan accent. Dark is the reference theme; light is
+     a separately tuned palette below (not an inversion).
+     ===================================================================== */
+  --color-background: #06070f;
+  --color-surface: #0a0c17;
+  --color-surface-elevated: #0f1220;
+  --color-surface-muted: #151a2c;
+  --color-surface-header: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  --color-card: #0d1020;
+  --color-card-hover: #141932;
+  --color-border: #1f2540;
+  --color-border-subtle: #151a2e;
+  --color-text-primary: #eef0ff;
+  --color-text-secondary: #c3c8e6;
+  --color-text-muted: #8a91b4;
+  --color-text-inverse: #ffffff;
+  --shadow-admin-header: 0 10px 30px -12px rgb(0 0 0 / 45%);
+  --color-primary: #8b7dff;
+  --color-primary-hover: #7a6bfa;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #4f8dff;
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #22d3ee;
+  --color-accent-foreground: #04222b;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #fb7185;
+  --color-danger-foreground: #2a0710;
+  --color-error: var(--color-danger);
+  --color-info: #38bdf8;
+  --color-focus: #a99fff;
+  --color-highlight: #34d399;
+  --color-stat-green: #34d399;
+  --color-stat-teal: #22d3ee;
+  --color-stat-sage: #8b7dff;
+  --color-stat-lime: #4f8dff;
+  --color-stat-neutral: #cbd5e1;
+
+  --font-display: "Plus Jakarta Sans", "Inter", "Vazirmatn", "Noto Sans Arabic", sans-serif;
+  --font-body: "Inter", "Vazirmatn", "Noto Sans Arabic", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+:root {
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --gradient-brand: linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 55%, var(--color-accent) 100%);
+  --gradient-brand-soft: linear-gradient(120deg, color-mix(in srgb, var(--color-primary) 16%, transparent), color-mix(in srgb, var(--color-secondary) 12%, transparent) 55%, color-mix(in srgb, var(--color-accent) 10%, transparent));
+}
+
+/* ---- Light theme: separately tuned, cool "paper + ink" palette ---- */
+[data-theme="light"] {
+  color-scheme: light;
+  --color-background: #f7f8fc;
+  --color-surface: #eff1f8;
+  --color-surface-elevated: #ffffff;
+  --color-surface-muted: #e8ebf5;
+  --color-surface-header: color-mix(in srgb, #ffffff 84%, transparent);
+  --color-card: #ffffff;
+  --color-card-hover: #f4f5fb;
+  --color-border: #e2e5f0;
+  --color-border-subtle: #edeff6;
+  --color-text-primary: #0b0f24;
+  --color-text-secondary: #343b5c;
+  --color-text-muted: #5d6485;
+  --color-text-inverse: #ffffff;
+  --shadow-admin-header: 0 10px 30px -14px rgb(40 44 90 / 18%);
+  --color-primary: #5b45f0;
+  --color-primary-hover: #4a35dc;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #2563eb;
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #0e7490;
+  --color-accent-foreground: #ffffff;
+  --color-success: #059669;
+  --color-warning: #b45309;
+  --color-danger: #e11d48;
+  --color-danger-foreground: #ffffff;
+  --color-error: var(--color-danger);
+  --color-info: #0284c7;
+  --color-focus: #5b45f0;
+  --color-highlight: #059669;
+  --color-stat-green: #059669;
+  --color-stat-teal: #0e7490;
+  --color-stat-sage: #5b45f0;
+  --color-stat-lime: #2563eb;
+  --color-stat-neutral: #475569;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+@layer base {
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  /* Keep these defaults in Tailwind's base layer so component utilities such
+     as text-primary-foreground can correctly style native and anchor buttons. */
+  button {
+    color: inherit;
+    cursor: pointer;
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    cursor: pointer;
+  }
+
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  button:not(:disabled):not([aria-disabled="true"]):hover,
+  [role="button"]:not([aria-disabled="true"]):hover {
+    background-color: var(--color-card-hover);
+  }
+
+  a {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    color: var(--color-text-primary);
+    caret-color: var(--color-primary);
+    background-color: var(--color-card);
+    border-color: var(--color-border);
+  }
+
+  select:not(:disabled) {
+    transition: border-color 160ms ease;
+  }
+
+  select:not(:disabled):hover {
+    border-color: var(--color-primary);
+  }
+
+  :where(input, textarea)::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+  }
+
+  option {
+    color: var(--color-text-primary);
+    background-color: var(--color-card);
+  }
+}
+
+:where(button, input, select, textarea, [role="button"]):disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button:disabled:hover {
+  filter: none;
+}
+
+button:disabled {
+  background-color: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+  opacity: 1;
+}
+
+/* Decorative code layer used only by the admin sign-in screen. It borrows the
+   application palette so it follows the existing dark, light, and system modes. */
+.admin-login {
+  isolation: isolate;
+  position: relative;
+}
+
+.admin-shell-grid {
+  opacity: 0.18;
+  background-image: radial-gradient(ellipse at top, color-mix(in srgb, var(--color-primary) 6%, transparent), transparent 58%);
+}
+
+.admin-login__overlay,
+.animated-code-background {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+/* Admin authentication belongs to the same restrained portfolio theme. */
+.animated-code-background { display: none; }
+
+.animated-code-background {
+  z-index: -2;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: clamp(0.62rem, 0.82vw, 0.78rem);
+  line-height: 1.8;
+}
+
+.admin-login__overlay {
+  z-index: -1;
+  background: radial-gradient(ellipse 32rem 28rem at 50% 45%, color-mix(in srgb, var(--color-primary) 10%, var(--color-background)) 0%, var(--color-background) 72%);
+}
+
+.admin-login__content {
+  background: color-mix(in srgb, var(--color-card) 94%, transparent);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--color-background) 42%, transparent);
+  border-color: var(--color-border);
+  border-radius: 1rem;
+}
+
+.animated-code-background__region {
+  position: absolute;
+  width: min(31rem, 43vw);
+  overflow: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-text-secondary) 68%, transparent);
+  animation: code-region var(--cycle-duration) ease-in-out var(--typing-delay) infinite;
+}
+
+.animated-code-background__region--2 { width: min(29rem, 40vw); }
+.animated-code-background__region--3 { width: min(32rem, 43vw); }
+.animated-code-background__region--4 { width: min(31rem, 42vw); }
+.animated-code-background__region--5 { width: min(30rem, 40vw); }
+.animated-code-background__region--6 { width: min(33rem, 44vw); }
+.animated-code-background__region--7 { width: min(31rem, 42vw); }
+.animated-code-background__region--8 { width: min(30rem, 40vw); }
+.animated-code-background__region--9 { width: min(30rem, 42vw); }
+
+.animated-code-background__line {
+  width: 0;
+  overflow: hidden;
+  animation: code-type var(--cycle-duration) steps(var(--line-chars), end) var(--typing-delay) infinite;
+  animation-delay: calc(var(--typing-delay) + var(--line-delay));
+}
+
+.animated-code-background__caret {
+  display: inline-block;
+  height: 0.95em;
+  margin-inline-start: 0.12em;
+  border-inline-start: 1px solid var(--color-primary);
+  vertical-align: -0.12em;
+  animation: caret-blink 1s steps(2, start) infinite;
+}
+
+.code-line,
+.code-comment {
+  margin: 0;
+}
+
+.code-comment { color: color-mix(in srgb, var(--color-text-muted) 82%, transparent); }
+.code-keyword { color: var(--color-secondary); }
+.code-function { color: var(--color-primary); }
+.code-variable { color: var(--color-text-secondary); }
+.code-string { color: var(--color-success); }
+.code-number { color: var(--color-warning); }
+.code-operator { color: var(--color-accent); }
+.code-tag { color: var(--color-secondary); }
+.code-property { color: var(--color-stat-sage); }
+
+@keyframes code-region {
+  0%, 4% { opacity: 0; }
+  10%, 74% { opacity: 0.9; }
+  88%, 100% { opacity: 0; }
+}
+
+@keyframes code-type {
+  0%, 5% { width: 0; }
+  28%, 100% { width: 100%; }
+}
+
+@keyframes caret-blink {
+  to { visibility: hidden; }
+}
+
+@media (max-width: 768px) {
+  .animated-code-background__region { width: min(27rem, 58vw); }
+  .animated-code-background__region--3,
+  .animated-code-background__region--5,
+  .animated-code-background__region--8 { display: none; }
+  .animated-code-background__region--9 { width: min(25rem, 54vw); }
+}
+
+@media (max-width: 480px) {
+  .animated-code-background { font-size: 0.58rem; }
+  .animated-code-background__region { width: 68vw; }
+  .animated-code-background__region--2,
+  .animated-code-background__region--4,
+  .animated-code-background__region--7 { display: none; }
+  .animated-code-background__region--6,
+  .animated-code-background__region--9 { width: 62vw; }
+  .admin-login__overlay { background: radial-gradient(ellipse 17rem 22rem at 50% 50%, color-mix(in srgb, var(--color-background) 86%, transparent), color-mix(in srgb, var(--color-background) 58%, transparent) 72%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-code-background__region,
+  .animated-code-background__line,
+  .animated-code-background__caret { animation: none; }
+  .animated-code-background__region { opacity: 0.62; }
+  .animated-code-background__line { width: 100%; }
+  .animated-code-background__caret { display: none; }
+}
+
+/* Admin forms use one predictable label/control/support rhythm across the
+   generated resource form and the hand-built admin forms. Keep the spacing
+   logical so it follows the writing direction in Dari and Pashto. */
+.admin-form label:not(.admin-form-inline-label) {
+  margin-block-end: 0.5rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.admin-form .admin-form-inline-label {
+  margin-block-end: 0;
+}
+
+.admin-form input:not([type="checkbox"]):not([type="radio"]),
+.admin-form select,
+.admin-form textarea {
+  box-sizing: border-box;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+.admin-form :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea)[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  background-color: color-mix(in srgb, var(--color-danger) 5%, transparent);
+}
+
+.admin-form [role="alert"] {
+  display: block;
+  margin-block-start: 0.5rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.admin-form .admin-form-counter {
+  margin-block-start: 0.5rem;
+  line-height: 1.5;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/* Reference cards use quiet depth and a small lift on interaction. Apply it
+   to the existing rounded semantic card surfaces across public and admin UI. */
+:where(article, aside, div)[class*="bg-[var(--color-card)]"][class*="rounded-[var(--radius-lg)]"] {
+  box-shadow: 0 8px 26px color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+}
+
+:where(article, aside, div)[class*="bg-[var(--color-card)]"][class*="rounded-[var(--radius-lg)]"]:hover {
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--color-text-primary) 9%, transparent);
+  transform: translateY(-2px);
+}
+
+/* Dashboard summary cards share one surface treatment with role-based,
+   theme-aware accent tones to keep metrics visually distinct. */
+.dashboard-stat-card {
+  --stat-accent: var(--color-stat-green);
+  background-color: color-mix(in srgb, var(--stat-accent) 7%, var(--color-card));
+  border-color: color-mix(in srgb, var(--stat-accent) 24%, var(--color-border));
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+  background-color: color-mix(in srgb, var(--stat-accent) 11%, var(--color-card));
+  border-color: color-mix(in srgb, var(--stat-accent) 36%, var(--color-border));
+  transform: translateY(-1px);
+}
+
+.dashboard-stat-card[data-stat-tone="teal"] { --stat-accent: var(--color-stat-teal); }
+.dashboard-stat-card[data-stat-tone="sage"] { --stat-accent: var(--color-stat-sage); }
+.dashboard-stat-card[data-stat-tone="lime"] { --stat-accent: var(--color-stat-lime); }
+.dashboard-stat-card[data-stat-tone="neutral"] { --stat-accent: var(--color-stat-neutral); }
+
+.dashboard-stat-card .dashboard-stat-icon { color: var(--stat-accent); }
+
+/* RTL support for Dari / Pashto */
+/* Vazirmatn covers Dari/Persian; Noto Sans Arabic is the safety net for
+   Pashto-specific letters (ټ ډ ړ ږ ښ ګ ڼ ې ۍ) on every platform. */
+html[dir="rtl"] body {
+  font-family: "Vazirmatn", "Noto Sans Arabic", var(--font-body);
+  line-height: 1.75;
+}
+
+html[dir="rtl"] {
+  --font-display: "Vazirmatn", "Noto Sans Arabic", "Plus Jakarta Sans", sans-serif;
+  --font-body: "Vazirmatn", "Noto Sans Arabic", "Inter", sans-serif;
+}
+
+html[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.container-page {
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-page {
+    padding-inline: 1.5rem;
+  }
+}
+
+.container-page.max-w-3xl {
+  max-width: 48rem;
+}
+
+@media (min-width: 1024px) {
+  .container-page {
+    padding-inline: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-responsive table {
+    min-width: 640px;
+  }
+}
+
+/* =========================================================================
+   PUBLIC DESIGN SYSTEM — "Ink & Signal"
+   A layered, code-inspired visual language for the public portfolio. All
+   values are token based so dark, light, LTR, and RTL stay in sync.
+   ========================================================================= */
+
+:root {
+  --ds-radius-xl: 1.5rem;
+  --ds-radius-2xl: 2rem;
+  --ds-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-glow: color-mix(in srgb, var(--color-primary) 38%, transparent);
+  --ds-hairline: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+  --ds-glass: color-mix(in srgb, var(--color-card) 72%, transparent);
+  --ds-grid-line: color-mix(in srgb, var(--color-text-primary) 4.5%, transparent);
+  --ds-shadow-lg: 0 30px 80px -30px rgb(0 0 0 / 70%), 0 0 0 1px var(--ds-hairline);
+  --ds-shadow-md: 0 18px 50px -24px rgb(0 0 0 / 60%);
+  --ds-aurora-a: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --ds-aurora-b: color-mix(in srgb, var(--color-secondary) 14%, transparent);
+}
+
+[data-theme="light"] {
+  --ds-glass: color-mix(in srgb, #ffffff 78%, transparent);
+  --ds-grid-line: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  --ds-shadow-lg: 0 30px 70px -32px rgb(32 30 90 / 28%), 0 0 0 1px var(--ds-hairline);
+  --ds-shadow-md: 0 16px 40px -22px rgb(32 30 90 / 22%);
+  --ds-aurora-a: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  --ds-aurora-b: color-mix(in srgb, var(--color-secondary) 12%, transparent);
+}
+
+/* ---------- Ambient page background ---------- */
+.ds-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.ds-ambient {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, var(--ds-aurora-a), transparent 60%),
+    radial-gradient(50rem 36rem at -10% 30%, var(--ds-aurora-b), transparent 60%),
+    var(--color-background);
+}
+
+.ds-ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.6 0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+.ds-grid {
+  background-image:
+    linear-gradient(var(--ds-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ds-grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.ds-grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+
+.ds-dots {
+  background-image: radial-gradient(color-mix(in srgb, var(--color-text-primary) 14%, transparent) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* ---------- Sections ---------- */
+.ds-section {
+  position: relative;
+  padding-block: clamp(5rem, 9vw, 8rem);
+}
+
+.ds-section + .ds-section::before {
+  content: "";
+  position: absolute;
+  inset-inline: max(1rem, calc((100% - 76rem) / 2));
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+}
+
+.ds-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.ds-eyebrow__index {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 1.5rem;
+  padding-inline: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.ds-eyebrow__rule {
+  width: 2.25rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-primary), transparent);
+}
+
+html[dir="rtl"] .ds-eyebrow__rule {
+  background: linear-gradient(-90deg, var(--color-primary), transparent);
+}
+
+html[dir="rtl"] .ds-eyebrow {
+  letter-spacing: 0;
+}
+
+.ds-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+html[dir="rtl"] .ds-display {
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+/* ---------- Surfaces ---------- */
+.ds-card {
+  position: relative;
+  border-radius: var(--ds-radius-xl);
+  border: 1px solid var(--color-border);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-text-primary) 2.5%, transparent), transparent 40%),
+    var(--color-card);
+  box-shadow: var(--ds-shadow-md);
+  transition: transform 500ms var(--ds-ease), border-color 300ms ease, box-shadow 500ms var(--ds-ease);
+}
+
+.ds-card--interactive:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  box-shadow: var(--ds-shadow-lg), 0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+
+.ds-glass {
+  background: var(--ds-glass);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid var(--ds-hairline);
+}
+
+/* Pointer-following spotlight. JS sets --mx / --my on the element. */
+.ds-spotlight {
+  --mx: 50%;
+  --my: 50%;
+  overflow: hidden;
+}
+
+.ds-spotlight::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(420px circle at var(--mx) var(--my), color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 45%);
+  transition: opacity 400ms ease;
+}
+
+.ds-spotlight::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1px;
+  opacity: 0;
+  background: radial-gradient(300px circle at var(--mx) var(--my), color-mix(in srgb, var(--color-primary) 70%, transparent), transparent 55%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: opacity 400ms ease;
+}
+
+.ds-spotlight:hover::before,
+.ds-spotlight:hover::after,
+.ds-spotlight:focus-within::before,
+.ds-spotlight:focus-within::after {
+  opacity: 1;
+}
+
+.ds-spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Typography helpers ---------- */
+.ds-gradient-text {
+  background: linear-gradient(100deg, var(--color-text-primary) 10%, var(--color-primary) 45%, var(--color-secondary) 75%, var(--color-text-primary) 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ds-gradient-pan 9s ease-in-out infinite alternate;
+}
+
+@keyframes ds-gradient-pan {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+.ds-caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.08em;
+  height: 0.82em;
+  margin-inline-start: 0.08em;
+  vertical-align: -0.04em;
+  background: var(--color-primary);
+  animation: caret-blink 1.05s steps(2, start) infinite;
+}
+
+.ds-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding-inline: 0.3rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-bottom-width: 2px;
+  background: var(--color-surface-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Chips & badges ---------- */
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-muted) 60%, transparent);
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease, transform 300ms var(--ds-ease);
+}
+
+.ds-chip:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+  color: var(--color-text-primary);
+}
+
+.ds-status-dot {
+  position: relative;
+  display: inline-flex;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--color-success);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-success) 20%, transparent);
+}
+
+.ds-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: ds-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ds-ping {
+  75%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* ---------- Buttons ---------- */
+.ds-btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ds-btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 28%) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 800ms var(--ds-ease);
+}
+
+.ds-btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* ---------- Marquee ---------- */
+.ds-marquee {
+  --gap: 0.75rem;
+  display: flex;
+  overflow: hidden;
+  gap: var(--gap);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.ds-marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--gap);
+  min-width: 100%;
+  justify-content: space-around;
+  animation: ds-marquee var(--duration, 40s) linear infinite;
+}
+
+.ds-marquee:hover .ds-marquee__track {
+  animation-play-state: paused;
+}
+
+html[dir="rtl"] .ds-marquee__track {
+  animation-direction: reverse;
+}
+
+@keyframes ds-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
+}
+
+/* ---------- Window chrome (terminal / browser frames) ---------- */
+.ds-window {
+  border-radius: 1.1rem;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-card) 92%, transparent);
+  box-shadow: var(--ds-shadow-lg);
+  overflow: hidden;
+}
+
+.ds-window__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 0.95rem;
+  border-bottom: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-muted) 55%, transparent);
+}
+
+.ds-window__dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+}
+
+/* ---------- Floating animation ---------- */
+.ds-float {
+  animation: ds-float 7s ease-in-out infinite;
+}
+
+.ds-float--slow {
+  animation-duration: 10s;
+}
+
+.ds-float--delay {
+  animation-delay: -3.5s;
+}
+
+@keyframes ds-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+
+.ds-orbit {
+  animation: ds-spin 40s linear infinite;
+}
+
+@keyframes ds-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Forms ---------- */
+.ds-field {
+  position: relative;
+}
+
+.ds-input {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent) !important;
+  padding: 0.85rem 1rem;
+  font-size: 0.925rem;
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 250ms ease, background-color 200ms ease;
+}
+
+.ds-input:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+}
+
+.ds-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+
+.ds-input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-danger) 12%, transparent);
+}
+
+.ds-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-end: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+html[dir="rtl"] .ds-label {
+  letter-spacing: 0;
+}
+
+/* ---------- Media frame ---------- */
+.ds-media-zoom img {
+  transition: transform 900ms var(--ds-ease), filter 600ms ease;
+}
+
+.group:hover .ds-media-zoom img {
+  transform: scale(1.06);
+}
+
+/* ---------- Timeline ---------- */
+.ds-timeline-rail {
+  background: linear-gradient(180deg, transparent, var(--color-border) 8%, var(--color-border) 92%, transparent);
+}
+
+/* ---------- Scrollbar progress ---------- */
+.ds-progress {
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
+html[dir="rtl"] .ds-progress {
+  transform-origin: 100% 50%;
+}
+
+/* ---------- Line clamp helpers ---------- */
+.ds-clamp-2,
+.ds-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ds-clamp-2 { -webkit-line-clamp: 2; }
+.ds-clamp-3 { -webkit-line-clamp: 3; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-gradient-text,
+  .ds-marquee__track,
+  .ds-float,
+  .ds-orbit,
+  .ds-status-dot::after,
+  .ds-caret::after {
+    animation: none !important;
+  }
+
+  .ds-card--interactive:hover,
+  .group:hover .ds-media-zoom img {
+    transform: none;
+  }
+}
+
+/* =========================================================================
+   PREMIUM LAYER — "Nebula" (UI/UX transformation)
+   Shared, token-driven primitives used by the redesigned public site, the
+   sign-in screen and the admin dashboard. Everything reads the palette
+   variables above, so dark/light and LTR/RTL stay in sync automatically.
+   ========================================================================= */
+
+@property --ds-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ---------- Theme & language transitions ---------- */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: background-color 380ms ease, border-color 380ms ease, color 380ms ease, fill 380ms ease, stroke 380ms ease, box-shadow 380ms ease !important;
+}
+
+html.lang-switching main,
+html.lang-switching [data-lang-fade] {
+  animation: ds-lang-fade 420ms var(--ds-ease) both;
+}
+
+@keyframes ds-lang-fade {
+  from { opacity: 0.25; filter: blur(3px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+/* ---------- Brand gradient helpers ---------- */
+.ds-brand-gradient { background-image: var(--gradient-brand); }
+.ds-brand-text {
+  background-image: var(--gradient-brand);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ds-gradient-pan 8s ease-in-out infinite alternate;
+}
+
+/* ---------- Animated aurora backdrop ---------- */
+.ds-aurora {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.ds-aurora__blob {
+  position: absolute;
+  width: 42rem;
+  height: 42rem;
+  border-radius: 999px;
+  filter: blur(110px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.ds-aurora__blob--1 {
+  top: -18rem;
+  inset-inline-start: -10rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-primary) 55%, transparent), transparent 65%);
+  animation: ds-aurora-a 22s ease-in-out infinite alternate;
+}
+
+.ds-aurora__blob--2 {
+  top: 10%;
+  inset-inline-end: -14rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-secondary) 45%, transparent), transparent 65%);
+  animation: ds-aurora-b 26s ease-in-out infinite alternate;
+}
+
+.ds-aurora__blob--3 {
+  bottom: -22rem;
+  inset-inline-start: 30%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 35%, transparent), transparent 65%);
+  animation: ds-aurora-c 30s ease-in-out infinite alternate;
+}
+
+[data-theme="light"] .ds-aurora__blob { opacity: 0.32; }
+
+@keyframes ds-aurora-a { to { transform: translate3d(14rem, 8rem, 0) scale(1.15); } }
+@keyframes ds-aurora-b { to { transform: translate3d(-12rem, 10rem, 0) scale(0.9); } }
+@keyframes ds-aurora-c { to { transform: translate3d(-10rem, -8rem, 0) scale(1.1); } }
+
+/* Soft animated beams (code-inspired lines) */
+.ds-beams {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.ds-beams span {
+  position: absolute;
+  top: -40%;
+  width: 1px;
+  height: 40%;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-primary) 70%, transparent), transparent);
+  animation: ds-beam 9s linear infinite;
+  opacity: 0.55;
+}
+
+.ds-beams span:nth-child(1) { inset-inline-start: 12%; animation-delay: -1s; }
+.ds-beams span:nth-child(2) { inset-inline-start: 34%; animation-delay: -5s; animation-duration: 11s; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-secondary) 70%, transparent), transparent); }
+.ds-beams span:nth-child(3) { inset-inline-start: 58%; animation-delay: -3s; animation-duration: 13s; }
+.ds-beams span:nth-child(4) { inset-inline-start: 81%; animation-delay: -7s; animation-duration: 10s; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-accent) 70%, transparent), transparent); }
+
+@keyframes ds-beam {
+  to { transform: translateY(380%); }
+}
+
+/* Floating particles (pure CSS, a handful of nodes) */
+.ds-particles {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.ds-particles i {
+  position: absolute;
+  bottom: -10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary) 80%, white);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-primary) 70%, transparent);
+  opacity: 0;
+  animation: ds-particle var(--d, 14s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes ds-particle {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.5; }
+  100% { transform: translate3d(var(--x, 30px), -105vh, 0); opacity: 0; }
+}
+
+/* ---------- Animated gradient border ---------- */
+.ds-gradient-border {
+  position: relative;
+  isolation: isolate;
+}
+
+.ds-gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--ds-angle), transparent 0deg, color-mix(in srgb, var(--color-primary) 85%, transparent) 70deg, color-mix(in srgb, var(--color-accent) 80%, transparent) 140deg, transparent 220deg, color-mix(in srgb, var(--color-secondary) 70%, transparent) 300deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: ds-angle-spin 6s linear infinite;
+  opacity: 0.9;
+}
+
+.ds-gradient-border--hover::before { opacity: 0; transition: opacity 400ms ease; }
+.ds-gradient-border--hover:hover::before,
+.ds-gradient-border--hover:focus-within::before { opacity: 1; }
+
+@keyframes ds-angle-spin { to { --ds-angle: 360deg; } }
+
+/* ---------- Tooltip ---------- */
+[data-tooltip] { position: relative; }
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  pointer-events: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 30;
+  white-space: nowrap;
+  border-radius: 0.55rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-elevated);
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text-primary);
+  box-shadow: var(--ds-shadow-md);
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 180ms ease, transform 220ms var(--ds-ease);
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+[data-tooltip-side="bottom"]::after {
+  top: calc(100% + 10px);
+  bottom: auto;
+}
+
+/* ---------- Social buttons ---------- */
+.ds-social {
+  --brand: var(--color-primary);
+  display: inline-grid;
+  place-items: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-card) 70%, transparent);
+  color: var(--color-text-muted);
+  transition: transform 350ms var(--ds-ease), color 200ms ease, border-color 200ms ease, background-color 200ms ease, box-shadow 350ms var(--ds-ease);
+}
+
+.ds-social svg { transition: transform 350ms var(--ds-ease); }
+
+a.ds-social:hover,
+a.ds-social:focus-visible {
+  transform: translateY(-3px);
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--color-border));
+  background: color-mix(in srgb, var(--brand) 10%, var(--color-card));
+  box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--brand) 70%, transparent);
+}
+
+a.ds-social:hover svg { transform: scale(1.12); }
+
+.ds-social--sm { width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; }
+.ds-social--lg { width: 3rem; height: 3rem; border-radius: 1rem; }
+.ds-social[aria-disabled="true"] { opacity: 0.5; cursor: default; border-style: dashed; }
+
+/* ---------- Gradient button ---------- */
+.ds-btn-gradient {
+  background-image: linear-gradient(120deg, var(--color-primary), var(--color-secondary) 60%, var(--color-primary));
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  color: #fff !important;
+  transition: background-position 700ms var(--ds-ease), transform 300ms var(--ds-ease), box-shadow 300ms ease;
+  box-shadow: 0 14px 34px -14px var(--ds-glow), inset 0 1px 0 rgb(255 255 255 / 20%);
+}
+
+.ds-btn-gradient:not(:disabled):hover {
+  background-position: 100% 50%;
+  box-shadow: 0 18px 42px -14px var(--ds-glow), inset 0 1px 0 rgb(255 255 255 / 24%);
+}
+
+/* ---------- Skeleton shimmer ---------- */
+.ds-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface-muted);
+}
+
+.ds-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-text-primary) 7%, transparent), transparent);
+  animation: ds-shimmer 1.6s ease-in-out infinite;
+}
+
+html[dir="rtl"] .ds-skeleton::after { animation-direction: reverse; }
+
+@keyframes ds-shimmer { to { transform: translateX(100%); } }
+
+/* ---------- Code window ---------- */
+.ds-code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.85;
+  color: var(--color-text-secondary);
+}
+
+.ds-code__ln {
+  display: inline-block;
+  width: 1.8rem;
+  margin-inline-end: 0.9rem;
+  text-align: end;
+  color: color-mix(in srgb, var(--color-text-muted) 60%, transparent);
+  user-select: none;
+}
+
+.ds-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 0.6rem;
+  padding: 0.35rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  background: transparent;
+  transition: color 200ms ease, background-color 200ms ease;
+}
+
+.ds-tab[aria-selected="true"] {
+  color: var(--color-text-primary);
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent) !important;
+}
+
+/* ---------- Section label pill ---------- */
+.ds-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ---------- Project card (premium) ---------- */
+.ds-project {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-border);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-text-primary) 2.5%, transparent), transparent 35%), var(--color-card);
+  box-shadow: var(--ds-shadow-md);
+  overflow: hidden;
+  transition: transform 550ms var(--ds-ease), box-shadow 550ms var(--ds-ease), border-color 300ms ease;
+}
+
+.ds-project:hover,
+.ds-project:focus-within {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+  box-shadow: var(--ds-shadow-lg), 0 30px 60px -36px color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+.ds-project__media img {
+  transition: transform 1000ms var(--ds-ease), filter 600ms ease;
+}
+
+.ds-project:hover .ds-project__media img { transform: scale(1.07); }
+
+.ds-project__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 35%, color-mix(in srgb, #05060d 78%, transparent) 100%);
+  transition: opacity 400ms ease;
+}
+
+.ds-project__actions {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 350ms ease, transform 450ms var(--ds-ease);
+}
+
+.ds-project:hover .ds-project__actions,
+.ds-project:focus-within .ds-project__actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: none) {
+  .ds-project__actions { opacity: 1; transform: none; }
+}
+
+.ds-arrow-nudge { transition: transform 350ms var(--ds-ease); }
+.group:hover .ds-arrow-nudge { transform: translateX(4px); }
+html[dir="rtl"] .group:hover .ds-arrow-nudge { transform: translateX(-4px) scaleX(-1); }
+
+/* ---------- Page hero (inner pages) ---------- */
+.ds-page-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ds-page-hero::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--gradient-brand);
+  opacity: 0.55;
+}
+
+/* ---------- Floating AI launcher ---------- */
+.ds-ai-launcher {
+  position: fixed;
+  inset-inline-end: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 999px;
+  padding: 0.45rem 1rem 0.45rem 0.45rem;
+  color: var(--color-text-primary) !important;
+  background: color-mix(in srgb, var(--color-card) 82%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 40px -18px var(--ds-glow), 0 0 0 1px var(--ds-hairline);
+  transition: transform 400ms var(--ds-ease), box-shadow 400ms ease;
+}
+
+html[dir="rtl"] .ds-ai-launcher { padding: 0.45rem 0.45rem 0.45rem 1rem; }
+
+.ds-ai-launcher:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 50px -18px var(--ds-glow), 0 0 0 1px color-mix(in srgb, var(--color-primary) 45%, transparent);
+}
+
+/* ---------- Public forms ---------- */
+.ds-input:focus { background: color-mix(in srgb, var(--color-surface) 92%, transparent) !important; }
+
+.ds-field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-danger);
+  animation: ds-error-in 280ms var(--ds-ease) both;
+}
+
+@keyframes ds-error-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================================
+   ADMIN — professional dashboard language
+   Unlayered rules intentionally win over utility classes so every admin
+   form (generated and hand-built) shares one field rhythm.
+   ========================================================================= */
+
+.admin-shell-grid {
+  opacity: 1;
+  background:
+    radial-gradient(60rem 30rem at 100% -10%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 60%),
+    radial-gradient(40rem 24rem at -10% 110%, color-mix(in srgb, var(--color-secondary) 8%, transparent), transparent 60%);
+}
+
+.admin-sidebar {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 6%, transparent), transparent 30%),
+    var(--color-surface) !important;
+}
+
+.admin-nav-link {
+  position: relative;
+  font-family: var(--font-body) !important;
+  font-weight: 500;
+}
+
+.admin-nav-link[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -0.75rem;
+  top: 22%;
+  bottom: 22%;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--gradient-brand);
+}
+
+.admin-nav-link[aria-current="page"] {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.admin-nav-link[aria-current="page"] svg { color: var(--color-primary); }
+
+.admin-card {
+  border-radius: 1.1rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-text-primary) 4%, transparent) inset, 0 16px 40px -28px rgb(0 0 0 / 45%);
+}
+
+[data-theme="light"] .admin-card { box-shadow: 0 1px 2px rgb(16 24 64 / 5%), 0 16px 40px -30px rgb(40 44 90 / 25%); }
+
+.admin-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--color-text-primary);
+}
+
+.dashboard-stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-stat-card::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: -2.5rem;
+  top: -2.5rem;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--stat-accent) 22%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+/* Admin field system */
+.admin-form label:not(.admin-form-inline-label) {
+  font-family: var(--font-body) !important;
+  font-size: 0.8rem !important;
+  font-weight: 600;
+  color: var(--color-text-secondary) !important;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.admin-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+.admin-form select {
+  min-height: 2.75rem;
+}
+
+.admin-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+.admin-form select,
+.admin-form textarea {
+  width: 100%;
+  border-radius: 0.8rem !important;
+  border: 1px solid var(--color-border);
+  background-color: color-mix(in srgb, var(--color-surface) 65%, var(--color-card)) !important;
+  padding: 0.65rem 0.9rem !important;
+  font-family: var(--font-body);
+  font-size: 0.9rem !important;
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 220ms ease, background-color 180ms ease;
+}
+
+.admin-form textarea { min-height: 6.5rem; resize: vertical !important; }
+
+.admin-form input:not([type="checkbox"]):not([type="radio"]):hover,
+.admin-form select:hover,
+.admin-form textarea:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+}
+
+.admin-form input:not([type="checkbox"]):not([type="radio"]):focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+  border-color: var(--color-primary) !important;
+  background-color: var(--color-card) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+
+.admin-form :is(input, select, textarea)[aria-invalid="true"] {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-danger) 12%, transparent);
+}
+
+.admin-form :is(input, select, textarea):disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-form [role="alert"]:not(.admin-alert) {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-danger);
+  animation: ds-error-in 260ms var(--ds-ease) both;
+}
+
+.admin-form input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--color-primary);
+}
+
+.admin-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.admin-section-title::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--gradient-brand);
+}
+
+.admin-form > .admin-section-title:first-child,
+.admin-form > div:first-child + .admin-section-title { border-top: 0; padding-top: 0; }
+
+.admin-modal-backdrop {
+  background: color-mix(in srgb, #03040a 70%, transparent) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.admin-modal {
+  animation: ds-modal-in 320ms var(--ds-ease) both;
+}
+
+@keyframes ds-modal-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- Login ---------- */
+.admin-login__content {
+  border-radius: 1.6rem !important;
+  background: color-mix(in srgb, var(--color-card) 78%, transparent) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 40px 90px -40px rgb(0 0 0 / 70%), 0 0 0 1px var(--ds-hairline) !important;
+}
+
+[data-theme="light"] .admin-login__content {
+  box-shadow: 0 40px 90px -40px rgb(40 44 90 / 35%), 0 0 0 1px var(--ds-hairline) !important;
+}
+
+.admin-login .animated-code-background { display: block; opacity: 0.35; }
+[data-theme="light"] .admin-login .animated-code-background { opacity: 0.28; }
+
+/* ---------- Reduced motion for the premium layer ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ds-aurora__blob,
+  .ds-beams span,
+  .ds-particles i,
+  .ds-gradient-border::before,
+  .ds-brand-text,
+  .admin-modal,
+  html.lang-switching main {
+    animation: none !important;
+  }
+
+  .ds-particles,
+  .ds-beams { display: none; }
+
+  .ds-project:hover,
+  .ds-project:focus-within,
+  a.ds-social:hover { transform: none; }
+
+  .ds-project:hover .ds-project__media img { transform: none; }
+}

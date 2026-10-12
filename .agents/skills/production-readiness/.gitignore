@@ -1,0 +1,10 @@
+# Local vector index written by tooling, not part of the skill.
+# This repo is public: keep binaries and local state out of it.
+ruvector.db
+*.db
+
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example

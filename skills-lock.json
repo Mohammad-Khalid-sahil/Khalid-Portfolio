@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "production-readiness": {
+      "source": "Imasaikiran/production-readiness-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "009183d5dd652f9eca63f466af15b087ba913354c465760bfcfa8bc15cddf48a"
+    },
+    "production-ready-check": {
+      "source": "qualityclouds/production-ready-check",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "0bb28f871920b9ddaeae5fb13c3d7cd039f4655d8d3185d7555d788a5d896f66"
+    }
+  }
+}

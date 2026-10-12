@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="Mohammad Khalid icon">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b0e14"/>
+      <stop offset="100%" stop-color="#101827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="36" fill="url(#bg)"/>
+  <rect x="18" y="18" width="156" height="156" rx="30" fill="none" stroke="url(#accent)" stroke-width="4" opacity="0.9"/>
+  <path d="M58 50h20l28 35 28-35h20v92h-20V93l-28 35-28-35v49H58z" fill="url(#accent)"/>
+  <circle cx="138" cy="58" r="8" fill="#67e8f9" opacity="0.9"/>
+</svg>
