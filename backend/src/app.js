@@ -15,6 +15,7 @@ import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDatabase } from "./config/database.js";
 import { getLocalStorageDirectory } from "./utils/storage.js";
+import { ApiError } from "./utils/ApiError.js";
 
 const app = express();
 
@@ -70,9 +71,9 @@ app.use("/api", async (req, res, next) => {
   try {
     await connectDatabase();
     next();
-  } catch (error) {
+  } catch {
     if (req.method === "GET" && req.path === "/health") return next();
-    next(error);
+    next(ApiError.serviceUnavailable("Database is temporarily unavailable"));
   }
 });
 

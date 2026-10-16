@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 
-function runEnvValidation(overrides = {}) {
+function runEnvValidation(overrides = {}, source = "await import('./src/config/env.js')") {
   const childEnv = {
     ...process.env,
     NODE_ENV: "production",
@@ -20,7 +20,7 @@ function runEnvValidation(overrides = {}) {
     UPSTASH_REDIS_REST_TOKEN: "",
     ...overrides,
   };
-  const result = spawnSync(process.execPath, ["--input-type=module", "-e", "await import('./src/config/env.js')"], {
+  const result = spawnSync(process.execPath, ["--input-type=module", "-e", source], {
     cwd: process.cwd(),
     env: childEnv,
     encoding: "utf8",
@@ -42,6 +42,58 @@ test("production Mongo connection validation rejects non-Mongo schemes generical
   });
   assert.match(output, /MONGO_URI must be set to a non-local production database/);
   assert.equal(output.includes("should-not-be-printed"), false);
+});
+
+test("production rejects a local Mongo URI without echoing the URI", () => {
+  const output = runEnvValidation({
+    MONGO_URI: "mongodb://127.0.0.1:27017/private-test",
+    UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
+    UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
+  });
+  assert.match(output, /MONGO_URI must be set to a non-local production database/);
+  assert.equal(output.includes("private-test"), false);
+});
+
+test("production rejects the local Mongo fallback when both URI variables are blank", () => {
+  const output = runEnvValidation({
+    MONGO_URI: "",
+    MONGODB_URI: "",
+    UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
+    UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
+  });
+  assert.match(output, /MONGO_URI must be set to a non-local production database/);
+  assert.equal(output.includes("127.0.0.1"), false);
+});
+
+test("MONGO_URI takes precedence over the supported MONGODB_URI alias", () => {
+  const output = runEnvValidation({
+    MONGO_URI: "mongodb+srv://primary.test.invalid/portfolio",
+    MONGODB_URI: "mongodb+srv://fallback.test.invalid/portfolio",
+    UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
+    UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
+  }, "const {env}=await import('./src/config/env.js');console.log(env.MONGO_URI.includes('primary.test.invalid'))");
+  assert.match(output, /true/);
+  assert.equal(output.includes("fallback.test.invalid"), false);
+});
+
+test("production treats CLIENT_URL as an allowed origin without requiring a duplicate entry", () => {
+  const output = runEnvValidation({
+    ALLOWED_ORIGINS: "https://secondary.test-domain.org/",
+    UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
+    UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
+  });
+  assert.equal(output.includes("CLIENT_URL must be included"), false);
+  assert.equal(output.includes("Error:"), false);
+});
+
+test("production rejects origin paths without echoing the configured value", () => {
+  const output = runEnvValidation({
+    ALLOWED_ORIGINS: "https://frontend.test-domain.org/private-path",
+    UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
+    UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
+  });
+  assert.match(output, /ALLOWED_ORIGINS must contain valid HTTP\(S\) origins/);
+  assert.equal(output.includes("private-path"), false);
 });
 
 test("production requires an HTTPS Upstash endpoint", () => {

@@ -8,7 +8,7 @@ const siteUrl = (process.env.VITE_SITE_URL || loaded.VITE_SITE_URL || "").replac
 if (!siteUrl) throw new Error("[frontend seo] VITE_SITE_URL is required to generate absolute sitemap URLs.");
 const origin = new URL(siteUrl);
 const host = origin.hostname.toLowerCase();
-const reservedHost = host === "example.com" || [".example.com", ".example", ".invalid", ".test", ".localhost", ".local"].some((suffix) => host.endsWith(suffix));
+const reservedHost = host === "example.com" || [".example.com", ".example.org", ".example", ".invalid", ".test", ".localhost", ".local"].some((suffix) => host.endsWith(suffix));
 if (origin.protocol !== "https:" || origin.pathname !== "/" || ["localhost", "127.0.0.1", "::1"].includes(host) || reservedHost) throw new Error("[frontend seo] VITE_SITE_URL must be a real HTTPS production origin.");
 const sitemapPath = path.join(output, "sitemap.xml");
 const robotsPath = path.join(output, "robots.txt");

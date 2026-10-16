@@ -11,7 +11,7 @@ process.env.STORAGE_PROVIDER = "local";
 process.env.LOCAL_STORAGE_DIR = "./test-uploads";
 process.env.LOCAL_STORAGE_PERSISTENT = "false";
 process.env.HOST = "127.0.0.1";
-const { env, getSeedAdminCredentials, parseJwtDurationMs } = await import("../src/config/env.js");
+const { env, getSeedAdminCredentials, normalizeOrigin, parseJwtDurationMs } = await import("../src/config/env.js");
 
 test("uses a short access lifetime and parses refresh durations for cookie expiry", () => {
   assert.equal(env.JWT_EXPIRES_IN, "15m");
@@ -29,6 +29,13 @@ test("loads documented Mongo, host, and upload settings into runtime config", ()
   assert.equal(env.STORAGE_PROVIDER, "local");
   assert.equal(env.LOCAL_STORAGE_DIR, "./test-uploads");
   assert.equal(env.LOCAL_STORAGE_PERSISTENT, false);
+});
+
+test("normalizes trusted origins and rejects URL paths, credentials, and wildcards", () => {
+  assert.equal(normalizeOrigin(" HTTPS://Frontend.Example:443/ "), "https://frontend.example");
+  assert.throws(() => normalizeOrigin("https://frontend.example/path"));
+  assert.throws(() => normalizeOrigin("https://user@frontend.example"));
+  assert.throws(() => normalizeOrigin("https://*.frontend.example"));
 });
 
 test("requires explicit non-placeholder credentials for admin utilities", () => {

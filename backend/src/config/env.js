@@ -35,15 +35,38 @@ function isLikelyInsecureSecret(value) {
   return insecureTokens.some((token) => normalized.includes(token));
 }
 
-function ensureValidOriginList(label, origins) {
-  const invalid = origins.filter((origin) => {
-    if (!/^https?:\/\//i.test(origin)) return true;
-    if (origin.includes("*")) return true;
-    return false;
-  });
+export function normalizeOrigin(value) {
+  if (typeof value !== "string" || !value.trim() || value.includes("*")) {
+    throw new Error("[env] Origin must be a valid HTTP(S) origin.");
+  }
 
-  if (invalid.length > 0) {
-    throw new Error(`[env] ${label} contains invalid origins: ${invalid.join(", ")}`);
+  let url;
+  try {
+    url = new URL(value.trim());
+  } catch {
+    throw new Error("[env] Origin must be a valid HTTP(S) origin.");
+  }
+
+  if (!["http:", "https:"].includes(url.protocol)
+    || url.username
+    || url.password
+    || url.pathname !== "/"
+    || url.search
+    || url.hash) {
+    throw new Error("[env] Origin must be a valid HTTP(S) origin.");
+  }
+
+  return url.origin;
+}
+
+function ensureValidOriginList(label, origins, { requireHttps = false } = {}) {
+  try {
+    for (const origin of origins) {
+      const normalizedOrigin = normalizeOrigin(origin);
+      if (requireHttps && !normalizedOrigin.startsWith("https://")) throw new Error("Invalid origin protocol.");
+    }
+  } catch {
+    throw new Error(`[env] ${label} must contain valid HTTP(S) origins without paths, credentials, queries, fragments, or wildcards.`);
   }
 }
 
@@ -151,24 +174,25 @@ function assertProductionConfig() {
     throw new Error("[env] MONGO_URI must be set to a non-local production database in production.");
   }
 
-  if (!/^https:\/\//i.test(env.CLIENT_URL)) {
-    throw new Error("[env] CLIENT_URL must use HTTPS in production.");
-  }
-
   const productionOrigins = [...new Set(env.ALLOWED_ORIGINS.map((origin) => origin.replace(/\/+$/, "")))];
   if (productionOrigins.length === 0) {
     throw new Error("[env] ALLOWED_ORIGINS must include the configured production frontend origin(s).");
   }
 
-  ensureValidOriginList("ALLOWED_ORIGINS", productionOrigins);
+  ensureValidOriginList("ALLOWED_ORIGINS", productionOrigins, { requireHttps: true });
 
-  const localhostProductionOrigin = productionOrigins.some((origin) => /localhost|127\.0\.0\.1/i.test(origin));
-  if (localhostProductionOrigin) {
-    throw new Error("[env] Production origin configuration must not include localhost or local development URLs.");
+  const clientOrigin = normalizeOrigin(env.CLIENT_URL);
+  if (!clientOrigin.startsWith("https://")) {
+    throw new Error("[env] CLIENT_URL must use HTTPS in production.");
   }
 
-  if (!productionOrigins.includes(env.CLIENT_URL.replace(/\/+$/, ""))) {
-    throw new Error("[env] CLIENT_URL must be included in ALLOWED_ORIGINS in production.");
+  const allProductionOrigins = [...productionOrigins, clientOrigin];
+  const localhostProductionOrigin = allProductionOrigins.some((origin) => {
+    const hostname = new URL(origin).hostname.replace(/^\[|\]$/g, "").toLowerCase();
+    return hostname === "localhost" || hostname.endsWith(".localhost") || hostname === "127.0.0.1" || hostname === "::1";
+  });
+  if (localhostProductionOrigin) {
+    throw new Error("[env] Production origin configuration must not include localhost or local development URLs.");
   }
 
   const requiredSecrets = [

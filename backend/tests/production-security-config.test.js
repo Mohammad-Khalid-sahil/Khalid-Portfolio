@@ -34,7 +34,7 @@ test("production CORS permits only explicitly configured origins with credential
   for (const origin of ["https://portfolio.example.invalid", "https://admin.example.invalid"]) {
     corsOptions.origin(origin, (error, allowed) => {
       assert.equal(error, null);
-      assert.equal(allowed, true);
+      assert.equal(allowed, origin);
     });
   }
   for (const origin of ["http://localhost:5173", "https://attacker.example.invalid"]) {
@@ -162,4 +162,27 @@ test("production database success logs do not reveal Atlas host or database name
 
   assert.deepEqual(logs, ["[database] Connected."]);
   assert.equal(logs.some((entry) => entry.includes("security-test.invalid")), false);
+});
+
+test("concurrent requests reuse one in-flight database connection attempt", async () => {
+  const originalConnect = mongoose.connect;
+  let resolveConnection;
+  let connectionAttempts = 0;
+  mongoose.connect = () => {
+    connectionAttempts += 1;
+    return new Promise((resolve) => { resolveConnection = resolve; });
+  };
+
+  try {
+    const firstConnection = database.connectDatabase();
+    const secondConnection = database.connectDatabase();
+    assert.equal(connectionAttempts, 1);
+    resolveConnection(mongoose);
+    await Promise.all([firstConnection, secondConnection]);
+  } finally {
+    mongoose.connection.emit("disconnected");
+    mongoose.connect = originalConnect;
+  }
+
+  assert.equal(connectionAttempts, 1);
 });

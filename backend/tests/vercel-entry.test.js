@@ -52,10 +52,25 @@ test("Vercel entry preserves root, API health, and not-found routing", async () 
   assert.equal(rootResponse.status, 200);
   assert.equal(rootBody.success, true);
 
-  const healthResponse = await fetch(`${baseUrl}/api/health`);
+  const originalConnect = mongoose.connect;
+  mongoose.connect = async () => { throw Object.assign(new Error("private connection detail"), { name: "MongooseServerSelectionError" }); };
+
+  let healthResponse;
+  let serviceResponse;
+  try {
+    healthResponse = await fetch(`${baseUrl}/api/health`);
+    serviceResponse = await fetch(`${baseUrl}/api/services`);
+  } finally {
+    mongoose.connect = originalConnect;
+  }
+
   const healthBody = await healthResponse.json();
   assert.equal(healthResponse.status, 503);
   assert.equal(healthBody.success, false);
+
+  const serviceBody = await serviceResponse.json();
+  assert.equal(serviceResponse.status, 503);
+  assert.deepEqual(serviceBody, { success: false, message: "Database is temporarily unavailable" });
 
   const missingResponse = await fetch(`${baseUrl}/not-a-route`);
   assert.equal(missingResponse.status, 404);

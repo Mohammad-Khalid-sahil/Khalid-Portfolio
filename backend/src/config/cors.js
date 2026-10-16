@@ -1,11 +1,8 @@
-import { env, isProd, devOrigins } from "./env.js";
+import { env, isProd, devOrigins, normalizeOrigin } from "./env.js";
 import { ApiError } from "../utils/ApiError.js";
 
-const productionOrigins = [...new Set(env.ALLOWED_ORIGINS.map((origin) => origin.replace(/\/+$/, "")))];
-const allowedOrigins = new Set([
-  ...(isProd ? productionOrigins : [...productionOrigins, ...devOrigins]),
-  ...(env.CLIENT_URL ? [env.CLIENT_URL.replace(/\/+$/, "")] : []),
-]);
+const configuredOrigins = isProd ? env.ALLOWED_ORIGINS : [...env.ALLOWED_ORIGINS, ...devOrigins];
+const allowedOrigins = new Set([...configuredOrigins, env.CLIENT_URL].map(normalizeOrigin));
 
 export const corsOptions = {
   origin(origin, callback) {
@@ -14,10 +11,16 @@ export const corsOptions = {
       return;
     }
 
-    const normalizedOrigin = origin.replace(/\/+$/, "");
+    let normalizedOrigin;
+    try {
+      normalizedOrigin = normalizeOrigin(origin);
+    } catch {
+      callback(ApiError.forbidden("Origin is not allowed by CORS policy"));
+      return;
+    }
 
     if (allowedOrigins.has(normalizedOrigin)) {
-      callback(null, true);
+      callback(null, normalizedOrigin);
       return;
     }
 
