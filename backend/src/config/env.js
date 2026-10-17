@@ -158,6 +158,42 @@ function assertProductionConfig() {
     throw new Error("[env] PORT must be a valid integer between 1 and 65535 in production.");
   }
 
+  const mongoUriPresent = typeof process.env.MONGO_URI === "string" && process.env.MONGO_URI.trim() !== "";
+  const mongodbUriPresent = typeof process.env.MONGODB_URI === "string" && process.env.MONGODB_URI.trim() !== "";
+  const selectedVariable = mongoUriPresent ? "MONGO_URI" : mongodbUriPresent ? "MONGODB_URI" : "default";
+  const mongoDiagnostic = {
+    event: "mongo_uri_validation",
+    MONGO_URI_present: mongoUriPresent,
+    MONGODB_URI_present: mongodbUriPresent,
+    selectedVariable,
+  };
+
+  if (!mongoUriPresent && !mongodbUriPresent) {
+    mongoDiagnostic.outcome = "missing";
+  } else {
+    try {
+      const diagnosticUrl = new URL(env.MONGO_URI);
+      const diagnosticHost = diagnosticUrl.hostname.replace(/^\[|\]$/g, "").toLowerCase();
+      mongoDiagnostic.protocol = diagnosticUrl.protocol;
+      mongoDiagnostic.hostname = diagnosticUrl.hostname;
+
+      if (!diagnosticUrl.hostname) mongoDiagnostic.outcome = "empty hostname";
+      else if (!["mongodb:", "mongodb+srv:"].includes(diagnosticUrl.protocol)) {
+        mongoDiagnostic.outcome = "unsupported protocol";
+      } else if (diagnosticHost === "localhost"
+        || diagnosticHost.endsWith(".localhost")
+        || diagnosticHost === "::1"
+        || /^127\./.test(diagnosticHost)) {
+        mongoDiagnostic.outcome = "local hostname";
+      } else {
+        mongoDiagnostic.outcome = "valid external hostname";
+      }
+    } catch {
+      mongoDiagnostic.outcome = "invalid URI";
+    }
+  }
+  console.info(JSON.stringify(mongoDiagnostic));
+
   let mongoUrl;
   try {
     mongoUrl = new URL(env.MONGO_URI);

@@ -28,6 +28,82 @@ function runEnvValidation(overrides = {}, source = "await import('./src/config/e
   return `${result.stdout}${result.stderr}`;
 }
 
+function getMongoUriDiagnostic(output) {
+  const record = output.split(/\r?\n/).find((line) => line.includes('"event":"mongo_uri_validation"'));
+  assert.ok(record, "Mongo URI diagnostic record should be present");
+  return JSON.parse(record);
+}
+
+test("Mongo URI diagnostic identifies missing configuration without exposing a URI", () => {
+  const output = runEnvValidation({ MONGO_URI: "", MONGODB_URI: "" });
+  const diagnostic = getMongoUriDiagnostic(output);
+
+  assert.deepEqual(diagnostic, {
+    event: "mongo_uri_validation",
+    MONGO_URI_present: false,
+    MONGODB_URI_present: false,
+    selectedVariable: "default",
+    outcome: "missing",
+  });
+  assert.match(output, /MONGO_URI must be set to a non-local production database/);
+});
+
+test("Mongo URI diagnostic identifies a selected local hostname", () => {
+  const output = runEnvValidation({
+    MONGO_URI: "mongodb://127.0.0.1:27017/portfolio",
+    MONGODB_URI: "mongodb+srv://fallback.example.invalid/portfolio",
+  });
+  const diagnostic = getMongoUriDiagnostic(output);
+
+  assert.deepEqual(diagnostic, {
+    event: "mongo_uri_validation",
+    MONGO_URI_present: true,
+    MONGODB_URI_present: true,
+    selectedVariable: "MONGO_URI",
+    protocol: "mongodb:",
+    hostname: "127.0.0.1",
+    outcome: "local hostname",
+  });
+});
+
+test("Mongo URI diagnostic identifies an unsupported protocol without echoing the URI", () => {
+  const uri = "https://mongo.example.invalid/database?private=query-value";
+  const output = runEnvValidation({ MONGO_URI: uri });
+  const diagnostic = getMongoUriDiagnostic(output);
+
+  assert.deepEqual(diagnostic, {
+    event: "mongo_uri_validation",
+    MONGO_URI_present: true,
+    MONGODB_URI_present: false,
+    selectedVariable: "MONGO_URI",
+    protocol: "https:",
+    hostname: "mongo.example.invalid",
+    outcome: "unsupported protocol",
+  });
+  assert.equal(output.includes(uri), false);
+  assert.equal(output.includes("private=query-value"), false);
+});
+
+test("Mongo URI diagnostic accepts an external Atlas-style hostname and redacts credentials", () => {
+  const uri = "mongodb+srv://private-user:private-password@cluster.example.mongodb.net/portfolio?token=private-query-value";
+  const output = runEnvValidation({ MONGO_URI: "", MONGODB_URI: uri });
+  const diagnostic = getMongoUriDiagnostic(output);
+
+  assert.deepEqual(diagnostic, {
+    event: "mongo_uri_validation",
+    MONGO_URI_present: false,
+    MONGODB_URI_present: true,
+    selectedVariable: "MONGODB_URI",
+    protocol: "mongodb+srv:",
+    hostname: "cluster.example.mongodb.net",
+    outcome: "valid external hostname",
+  });
+  assert.equal(output.includes(uri), false);
+  for (const secret of ["private-user", "private-password", "private-query-value"]) {
+    assert.equal(output.includes(secret), false);
+  }
+});
+
 test("Vercel production requires shared rate-limit credentials without echoing values", () => {
   const output = runEnvValidation();
   assert.match(output, /UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN/);
@@ -35,13 +111,23 @@ test("Vercel production requires shared rate-limit credentials without echoing v
 });
 
 test("production Mongo connection validation rejects non-Mongo schemes generically", () => {
+  const uri = "https://should-not-be-printed.invalid/portfolio";
   const output = runEnvValidation({
-    MONGO_URI: "https://should-not-be-printed.invalid/portfolio",
+    MONGO_URI: uri,
     UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
     UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
   });
   assert.match(output, /MONGO_URI must be set to a non-local production database/);
-  assert.equal(output.includes("should-not-be-printed"), false);
+  assert.equal(output.includes(uri), false);
+  assert.deepEqual(getMongoUriDiagnostic(output), {
+    event: "mongo_uri_validation",
+    MONGO_URI_present: true,
+    MONGODB_URI_present: false,
+    selectedVariable: "MONGO_URI",
+    protocol: "https:",
+    hostname: "should-not-be-printed.invalid",
+    outcome: "unsupported protocol",
+  });
 });
 
 test("production rejects a local Mongo URI without echoing the URI", () => {
