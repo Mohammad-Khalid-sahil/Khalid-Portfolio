@@ -11,54 +11,61 @@ function safeToken(value) {
 
 function safeCode(value) {
   if (typeof value === "number" && Number.isFinite(value)) return value;
-  return safeToken(value);
+  const knownCodes = new Set([
+    "ENOTFOUND",
+    "EAI_AGAIN",
+    "ECONNREFUSED",
+    "ETIMEDOUT",
+    "ECONNRESET",
+    "EHOSTUNREACH",
+    "ENETUNREACH",
+    "ECONNABORTED",
+    "ERR_TLS_CERT_ALTNAME_INVALID",
+  ]);
+  return typeof value === "string" && knownCodes.has(value) ? value : undefined;
 }
 
-function safeErrorMessage(error) {
+function safeErrorName(value) {
+  const name = safeToken(value);
+  if (!name) return undefined;
+  if (["Error", "TypeError", "RangeError", "SyntaxError", "ReferenceError", "AggregateError"].includes(name)) return name;
+  return /^(Mongo|Mongoose)[A-Za-z0-9_]{1,61}$/.test(name) ? name : undefined;
+}
+
+function classifyConnectionError(error) {
   const codes = [error?.code, error?.cause?.code].map((code) => String(code || "").toUpperCase());
   const labels = [error?.codeName, error?.cause?.codeName, error?.name, error?.cause?.name]
     .map((label) => String(label || "").toLowerCase());
   const message = [error?.message, error?.cause?.message].map((value) => String(value || "").toLowerCase()).join(" ");
 
   if (codes.includes("18") || labels.some((label) => label.includes("authenticationfailed")) || /authentication failed|bad auth/.test(message)) {
-    return "MongoDB authentication failed.";
+    return "authentication_failed";
   }
   if (codes.includes("13") || labels.some((label) => label.includes("unauthorized")) || /not authorized/.test(message)) {
-    return "MongoDB authorization failed.";
+    return "authorization_failed";
   }
   if (codes.some((code) => ["ENOTFOUND", "EAI_AGAIN"].includes(code)) || /querysrv|enotfound|eai_again|dns lookup|name resolution/.test(message)) {
-    return "MongoDB hostname resolution failed.";
+    return "dns_resolution_failed";
   }
-  if (codes.includes("ECONNREFUSED") || /econnrefused|connection refused/.test(message)) return "MongoDB connection was refused.";
-  if (codes.includes("ETIMEDOUT") || /timed out|timeout/.test(message)) return "MongoDB connection timed out.";
-  if (codes.includes("ECONNRESET") || /econnreset|connection reset/.test(message)) return "MongoDB connection was reset.";
-  if (/tls|certificate/.test(message)) return "MongoDB TLS negotiation failed.";
+  if (codes.includes("ECONNREFUSED") || /econnrefused|connection refused/.test(message)) return "connection_refused";
+  if (codes.includes("ETIMEDOUT") || /timed out|timeout/.test(message)) return "connection_timeout";
+  if (codes.includes("ECONNRESET") || /econnreset|connection reset/.test(message)) return "connection_reset";
+  if (/tls|certificate/.test(message)) return "tls_negotiation_failed";
   if (labels.some((label) => label.includes("servers election") || label.includes("serverselection"))) {
-    return "MongoDB server selection failed.";
+    return "server_selection_failed";
   }
-  return "Database connection failed.";
+  return "connection_failed";
 }
 
 function safeConnectionErrorSummary(error) {
-  const summary = { message: safeErrorMessage(error) };
-  const name = safeToken(error?.name);
+  const summary = { classification: classifyConnectionError(error) };
+  const name = safeErrorName(error?.name);
   const code = safeCode(error?.code);
-  const errno = typeof error?.errno === "number" && Number.isFinite(error.errno) ? error.errno : undefined;
-  const codeName = safeToken(error?.codeName);
-  const syscall = safeToken(error?.syscall);
-  const causeName = safeToken(error?.cause?.name);
   const causeCode = safeCode(error?.cause?.code);
 
   if (name) summary.name = name;
   if (code !== undefined) summary.code = code;
-  if (errno !== undefined) summary.errno = errno;
-  if (codeName) summary.codeName = codeName;
-  if (syscall) summary.syscall = syscall;
-  if (causeName || causeCode !== undefined) {
-    summary.cause = {};
-    if (causeName) summary.cause.name = causeName;
-    if (causeCode !== undefined) summary.cause.code = causeCode;
-  }
+  if (causeCode !== undefined) summary.causeCode = causeCode;
 
   return summary;
 }

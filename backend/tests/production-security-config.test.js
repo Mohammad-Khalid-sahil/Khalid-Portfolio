@@ -72,7 +72,7 @@ test("AI keeps its deterministic response path without calling the provider by d
   }
 });
 
-test("production database failure logs only validated diagnostic fields", async () => {
+test("database connection catch logs a fixed classification and safe codes only", async () => {
   const originalConnect = mongoose.connect;
   const originalConsoleError = console.error;
   const logs = [];
@@ -100,16 +100,16 @@ test("production database failure logs only validated diagnostic fields", async 
   assert.equal(logs.length, 1);
   assert.equal(logs[0].length, 1);
   assert.match(logs[0][0], /^\[database\] Connection failed\. /);
-  assert.deepEqual(JSON.parse(logs[0][0].slice("[database] Connection failed. ".length)), {
-    message: "MongoDB authentication failed.",
+  const diagnostic = JSON.parse(logs[0][0].slice("[database] Connection failed. ".length));
+  assert.deepEqual(diagnostic, {
+    classification: "authentication_failed",
     name: "MongoServerSelectionError",
     code: 18,
-    errno: -3008,
-    codeName: "AuthenticationFailed",
-    syscall: "getaddrinfo",
-    cause: { name: "Error", code: "ENOTFOUND" },
+    causeCode: "ENOTFOUND",
   });
+  assert.deepEqual(Object.keys(diagnostic).sort(), ["causeCode", "classification", "code", "name"]);
   assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
+  assert.equal(JSON.stringify(logs).includes("AuthenticationFailed"), false);
 });
 
 test("Vercel Preview uses safe database failure logging when NODE_ENV is not production", async () => {
@@ -141,11 +141,13 @@ test("Vercel Preview uses safe database failure logging when NODE_ENV is not pro
   assert.equal(logs.length, 1);
   assert.equal(logs[0].length, 1);
   assert.match(logs[0][0], /^\[database\] Connection failed\. /);
-  assert.deepEqual(JSON.parse(logs[0][0].slice("[database] Connection failed. ".length)), {
-    message: "MongoDB hostname resolution failed.",
+  const diagnostic = JSON.parse(logs[0][0].slice("[database] Connection failed. ".length));
+  assert.deepEqual(diagnostic, {
+    classification: "dns_resolution_failed",
     name: "MongoServerSelectionError",
-    cause: { name: "Error", code: "ENOTFOUND" },
+    causeCode: "ENOTFOUND",
   });
+  assert.deepEqual(Object.keys(diagnostic).sort(), ["causeCode", "classification", "name"]);
   assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
 });
 
