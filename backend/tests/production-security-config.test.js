@@ -98,17 +98,17 @@ test("production database failure logs only validated diagnostic fields", async 
   }
 
   assert.equal(logs.length, 1);
-  assert.deepEqual(logs[0], [
-    "[database] Connection failed.",
-    {
-      name: "MongoServerSelectionError",
-      code: 18,
-      errno: -3008,
-      codeName: "AuthenticationFailed",
-      syscall: "getaddrinfo",
-      cause: { name: "Error", code: "ENOTFOUND" },
-    },
-  ]);
+  assert.equal(logs[0].length, 1);
+  assert.match(logs[0][0], /^\[database\] Connection failed\. /);
+  assert.deepEqual(JSON.parse(logs[0][0].slice("[database] Connection failed. ".length)), {
+    message: "MongoDB authentication failed.",
+    name: "MongoServerSelectionError",
+    code: 18,
+    errno: -3008,
+    codeName: "AuthenticationFailed",
+    syscall: "getaddrinfo",
+    cause: { name: "Error", code: "ENOTFOUND" },
+  });
   assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
 });
 
@@ -138,10 +138,14 @@ test("Vercel Preview uses safe database failure logging when NODE_ENV is not pro
     else process.env.VERCEL = originalVercel;
   }
 
-  assert.deepEqual(logs, [[
-    "[database] Connection failed.",
-    { name: "MongoServerSelectionError", cause: { name: "Error", code: "ENOTFOUND" } },
-  ]]);
+  assert.equal(logs.length, 1);
+  assert.equal(logs[0].length, 1);
+  assert.match(logs[0][0], /^\[database\] Connection failed\. /);
+  assert.deepEqual(JSON.parse(logs[0][0].slice("[database] Connection failed. ".length)), {
+    message: "MongoDB hostname resolution failed.",
+    name: "MongoServerSelectionError",
+    cause: { name: "Error", code: "ENOTFOUND" },
+  });
   assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
 });
 

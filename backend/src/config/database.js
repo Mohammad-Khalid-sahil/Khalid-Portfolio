@@ -14,8 +14,33 @@ function safeCode(value) {
   return safeToken(value);
 }
 
+function safeErrorMessage(error) {
+  const codes = [error?.code, error?.cause?.code].map((code) => String(code || "").toUpperCase());
+  const labels = [error?.codeName, error?.cause?.codeName, error?.name, error?.cause?.name]
+    .map((label) => String(label || "").toLowerCase());
+  const message = [error?.message, error?.cause?.message].map((value) => String(value || "").toLowerCase()).join(" ");
+
+  if (codes.includes("18") || labels.some((label) => label.includes("authenticationfailed")) || /authentication failed|bad auth/.test(message)) {
+    return "MongoDB authentication failed.";
+  }
+  if (codes.includes("13") || labels.some((label) => label.includes("unauthorized")) || /not authorized/.test(message)) {
+    return "MongoDB authorization failed.";
+  }
+  if (codes.some((code) => ["ENOTFOUND", "EAI_AGAIN"].includes(code)) || /querysrv|enotfound|eai_again|dns lookup|name resolution/.test(message)) {
+    return "MongoDB hostname resolution failed.";
+  }
+  if (codes.includes("ECONNREFUSED") || /econnrefused|connection refused/.test(message)) return "MongoDB connection was refused.";
+  if (codes.includes("ETIMEDOUT") || /timed out|timeout/.test(message)) return "MongoDB connection timed out.";
+  if (codes.includes("ECONNRESET") || /econnreset|connection reset/.test(message)) return "MongoDB connection was reset.";
+  if (/tls|certificate/.test(message)) return "MongoDB TLS negotiation failed.";
+  if (labels.some((label) => label.includes("servers election") || label.includes("serverselection"))) {
+    return "MongoDB server selection failed.";
+  }
+  return "Database connection failed.";
+}
+
 function safeConnectionErrorSummary(error) {
-  const summary = {};
+  const summary = { message: safeErrorMessage(error) };
   const name = safeToken(error?.name);
   const code = safeCode(error?.code);
   const errno = typeof error?.errno === "number" && Number.isFinite(error.errno) ? error.errno : undefined;
@@ -61,11 +86,7 @@ export async function connectDatabase() {
   }).catch((error) => {
     connectionPromise = undefined;
     // eslint-disable-next-line no-console
-    if (env.NODE_ENV === "production" || process.env.VERCEL === "1") {
-      console.error("[database] Connection failed.", safeConnectionErrorSummary(error));
-    } else {
-      console.error("[database] Connection failed:", error.message);
-    }
+    console.error(`[database] Connection failed. ${JSON.stringify(safeConnectionErrorSummary(error))}`);
     throw error;
   });
 
