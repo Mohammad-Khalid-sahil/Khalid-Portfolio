@@ -20,7 +20,6 @@ function isLikelyInsecureSecret(value) {
   const insecureTokens = [
     "change-me",
     "your-secret",
-    "secret",
     "example",
     "placeholder",
     "development",
@@ -32,7 +31,13 @@ function isLikelyInsecureSecret(value) {
     "mongodb://",
   ];
 
-  return insecureTokens.some((token) => normalized.includes(token));
+  // Match recognizable placeholder strings as tokens. Generic substring
+  // matching rejects valid random secrets whenever they happen to contain a
+  // common word such as "secret" or "example".
+  return insecureTokens.some((token) => {
+    const prefix = /[^a-z0-9]$/.test(token) ? token : `${token}_`;
+    return normalized === token || normalized.startsWith(prefix) || normalized.startsWith(`${token}-`);
+  });
 }
 
 export function normalizeOrigin(value) {

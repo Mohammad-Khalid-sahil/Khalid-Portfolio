@@ -170,6 +170,39 @@ test("production database success logs do not reveal Atlas host or database name
   assert.equal(logs.some((entry) => entry.includes("security-test.invalid")), false);
 });
 
+test("Vercel Preview database success logs hide the host when NODE_ENV is not production", async () => {
+  const originalConnect = mongoose.connect;
+  const originalConsoleLog = console.log;
+  const originalNodeEnv = env.NODE_ENV;
+  const originalVercel = process.env.VERCEL;
+  const originalHost = mongoose.connection.host;
+  const originalDatabaseName = mongoose.connection.name;
+  const logs = [];
+  mongoose.connect = async () => mongoose;
+  mongoose.connection.host = "preview-private-host.invalid";
+  mongoose.connection.name = "private-preview-database";
+  env.NODE_ENV = "development";
+  process.env.VERCEL = "1";
+  console.log = (...values) => logs.push(values.join(" "));
+
+  try {
+    await database.connectDatabase();
+  } finally {
+    mongoose.connection.emit("disconnected");
+    mongoose.connect = originalConnect;
+    console.log = originalConsoleLog;
+    env.NODE_ENV = originalNodeEnv;
+    mongoose.connection.host = originalHost;
+    mongoose.connection.name = originalDatabaseName;
+    if (originalVercel === undefined) delete process.env.VERCEL;
+    else process.env.VERCEL = originalVercel;
+  }
+
+  assert.deepEqual(logs, ["[database] Connected."]);
+  assert.equal(JSON.stringify(logs).includes("preview-private-host.invalid"), false);
+  assert.equal(JSON.stringify(logs).includes("private-preview-database"), false);
+});
+
 test("concurrent requests reuse one in-flight database connection attempt", async () => {
   const originalConnect = mongoose.connect;
   let resolveConnection;

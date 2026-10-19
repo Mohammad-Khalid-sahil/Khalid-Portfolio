@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 
@@ -108,6 +109,22 @@ test("Vercel production requires shared rate-limit credentials without echoing v
   const output = runEnvValidation();
   assert.match(output, /UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN/);
   assert.equal(output.includes("test-only-api-secret"), false);
+});
+
+test("Vercel Preview accepts long random JWT secrets containing the word secret", () => {
+  const accessSecret = `${randomBytes(32).toString("hex")}secret`;
+  const refreshSecret = `${randomBytes(32).toString("hex")}secret`;
+  const output = runEnvValidation({
+    JWT_SECRET: accessSecret,
+    JWT_REFRESH_SECRET: refreshSecret,
+    UPSTASH_REDIS_REST_URL: "https://redis.test.invalid",
+    UPSTASH_REDIS_REST_TOKEN: "test-only-redis-token",
+  });
+
+  assert.doesNotMatch(output, /Insecure production secret configuration/);
+  assert.doesNotMatch(output, /Error:/);
+  assert.equal(output.includes(accessSecret), false);
+  assert.equal(output.includes(refreshSecret), false);
 });
 
 test("production Mongo connection validation rejects non-Mongo schemes generically", () => {

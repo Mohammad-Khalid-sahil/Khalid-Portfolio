@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { env } from "./env.js";
+import { env, isProd } from "./env.js";
 
 let connectionPromise;
 
@@ -87,7 +87,7 @@ export async function connectDatabase() {
     connectTimeoutMS: 5000,
   }).then(() => {
     // eslint-disable-next-line no-console
-    if (env.NODE_ENV === "production") console.log("[database] Connected.");
+    if (isProd) console.log("[database] Connected.");
     else console.log(`[database] Connected: ${mongoose.connection.host}/${mongoose.connection.name}`);
     return mongoose;
   }).catch((error) => {
