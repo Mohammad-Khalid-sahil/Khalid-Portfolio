@@ -35,6 +35,9 @@ test("Upstash rate-limit store uses atomic shared counters and returns expiry me
 });
 
 test("Upstash storage errors fail closed without leaking provider error details", async () => {
+  const logged = [];
+  const originalError = console.error;
+  console.error = (line) => logged.push(String(line));
   const store = new UpstashRateLimitStore("api", {
     url: "https://redis.test.invalid",
     token: "test-only-token",
@@ -42,9 +45,47 @@ test("Upstash storage errors fail closed without leaking provider error details"
   });
   store.init({ windowMs: 60_000 });
 
-  await assert.rejects(store.increment("test-client"), (error) => {
-    assert.equal(error.message, "Shared rate-limit service command failed.");
-    assert.equal(error.message.includes("sensitive backend detail"), false);
-    return true;
-  });
+  try {
+    await assert.rejects(store.increment("test-client"), (error) => {
+      assert.equal(error.message, "Shared rate-limit service command failed.");
+      assert.equal(error.message.includes("sensitive backend detail"), false);
+      return true;
+    });
+  } finally {
+    console.error = originalError;
+  }
+  assert.deepEqual(JSON.parse(logged[0]), { event: "shared_rate_limit_failure", category: "command_error" });
+  assert.equal(logged.join(" ").includes("sensitive backend detail"), false);
+  assert.equal(logged.join(" ").includes("test-only-token"), false);
+});
+
+test("Upstash HTTP failures log only status and network failures log safe classifications", async () => {
+  const logged = [];
+  const originalError = console.error;
+  console.error = (line) => logged.push(String(line));
+  try {
+    const httpStore = new UpstashRateLimitStore("api", {
+      url: "https://redis.test.invalid",
+      token: "private-token-sentinel",
+      fetchImpl: async () => new Response("private response body", { status: 401 }),
+    });
+    await assert.rejects(httpStore.increment("test-client"), /Shared rate-limit service request failed/);
+
+    const networkStore = new UpstashRateLimitStore("api", {
+      url: "https://redis.test.invalid",
+      token: "private-token-sentinel",
+      fetchImpl: async () => { throw Object.assign(new TypeError("private network detail"), { cause: { code: "ECONNRESET" } }); },
+    });
+    await assert.rejects(networkStore.increment("test-client"), /Shared rate-limit service request failed/);
+  } finally {
+    console.error = originalError;
+  }
+
+  assert.deepEqual(logged.map((line) => JSON.parse(line)), [
+    { event: "shared_rate_limit_failure", category: "http_error", status: 401 },
+    { event: "shared_rate_limit_failure", category: "network_error", errorName: "RequestError", code: "ECONNRESET" },
+  ]);
+  assert.equal(logged.join(" ").includes("private-token-sentinel"), false);
+  assert.equal(logged.join(" ").includes("private response body"), false);
+  assert.equal(logged.join(" ").includes("private network detail"), false);
 });

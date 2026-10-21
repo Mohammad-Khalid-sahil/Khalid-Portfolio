@@ -208,6 +208,21 @@ test("production requires an HTTPS Upstash endpoint", () => {
   assert.equal(output.includes("test-only-redis-token"), false);
 });
 
+test("production config failures log only safe category and variable names", () => {
+  const secretSentinel = "replace_with_a_unique_random_secret_at_least_32_characters";
+  const output = runEnvValidation({ JWT_SECRET: secretSentinel });
+  const diagnosticLine = output.split(/\r?\n/).find((line) => line.includes('"event":"production_config_validation_failed"'));
+
+  assert.ok(diagnosticLine, "A sanitized production config diagnostic should be logged");
+  assert.deepEqual(JSON.parse(diagnosticLine), {
+    event: "production_config_validation_failed",
+    category: "jwt_secret_configuration",
+    variables: ["JWT_SECRET"],
+  });
+  assert.equal(output.includes(secretSentinel), false);
+  assert.equal(output.includes("test-only-api-secret"), false);
+});
+
 test("Vercel preview defaults provider AI off and uses production security mode", () => {
   const childEnv = {
     ...process.env,

@@ -24,16 +24,33 @@ export class UpstashRateLimitStore {
   }
 
   async command(command) {
-    const response = await this.fetchImpl(this.url, {
-      method: "POST",
-      headers: { authorization: `Bearer ${this.token}`, "content-type": "application/json" },
-      body: JSON.stringify(command),
-      signal: AbortSignal.timeout(3000),
-    });
-    if (!response.ok) throw new Error("Shared rate-limit service request failed.");
-    const payload = await response.json();
-    if (payload.error) throw new Error("Shared rate-limit service command failed.");
-    return payload.result;
+    try {
+      const response = await this.fetchImpl(this.url, {
+        method: "POST",
+        headers: { authorization: `Bearer ${this.token}`, "content-type": "application/json" },
+        body: JSON.stringify(command),
+        signal: AbortSignal.timeout(3000),
+      });
+      if (!response.ok) {
+        console.error(JSON.stringify({ event: "shared_rate_limit_failure", category: "http_error", status: response.status }));
+        throw new Error("Shared rate-limit service request failed.");
+      }
+      const payload = await response.json();
+      if (payload.error) {
+        console.error(JSON.stringify({ event: "shared_rate_limit_failure", category: "command_error" }));
+        throw new Error("Shared rate-limit service command failed.");
+      }
+      return payload.result;
+    } catch (error) {
+      if (error?.message === "Shared rate-limit service request failed." || error?.message === "Shared rate-limit service command failed.") {
+        throw error;
+      }
+      const code = ["ENOTFOUND", "EAI_AGAIN", "ECONNREFUSED", "ETIMEDOUT", "ECONNRESET", "EHOSTUNREACH", "ENETUNREACH", "ECONNABORTED"].includes(error?.cause?.code)
+        ? error.cause.code
+        : undefined;
+      console.error(JSON.stringify({ event: "shared_rate_limit_failure", category: "network_error", errorName: error?.name === "AbortError" || error?.name === "TimeoutError" ? error.name : "RequestError", ...(code ? { code } : {}) }));
+      throw new Error("Shared rate-limit service request failed.");
+    }
   }
 
   async increment(key) {

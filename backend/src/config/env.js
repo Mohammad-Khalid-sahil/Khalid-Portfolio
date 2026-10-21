@@ -353,8 +353,46 @@ function assertProductionConfig() {
   }
 }
 
+function logProductionConfigFailure(error) {
+  const message = typeof error?.message === "string" ? error.message : "";
+  const variableNames = [
+    "PORT", "MONGO_URI", "MONGODB_URI", "ALLOWED_ORIGINS", "CLIENT_URL",
+    "JWT_SECRET", "JWT_REFRESH_SECRET", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN",
+    "AI_API_KEY", "AI_TIMEOUT_MS", "AI_MAX_CONCURRENT", "STORAGE_PROVIDER",
+    "LOCAL_STORAGE_PERSISTENT", "S3_BUCKET", "S3_REGION", "S3_ACCESS_KEY_ID",
+    "S3_SECRET_ACCESS_KEY", "S3_PUBLIC_URL", "S3_ENDPOINT", "CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET", "SMTP_HOST", "SMTP_USER",
+    "SMTP_PASS", "CONTACT_RECEIVER_EMAIL", "GITHUB_TOKEN",
+  ];
+  const variables = variableNames.filter((name) => message.includes(name));
+  const category = message.includes("JWT_SECRET") || message.includes("JWT_REFRESH_SECRET")
+    ? "jwt_secret_configuration"
+    : message.includes("MONGO_URI") || message.includes("MONGODB_URI")
+      ? "mongo_configuration"
+      : message.includes("UPSTASH_REDIS_REST_URL") || message.includes("UPSTASH_REDIS_REST_TOKEN")
+        ? "rate_limit_configuration"
+        : message.includes("CLOUDINARY") || message.includes("STORAGE_PROVIDER")
+          ? "storage_configuration"
+          : message.includes("ORIGINS") || message.includes("CLIENT_URL")
+            ? "origin_configuration"
+            : variables.length > 0
+              ? "environment_configuration"
+              : "production_configuration";
+
+  console.error(JSON.stringify({
+    event: "production_config_validation_failed",
+    category,
+    variables,
+  }));
+}
+
 if (isProd) {
-  assertProductionConfig();
+  try {
+    assertProductionConfig();
+  } catch (error) {
+    logProductionConfigFailure(error);
+    throw error;
+  }
 }
 
 export const devOrigins = DEFAULT_DEV_ORIGINS;

@@ -1,0 +1,10 @@
+.env*
+**/.env*
+.vercel
+**/.vercel
+node_modules
+**/node_modules
+docs/
+docs/**
+uploads/
+uploads/**
