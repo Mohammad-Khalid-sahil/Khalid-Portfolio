@@ -144,6 +144,36 @@ test("database connection diagnostics safely retain per-server failure classes",
   assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
 });
 
+test("database diagnostics distinguish socket closure before TLS without logging messages", async () => {
+  const originalConnect = mongoose.connect;
+  const originalConsoleError = console.error;
+  const logs = [];
+  const sensitiveText = `mongodb://user:${crypto.randomUUID()}@private-atlas-host.invalid`;
+  const networkError = Object.assign(new Error(`Client network socket disconnected before secure TLS connection was established ${sensitiveText}`), {
+    name: "MongoNetworkError",
+  });
+  const failure = Object.assign(new Error(sensitiveText), {
+    name: "MongooseServerSelectionError",
+    reason: { servers: new Map([[sensitiveText, { error: networkError }]]) },
+  });
+  mongoose.connect = async () => { throw failure; };
+  console.error = (...values) => logs.push(values);
+
+  try {
+    await assert.rejects(database.connectDatabase(), failure);
+  } finally {
+    mongoose.connect = originalConnect;
+    console.error = originalConsoleError;
+  }
+
+  const prefix = "[database] Connection failed. ";
+  const diagnostic = JSON.parse(logs[0][0].slice(prefix.length));
+  assert.deepEqual(diagnostic.serverErrors, [
+    { classification: "tls_negotiation_failed", name: "MongoNetworkError", detail: "socket_disconnected_before_tls" },
+  ]);
+  assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
+});
+
 test("Vercel Preview uses safe database failure logging when NODE_ENV is not production", async () => {
   const originalConnect = mongoose.connect;
   const originalConsoleError = console.error;

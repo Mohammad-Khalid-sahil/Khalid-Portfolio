@@ -32,6 +32,30 @@ function safeErrorName(value) {
   return /^(Mongo|Mongoose)[A-Za-z0-9_]{1,61}$/.test(name) ? name : undefined;
 }
 
+function safeConnectionDetail(error) {
+  const message = [error?.message, error?.cause?.message]
+    .map((value) => String(value || "").toLowerCase())
+    .join(" ");
+
+  if (/disconnected before secure tls connection was established/.test(message)) {
+    return "socket_disconnected_before_tls";
+  }
+  if (/disconnected after secure tls connection was established/.test(message)) {
+    return "socket_disconnected_after_tls";
+  }
+  if (/err_tls_cert_altname_invalid|certificate verify failed|unable to verify the first certificate|self.signed certificate|certificate has expired/.test(message)) {
+    return "tls_certificate_validation_failed";
+  }
+  if (/tlsv\d.*alert|alert handshake failure|handshake failure/.test(message)) {
+    return "tls_alert_or_handshake_rejected";
+  }
+  if (/tls handshake.*timed out|handshake timeout/.test(message)) {
+    return "tls_handshake_timeout";
+  }
+  if (/tls|certificate|secure tls/.test(message)) return "tls_negotiation_failed";
+  return undefined;
+}
+
 function safeServerErrorSummaries(error) {
   const servers = error?.reason?.servers;
   const descriptions = servers instanceof Map
@@ -46,10 +70,12 @@ function safeServerErrorSummaries(error) {
     if (!serverError) continue;
 
     const summary = { classification: classifyConnectionError(serverError) };
+    const detail = safeConnectionDetail(serverError);
     const name = safeErrorName(serverError?.name);
     const code = safeCode(serverError?.code);
     const causeCode = safeCode(serverError?.cause?.code);
     if (name) summary.name = name;
+    if (detail) summary.detail = detail;
     if (code !== undefined) summary.code = code;
     if (causeCode !== undefined) summary.causeCode = causeCode;
     summaries.push(summary);
