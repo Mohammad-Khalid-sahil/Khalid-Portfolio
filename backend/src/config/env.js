@@ -181,6 +181,27 @@ function assertProductionConfig() {
       const diagnosticHost = diagnosticUrl.hostname.replace(/^\[|\]$/g, "").toLowerCase();
       mongoDiagnostic.protocol = diagnosticUrl.protocol;
       mongoDiagnostic.hostname = diagnosticUrl.hostname;
+      mongoDiagnostic.usernamePresent = Boolean(diagnosticUrl.username);
+      mongoDiagnostic.passwordPresent = Boolean(diagnosticUrl.password);
+      mongoDiagnostic.databasePathPresent = Boolean(diagnosticUrl.pathname && diagnosticUrl.pathname !== "/");
+      const tlsOption = diagnosticUrl.searchParams.get("tls") ?? diagnosticUrl.searchParams.get("ssl");
+      mongoDiagnostic.tlsOption = tlsOption == null
+        ? "driver_default"
+        : /^(true|false)$/i.test(tlsOption)
+          ? tlsOption.toLowerCase()
+          : "non_boolean";
+      mongoDiagnostic.tlsAllowInvalidCertificates = diagnosticUrl.searchParams.get("tlsAllowInvalidCertificates") === "true";
+      mongoDiagnostic.tlsAllowInvalidHostnames = diagnosticUrl.searchParams.get("tlsAllowInvalidHostnames") === "true";
+      mongoDiagnostic.authSourceOptionPresent = diagnosticUrl.searchParams.has("authSource");
+      mongoDiagnostic.authMechanismOptionPresent = diagnosticUrl.searchParams.has("authMechanism");
+      const safeOptionNames = new Set([
+        "authSource", "authMechanism", "retryWrites", "w", "tls", "ssl", "tlsAllowInvalidCertificates",
+        "tlsAllowInvalidHostnames", "directConnection", "replicaSet", "appName", "connectTimeoutMS",
+        "serverSelectionTimeoutMS", "maxPoolSize", "minPoolSize", "heartbeatFrequencyMS",
+      ]);
+      mongoDiagnostic.connectionOptions = [...new Set([...diagnosticUrl.searchParams.keys()])]
+        .filter((name) => safeOptionNames.has(name))
+        .sort();
 
       if (!diagnosticUrl.hostname) mongoDiagnostic.outcome = "empty hostname";
       else if (!["mongodb:", "mongodb+srv:"].includes(diagnosticUrl.protocol)) {

@@ -63,6 +63,15 @@ test("Mongo URI diagnostic identifies a selected local hostname", () => {
     selectedVariable: "MONGO_URI",
     protocol: "mongodb:",
     hostname: "127.0.0.1",
+    usernamePresent: false,
+    passwordPresent: false,
+    databasePathPresent: true,
+    tlsOption: "driver_default",
+    tlsAllowInvalidCertificates: false,
+    tlsAllowInvalidHostnames: false,
+    authSourceOptionPresent: false,
+    authMechanismOptionPresent: false,
+    connectionOptions: [],
     outcome: "local hostname",
   });
 });
@@ -79,14 +88,23 @@ test("Mongo URI diagnostic identifies an unsupported protocol without echoing th
     selectedVariable: "MONGO_URI",
     protocol: "https:",
     hostname: "mongo.example.invalid",
+    usernamePresent: false,
+    passwordPresent: false,
+    databasePathPresent: true,
+    tlsOption: "driver_default",
+    tlsAllowInvalidCertificates: false,
+    tlsAllowInvalidHostnames: false,
+    authSourceOptionPresent: false,
+    authMechanismOptionPresent: false,
+    connectionOptions: [],
     outcome: "unsupported protocol",
   });
   assert.equal(output.includes(uri), false);
   assert.equal(output.includes("private=query-value"), false);
 });
 
-test("Mongo URI diagnostic accepts an external Atlas-style hostname and redacts credentials", () => {
-  const uri = "mongodb+srv://private-user:private-password@cluster.example.mongodb.net/portfolio?token=private-query-value";
+test("Mongo URI diagnostic accepts an external Atlas-style hostname, reports safe options, and redacts credentials", () => {
+  const uri = "mongodb+srv://private-user:private-password@cluster.example.mongodb.net/portfolio?token=private-query-value&tls=false&retryWrites=true&authSource=admin";
   const output = runEnvValidation({ MONGO_URI: "", MONGODB_URI: uri });
   const diagnostic = getMongoUriDiagnostic(output);
 
@@ -97,6 +115,15 @@ test("Mongo URI diagnostic accepts an external Atlas-style hostname and redacts 
     selectedVariable: "MONGODB_URI",
     protocol: "mongodb+srv:",
     hostname: "cluster.example.mongodb.net",
+    usernamePresent: true,
+    passwordPresent: true,
+    databasePathPresent: true,
+    tlsOption: "false",
+    tlsAllowInvalidCertificates: false,
+    tlsAllowInvalidHostnames: false,
+    authSourceOptionPresent: true,
+    authMechanismOptionPresent: false,
+    connectionOptions: ["authSource", "retryWrites", "tls"],
     outcome: "valid external hostname",
   });
   assert.equal(output.includes(uri), false);
@@ -143,6 +170,15 @@ test("production Mongo connection validation rejects non-Mongo schemes generical
     selectedVariable: "MONGO_URI",
     protocol: "https:",
     hostname: "should-not-be-printed.invalid",
+    usernamePresent: false,
+    passwordPresent: false,
+    databasePathPresent: true,
+    tlsOption: "driver_default",
+    tlsAllowInvalidCertificates: false,
+    tlsAllowInvalidHostnames: false,
+    authSourceOptionPresent: false,
+    authMechanismOptionPresent: false,
+    connectionOptions: [],
     outcome: "unsupported protocol",
   });
 });

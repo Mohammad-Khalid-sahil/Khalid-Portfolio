@@ -174,6 +174,37 @@ test("database diagnostics distinguish socket closure before TLS without logging
   assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
 });
 
+test("database diagnostics classify a TLS alert without exposing its text", async () => {
+  const originalConnect = mongoose.connect;
+  const originalConsoleError = console.error;
+  const logs = [];
+  const sensitiveText = `mongodb://user:${crypto.randomUUID()}@private-atlas-host.invalid`;
+  const networkError = Object.assign(new Error(`TLSv1.2 alert internal error ${sensitiveText}`), {
+    name: "MongoNetworkError",
+    code: "ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR",
+  });
+  const failure = Object.assign(new Error(sensitiveText), {
+    name: "MongooseServerSelectionError",
+    reason: { servers: new Map([[sensitiveText, { error: networkError }]]) },
+  });
+  mongoose.connect = async () => { throw failure; };
+  console.error = (...values) => logs.push(values);
+
+  try {
+    await assert.rejects(database.connectDatabase(), failure);
+  } finally {
+    mongoose.connect = originalConnect;
+    console.error = originalConsoleError;
+  }
+
+  const prefix = "[database] Connection failed. ";
+  const diagnostic = JSON.parse(logs[0][0].slice(prefix.length));
+  assert.deepEqual(diagnostic.serverErrors, [
+    { classification: "tls_negotiation_failed", name: "MongoNetworkError", detail: "tls_alert_internal_error", code: "ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR" },
+  ]);
+  assert.equal(JSON.stringify(logs).includes(sensitiveText), false);
+});
+
 test("Vercel Preview uses safe database failure logging when NODE_ENV is not production", async () => {
   const originalConnect = mongoose.connect;
   const originalConsoleError = console.error;

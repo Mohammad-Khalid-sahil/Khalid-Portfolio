@@ -21,6 +21,13 @@ function safeCode(value) {
     "ENETUNREACH",
     "ECONNABORTED",
     "ERR_TLS_CERT_ALTNAME_INVALID",
+    "ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR",
+    "ERR_SSL_TLSV1_ALERT_HANDSHAKE_FAILURE",
+    "ERR_SSL_WRONG_VERSION_NUMBER",
+    "ERR_SSL_UNSUPPORTED_PROTOCOL",
+    "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
+    "CERT_HAS_EXPIRED",
+    "DEPTH_ZERO_SELF_SIGNED_CERT",
   ]);
   return typeof value === "string" && knownCodes.has(value) ? value : undefined;
 }
@@ -45,6 +52,18 @@ function safeConnectionDetail(error) {
   }
   if (/err_tls_cert_altname_invalid|certificate verify failed|unable to verify the first certificate|self.signed certificate|certificate has expired/.test(message)) {
     return "tls_certificate_validation_failed";
+  }
+  if (/tlsv\d(?:\.\d+)? alert internal error|tlsv\d(?:\.\d+)? alert internal_error/.test(message)) {
+    return "tls_alert_internal_error";
+  }
+  if (/tlsv\d(?:\.\d+)? alert handshake failure|alert handshake failure|handshake failure/.test(message)) {
+    return "tls_alert_handshake_failure";
+  }
+  if (/tlsv\d(?:\.\d+)? alert protocol version|unsupported protocol/.test(message)) {
+    return "tls_alert_protocol_version";
+  }
+  if (/tlsv\d(?:\.\d+)? alert unknown ca|unknown ca/.test(message)) {
+    return "tls_alert_unknown_ca";
   }
   if (/tlsv\d.*alert|alert handshake failure|handshake failure/.test(message)) {
     return "tls_alert_or_handshake_rejected";
