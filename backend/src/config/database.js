@@ -32,6 +32,33 @@ function safeErrorName(value) {
   return /^(Mongo|Mongoose)[A-Za-z0-9_]{1,61}$/.test(name) ? name : undefined;
 }
 
+function safeServerErrorSummaries(error) {
+  const servers = error?.reason?.servers;
+  const descriptions = servers instanceof Map
+    ? [...servers.values()]
+    : servers && typeof servers === "object"
+      ? Object.values(servers)
+      : [];
+  const summaries = [];
+
+  for (const description of descriptions) {
+    const serverError = description?.error || description?.cause;
+    if (!serverError) continue;
+
+    const summary = { classification: classifyConnectionError(serverError) };
+    const name = safeErrorName(serverError?.name);
+    const code = safeCode(serverError?.code);
+    const causeCode = safeCode(serverError?.cause?.code);
+    if (name) summary.name = name;
+    if (code !== undefined) summary.code = code;
+    if (causeCode !== undefined) summary.causeCode = causeCode;
+    summaries.push(summary);
+  }
+
+  const unique = [...new Map(summaries.map((summary) => [JSON.stringify(summary), summary])).values()];
+  return unique.slice(0, 5);
+}
+
 function classifyConnectionError(error) {
   const codes = [error?.code, error?.cause?.code].map((code) => String(code || "").toUpperCase());
   const labels = [error?.codeName, error?.cause?.codeName, error?.name, error?.cause?.name]
@@ -66,6 +93,8 @@ function safeConnectionErrorSummary(error) {
   if (name) summary.name = name;
   if (code !== undefined) summary.code = code;
   if (causeCode !== undefined) summary.causeCode = causeCode;
+  const serverErrors = safeServerErrorSummaries(error);
+  if (serverErrors.length > 0) summary.serverErrors = serverErrors;
 
   return summary;
 }
