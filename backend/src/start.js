@@ -1,9 +1,23 @@
 import app from "./app.js";
 import { connectDatabase } from "./config/database.js";
 import { env } from "./config/env.js";
+import { assertAdminBootstrapRuntime, isAdminBootstrapEnabled, runAdminBootstrap } from "./utils/adminBootstrap.js";
+import mongoose from "mongoose";
+import User from "./models/User.js";
 
 async function startServer() {
-  await connectDatabase();
+  if (isAdminBootstrapEnabled()) {
+    assertAdminBootstrapRuntime();
+    const { getSeedAdminCredentials } = await import("./config/env.js");
+    await runAdminBootstrap({
+      connectDatabase,
+      mongoose,
+      User,
+      getCredentials: getSeedAdminCredentials,
+    });
+  } else {
+    await connectDatabase();
+  }
 
   const server = app.listen(env.PORT, env.HOST, () => {
     // eslint-disable-next-line no-console
@@ -29,7 +43,8 @@ async function startServer() {
   });
 }
 
-startServer().catch((error) => {
+startServer().catch(async (error) => {
+  await mongoose.disconnect().catch(() => {});
   // eslint-disable-next-line no-console
   console.error("[server] Startup failed:", env.NODE_ENV === "production" ? "Unexpected error" : error.message);
   process.exitCode = 1;

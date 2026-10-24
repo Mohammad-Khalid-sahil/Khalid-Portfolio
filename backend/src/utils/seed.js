@@ -1,26 +1,32 @@
 import mongoose from "mongoose";
-import { connectDatabase } from "../config/database.js";
-import { getSeedAdminCredentials } from "../config/env.js";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import User from "../models/User.js";
+import { assertAdminBootstrapRuntime, isAdminBootstrapEnabled, runAdminBootstrap } from "./adminBootstrap.js";
 
-async function seedAdmin() {
-  const { email, password } = getSeedAdminCredentials();
-  await connectDatabase();
-  const name = process.env.SEED_ADMIN_NAME || "Portfolio Admin";
+export async function seedAdmin() {
+  if (!isAdminBootstrapEnabled()) throw new Error("Admin bootstrap is disabled.");
+  assertAdminBootstrapRuntime();
 
-  const existingAdmin = await User.findOne({ email });
-  if (existingAdmin) {
-    console.log(`[seed] Admin already exists: ${email}`);
-  } else {
-    await User.create({ name, email, password, role: "admin" });
-    console.log(`[seed] Admin created: ${email}`);
-  }
+  const [{ connectDatabase }, { getSeedAdminCredentials }] = await Promise.all([
+    import("../config/database.js"),
+    import("../config/env.js"),
+  ]);
 
-  await mongoose.disconnect();
+  return runAdminBootstrap({
+    connectDatabase,
+    mongoose,
+    User,
+    getCredentials: getSeedAdminCredentials,
+  });
 }
 
-seedAdmin().catch(async (error) => {
-  console.error("[seed] Failed:", error.message);
-  await mongoose.disconnect();
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  seedAdmin().then(async () => {
+    await mongoose.disconnect();
+  }).catch(async () => {
+    console.error("[seed] Admin initialization failed.");
+    await mongoose.disconnect();
+    process.exitCode = 1;
+  });
+}
