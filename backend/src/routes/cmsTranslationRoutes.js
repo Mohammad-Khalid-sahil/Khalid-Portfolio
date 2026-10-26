@@ -69,8 +69,11 @@ router.post("/translate", protect, canTranslate, translationJsonParser, sanitize
     }
   }
   if (totalCharacters > 60000) throw ApiError.badRequest("Translation request is too large");
-  if (!env.AI_ENABLED || !env.AI_PROVIDER_ENABLED || !env.AI_API_KEY) {
-    throw ApiError.serviceUnavailable("Automatic translation is not configured for this service");
+  if (!env.AI_PROVIDER_ENABLED) {
+    throw ApiError.serviceUnavailable("Automatic translation is disabled for this service");
+  }
+  if (!env.AI_API_KEY) {
+    throw ApiError.serviceUnavailable("Automatic translation requires an AI provider key in the service environment");
   }
 
   let response;
