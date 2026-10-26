@@ -1,4 +1,4 @@
-﻿import { Router } from "express";
+﻿import express, { Router } from "express";
 import {
   getProjects,
   getAdminProjects,
@@ -9,6 +9,7 @@ import {
   uploadProjectImage,
 } from "../controllers/projectController.js";
 import { protect, requirePermission } from "../middlewares/auth.js";
+import { sanitizeInput } from "../middlewares/sanitize.js";
 import { validate } from "../middlewares/validate.js";
 import { upload, uploadError, verifyUploadSignature, requireMultipartStorage } from "../middlewares/upload.js";
 import { mongoIdParam } from "../validators/common.js";
@@ -19,6 +20,7 @@ import {
 } from "../validators/projectValidator.js";
 
 const router = Router();
+const projectJsonParser = express.json({ limit: "2mb" });
 
 router.get("/", validate(listProjectsValidator), getProjects);
 router.get(
@@ -39,11 +41,13 @@ router.post(
   uploadProjectImage
 );
 router.get("/:slug", getProjectBySlug);
-router.post("/", protect, requirePermission("content:write"), validate(createProjectValidator), createProject);
+router.post("/", protect, requirePermission("content:write"), projectJsonParser, sanitizeInput, validate(createProjectValidator), createProject);
 router.put(
   "/:id",
   protect,
   requirePermission("content:write"),
+  projectJsonParser,
+  sanitizeInput,
   validate([mongoIdParam("id"), ...updateProjectValidator]),
   updateProject
 );

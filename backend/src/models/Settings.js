@@ -18,4 +18,8 @@ const settingsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+settingsSchema.add({ translations: { type: mongoose.Schema.Types.Mixed, default: () => ({}) } });
+settingsSchema.path("translations").options.select = false;
+settingsSchema.set("toJSON", { transform: (_document, value) => { delete value.translations; return value; } });
+
 export default mongoose.model("Settings", settingsSchema);

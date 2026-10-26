@@ -178,6 +178,7 @@ export default function ResourceManager({ resourceKey: propKey }) {
         <ResourceForm
           title={t(config.singularKey, { defaultValue: config.title.replace(/s$/, "") })}
           fields={config.fields}
+          resource={resourceKey}
           record={editingRecord[config.idKey] ? editingRecord : null}
           onSubmit={handleSubmit}
           onClose={() => setEditingRecord(null)}

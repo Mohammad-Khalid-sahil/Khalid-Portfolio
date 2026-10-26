@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import ImageUploadField from "./ImageUploadField";
 import GalleryUploadField from "./GalleryUploadField";
 import RelationMultiSelect from "./RelationMultiSelect";
-import LocalizedTextFields from "./LocalizedTextFields";
+import { addAdminTranslations } from "@/services/adminTranslationService";
 
 function toInputDate(value) {
   if (!value) return "";
@@ -29,13 +29,6 @@ function buildDefaultValues(fields, record) {
       values[field.name] = raw ?? field.defaultValue ?? false;
     } else {
       values[field.name] = raw ?? field.defaultValue ?? "";
-    }
-  });
-  values.translations = { fa: {}, ps: {} };
-  fields.filter((field) => field.localized).forEach((field) => {
-    for (const locale of ["fa", "ps"]) {
-      const value = record?.translations?.[locale]?.[field.name];
-      values.translations[locale][field.name] = Array.isArray(value) ? value.join(", ") : value || "";
     }
   });
   return values;
@@ -81,16 +74,6 @@ function parseSubmitValues(fields, formValues) {
       payload[field.name] = value;
     }
   });
-  const translations = { fa: {}, ps: {} };
-  fields.filter((field) => field.localized).forEach((field) => {
-    for (const locale of ["fa", "ps"]) {
-      const raw = formValues.translations?.[locale]?.[field.name] || "";
-      const value = field.type === "array" ? raw.split(",").map((item) => item.trim()).filter(Boolean) : raw.trim();
-      if (Array.isArray(value) ? value.length : value) translations[locale][field.name] = value;
-    }
-  });
-  const savedTranslations = Object.fromEntries(Object.entries(translations).filter(([, values]) => Object.keys(values).length));
-  if (Object.keys(savedTranslations).length) payload.translations = savedTranslations;
   // Normalize some fields to match backend expectations without changing rules:
   // - slug: trim and lower-case so backend's /^[a-z0-9-]*$/ matches expected input
   if (Object.prototype.hasOwnProperty.call(payload, "slug") && typeof payload.slug === "string") {
@@ -152,9 +135,10 @@ function getFieldRuleMessage(fieldName, fieldError, fallback) {
   return fallback;
 }
 
-export default function ResourceForm({ title, fields, record, onSubmit, onClose, isSaving }) {
+export default function ResourceForm({ title, fields, record, resource, onSubmit, onClose, isSaving }) {
   const { t } = useTranslation();
   const [serverErrors, setServerErrors] = useState([]);
+  const [isTranslating, setIsTranslating] = useState(false);
   const fieldRefs = useRef({});
   const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -241,7 +225,14 @@ export default function ResourceForm({ title, fields, record, onSubmit, onClose,
   async function submit(values) {
     setServerErrors([]);
     try {
-      await onSubmit(parseSubmitValues(fields, values));
+      const payload = parseSubmitValues(fields, values);
+      const localizedFields = fields.filter((field) => field.localized).map((field) => field.name);
+      setIsTranslating(localizedFields.length > 0);
+      const original = Object.fromEntries(localizedFields.map((name) => [name, record?.[name]]));
+      const translatedPayload = localizedFields.length
+        ? await addAdminTranslations(resource, payload, localizedFields, original, record?.translations)
+        : payload;
+      await onSubmit(translatedPayload);
     } catch (error) {
       const details = Array.isArray(error?.details)
         ? error.details
@@ -283,12 +274,14 @@ export default function ResourceForm({ title, fields, record, onSubmit, onClose,
         : firstMessage && /required/i.test(firstMessage)
           ? t("adminValidation.required", { field: localizedFirst })
           : t("adminValidation.invalid", { field: localizedFirst });
-      toast.error(visibleField ? `${localizedFirst}: ${localizedMessage}` : message);
+      toast.error(visibleField ? `${localizedFirst}: ${localizedMessage}` : error?.message || message);
 
       const focusField = visibleField?.name || fields.find((field) => !!errors[field.name])?.name || fields.find((field) => field.required)?.name;
       const input = focusField ? fieldRefs.current[focusField] : null;
       (input?.querySelector?.('[data-field-focus-target="true"],input:not([type=hidden]),button,select,textarea') || input)?.focus?.();
       input?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    } finally {
+      setIsTranslating(false);
     }
   }
 
@@ -310,13 +303,19 @@ export default function ResourceForm({ title, fields, record, onSubmit, onClose,
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            disabled={isSaving}
+            disabled={isSaving || isTranslating}
             aria-label={t("common.cancel")}
             className="grid h-8 w-8 place-items-center rounded-[var(--radius-md)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
           >
             <FiX />
           </button>
         </div>
+
+        {fields.some((field) => field.localized) && (
+          <p className="mb-4 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-xs text-[var(--color-text-muted)]">
+            {t("admin.cmsTranslationsHint")}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit(submit, handleInvalidSubmit)} className="admin-form space-y-4" noValidate>
           {serverErrors.length > 0 && (
@@ -563,8 +562,6 @@ export default function ResourceForm({ title, fields, record, onSubmit, onClose,
                   />
                 )}
 
-                {field.localized && <LocalizedTextFields name={field.name} label={fieldLabel} register={register} watch={watch} errors={errors} maxLength={fieldRules.maxLength?.value} multiline={field.type === "textarea" || field.type === "array"} />}
-
                 {fieldError && (
                   <p id={`${field.name}-error`} role="alert" className="mt-1 text-xs text-[var(--color-danger)]">
                     {inputErrorMessage}
@@ -579,17 +576,17 @@ export default function ResourceForm({ title, fields, record, onSubmit, onClose,
             <button
               type="button"
               onClick={onClose}
-              disabled={isSaving}
+              disabled={isSaving || isTranslating}
               className="rounded-[var(--radius-md)] border border-[var(--color-border)] px-4 py-2 font-mono text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
             >
               {t("common.cancel")}
             </button>
             <button
               type="submit"
-              disabled={isSaving}
+              disabled={isSaving || isTranslating}
               className="rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2 font-mono text-sm font-medium text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
             >
-              {isSaving ? t("common.saving") : t("common.save")}
+              {isTranslating ? t("common.saving") : isSaving ? t("common.saving") : t("common.save")}
             </button>
           </div>
         </form>

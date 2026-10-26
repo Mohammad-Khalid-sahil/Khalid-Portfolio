@@ -8,7 +8,7 @@ import { SectionLoader } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import PdfUploadField from "@/components/admin/PdfUploadField";
-import LocalizedTextFields from "@/components/admin/LocalizedTextFields";
+import { addAdminTranslations } from "@/services/adminTranslationService";
 import { getProfile } from "@/services/profileService";
 import { getSettings } from "@/services/settingsService";
 import { cleanBrandName } from "@/utils/displayContent";
@@ -22,7 +22,10 @@ function useProfileAdmin() {
 }
 
 function useSettingsAdmin() {
-  return useQuery({ queryKey: ["admin", "settings"], queryFn: getSettings });
+  return useQuery({ queryKey: ["admin", "settings"], queryFn: async () => {
+    const [settings, translationResponse] = await Promise.all([getSettings("en"), api.get("/settings/translations")]);
+    return settings ? { ...settings, translations: translationResponse.data?.translations || {} } : null;
+  } });
 }
 
 function statsToText(stats = []) {
@@ -86,23 +89,12 @@ function isValidSocialUrl(value) {
   try { const url = new URL(value); return url.protocol === "https:" || url.protocol === "http:"; }
   catch { return false; }
 }
-function profileTranslationValues(profile) {
-  const translations = { fa: {}, ps: {} };
-  for (const locale of ["fa", "ps"]) {
-    for (const field of ["title", "tagline", "bio", "specialization", "careerGoals", "interests"]) {
-      const value = profile?.translations?.[locale]?.[field];
-      translations[locale][field] = field === "interests" && Array.isArray(value) ? value.join(", ") : value || "";
-    }
-  }
-  return translations;
-}
-
 function ProfileForm({ profile }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [isTranslating, setIsTranslating] = useState(false);
   const { register, handleSubmit, reset, control, watch, formState: { errors } } = useForm({
     defaultValues: {
-      translations: profileTranslationValues(profile),
       name: profile?.name || "",
       title: profile?.title || "",
       tagline: profile?.tagline || "",
@@ -125,7 +117,6 @@ function ProfileForm({ profile }) {
 
   useEffect(() => {
     reset({
-      translations: profileTranslationValues(profile),
       name: profile?.name || "",
       title: profile?.title || "",
       tagline: profile?.tagline || "",
@@ -157,16 +148,10 @@ function ProfileForm({ profile }) {
     onError: (err) => toast.error(err.message || t("common.updateFailed")),
   });
 
-  function submit(values) {
-    mutation.mutate({
-      translations: Object.fromEntries(["fa", "ps"].map((locale) => {
-        const fields = values.translations?.[locale] || {};
-        const result = {};
-        for (const field of ["title", "tagline", "bio", "specialization", "careerGoals"]) if (fields[field]?.trim()) result[field] = fields[field].trim();
-        const interests = fields.interests ? fields.interests.split(",").map((item) => item.trim()).filter(Boolean) : [];
-        if (interests.length) result.interests = interests;
-        return [locale, result];
-      }).filter(([, localized]) => Object.keys(localized).length)),
+  async function submit(values) {
+    setIsTranslating(true);
+    try {
+      const payload = {
       name: cleanBrandName(values.name),
       title: values.title,
       tagline: values.tagline,
@@ -188,7 +173,14 @@ function ProfileForm({ profile }) {
       },
       socialSettings: values.socialSettings,
       stats: textToStats(values.statsText),
-    });
+      };
+      const translated = await addAdminTranslations("profile", payload, ["title", "tagline", "bio", "specialization", "careerGoals", "interests"], profile || {}, profile?.translations || {});
+      mutation.mutate(translated);
+    } catch (error) {
+      toast.error(error?.message || t("common.updateFailed"));
+    } finally {
+      setIsTranslating(false);
+    }
   }
 
   const inputClass =
@@ -241,12 +233,6 @@ function ProfileForm({ profile }) {
 
       <fieldset className="rounded-[var(--radius-md)] border border-[var(--color-border)] p-4">
         <legend className="px-2 font-mono text-xs text-[var(--color-primary)]">{t("admin.cmsTranslationsHint")}</legend>
-        <LocalizedTextFields name="title" label={t("admin.profile.professionalTitle")} register={register} watch={watch} errors={errors} maxLength={150} />
-        <LocalizedTextFields name="tagline" label={t("admin.profile.tagline")} register={register} watch={watch} errors={errors} maxLength={250} />
-        <LocalizedTextFields name="bio" label={t("admin.profile.bio")} register={register} watch={watch} errors={errors} maxLength={3000} multiline />
-        <LocalizedTextFields name="specialization" label={t("admin.profile.specialization")} register={register} watch={watch} errors={errors} maxLength={200} />
-        <LocalizedTextFields name="careerGoals" label={t("admin.profile.careerGoals")} register={register} watch={watch} errors={errors} maxLength={1000} multiline />
-        <LocalizedTextFields name="interests" label={t("admin.profile.interests")} register={register} watch={watch} errors={errors} maxLength={1200} />
       </fieldset>
 
       <div>
@@ -335,10 +321,10 @@ function ProfileForm({ profile }) {
 
       <button
         type="submit"
-        disabled={mutation.isPending}
+        disabled={mutation.isPending || isTranslating}
         className="rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 py-2.5 font-mono text-sm font-medium text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
       >
-        {mutation.isPending ? t("common.saving") : `${t("common.save")} ${t("admin.profileTab")}`}
+        {isTranslating ? t("common.saving") : mutation.isPending ? t("common.saving") : `${t("common.save")} ${t("admin.profileTab")}`}
       </button>
     </form>
   );
@@ -347,6 +333,7 @@ function ProfileForm({ profile }) {
 function SettingsForm({ settings }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [isTranslating, setIsTranslating] = useState(false);
   const { register, handleSubmit, reset, control } = useForm({
     defaultValues: {
       siteTitle: settings?.siteTitle || "",
@@ -386,8 +373,10 @@ function SettingsForm({ settings }) {
     onError: (err) => toast.error(err.message || t("common.updateFailed")),
   });
 
-  function submit(values) {
-    mutation.mutate({
+  async function submit(values) {
+    setIsTranslating(true);
+    try {
+      const payload = {
       siteTitle: cleanBrandName(values.siteTitle),
       siteDescription: values.siteDescription,
       defaultLanguage: values.defaultLanguage,
@@ -401,7 +390,26 @@ function SettingsForm({ settings }) {
           : [],
         ogImage: values.ogImage,
       },
-    });
+      };
+      const sourceValues = {
+        siteDescription: payload.siteDescription,
+        metaTitle: payload.seo.metaTitle,
+        metaDescription: payload.seo.metaDescription,
+        keywords: payload.seo.keywords,
+      };
+      const originalValues = {
+        siteDescription: settings?.siteDescription,
+        metaTitle: settings?.seo?.metaTitle,
+        metaDescription: settings?.seo?.metaDescription,
+        keywords: settings?.seo?.keywords,
+      };
+      const translated = await addAdminTranslations("settings", sourceValues, Object.keys(sourceValues), originalValues, settings?.translations || {});
+      mutation.mutate({ ...payload, translations: translated.translations || {} });
+    } catch (error) {
+      toast.error(error?.message || t("common.updateFailed"));
+    } finally {
+      setIsTranslating(false);
+    }
   }
 
   const inputClass =
@@ -410,6 +418,7 @@ function SettingsForm({ settings }) {
 
   return (
     <form onSubmit={handleSubmit(submit)} className="admin-form space-y-5">
+      <p className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-xs text-[var(--color-text-muted)]">{t("admin.cmsTranslationsHint")}</p>
       <div>
         <label htmlFor="settings-site-title" className={labelClass}>{t("admin.settings.siteTitle")}</label>
         <input id="settings-site-title" {...register("siteTitle")} className={inputClass} />
@@ -466,10 +475,10 @@ function SettingsForm({ settings }) {
 
       <button
         type="submit"
-        disabled={mutation.isPending}
+        disabled={mutation.isPending || isTranslating}
         className="rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 py-2.5 font-mono text-sm font-medium text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
       >
-        {mutation.isPending ? t("common.saving") : `${t("common.save")} ${t("admin.settingsTab")}`}
+        {mutation.isPending || isTranslating ? t("common.saving") : `${t("common.save")} ${t("admin.settingsTab")}`}
       </button>
     </form>
   );

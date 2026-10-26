@@ -40,7 +40,21 @@ app.options(/^(.*)$/, cors(corsOptions));
 app.use(cors(corsOptions));
 
 // Body parsing
-app.use(express.json({ limit: "10kb" }));
+const smallJsonParser = express.json({ limit: "10kb" });
+app.use((req, res, next) => {
+  const adminContentWrite = ["POST", "PUT"].includes(req.method)
+    && /^\/api\/(?:projects|skills|services|experiences|education|certifications|categories|tags)(?:\/[^/]+)?\/?$/.test(req.path);
+  const needsProtectedJsonParser = req.is("application/json") && (
+    adminContentWrite
+    || (req.method === "POST" && /^\/api\/blog\/?$/.test(req.path))
+    || (req.method === "PUT" && /^\/api\/blog\/[^/]+\/?$/.test(req.path))
+    || (req.method === "PUT" && /^\/api\/profile\/?$/.test(req.path))
+    || (req.method === "PUT" && /^\/api\/settings\/?$/.test(req.path))
+    || (req.method === "POST" && /^\/api\/cms-translations\/translate\/?$/.test(req.path))
+  );
+  if (needsProtectedJsonParser) return next();
+  return smallJsonParser(req, res, next);
+});
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 

@@ -7,6 +7,7 @@ import {
   deleteCertification,
 } from "../controllers/certificationController.js";
 import { protect, requirePermission } from "../middlewares/auth.js";
+import { adminContentJsonParser } from "../middlewares/adminContentJsonParser.js";
 import { validate } from "../middlewares/validate.js";
 import { adminResourceListValidators, mongoIdParam } from "../validators/common.js";
 import { createCertificationValidator, updateCertificationValidator } from "../validators/certificationValidator.js";
@@ -19,6 +20,7 @@ router.post(
   "/",
   protect,
   requirePermission("content:write"),
+  ...adminContentJsonParser,
   validate(createCertificationValidator),
   createCertification
 );
@@ -26,6 +28,7 @@ router.put(
   "/:id",
   protect,
   requirePermission("content:write"),
+  ...adminContentJsonParser,
   validate([mongoIdParam("id"), ...updateCertificationValidator]),
   updateCertification
 );

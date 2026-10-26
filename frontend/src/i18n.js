@@ -1,4 +1,4 @@
-﻿import i18n from "i18next";
+import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const SUPPORTED_LANGUAGES = ["en", "fa", "ps"];
@@ -1750,9 +1750,9 @@ resources.en.translation.admin.administration = "Administration";
 resources.fa.translation.sections.github.rateLimited = "گیت‌هاب درخواست‌ها را محدود کرده است. لطفاً کمی بعد دوباره تلاش کنید.";
 resources.ps.translation.sections.github.rateLimited = "ګیټ‌هاب غوښتنې محدودوي. مهرباني وکړئ لږ وروسته بیا هڅه وکړئ.";
 
-Object.assign(resources.en.translation.admin, { cmsTranslationsHint: "Leave blank to use the English text on the public site." });
-Object.assign(resources.fa.translation.admin, { cmsTranslationsHint: "اگر خالی بماند، متن انگلیسی در وب‌سایت نمایش داده می‌شود." });
-Object.assign(resources.ps.translation.admin, { cmsTranslationsHint: "که تش وي، په وېب‌پاڼه کې به انګلیسي متن ښکاره شي." });
+Object.assign(resources.en.translation.admin, { cmsTranslationsHint: "Enter descriptive content in English. Dari and Pashto translations are generated when you save; names, URLs, and technical values stay unchanged." });
+Object.assign(resources.fa.translation.admin, { cmsTranslationsHint: "متن‌های توضیحی را به انگلیسی وارد کنید؛ هنگام ذخیره ترجمهٔ دری و پشتو ساخته می‌شود. نام‌ها، نشانی‌ها و مقادیر فنی تغییر نمی‌کنند." });
+Object.assign(resources.ps.translation.admin, { cmsTranslationsHint: "تشریحي متنونه په انګلیسي ولیکئ؛ د خوندي کولو پر مهال دري او پښتو ژباړه جوړېږي. نومونه، پتې او تخنیکي ارزښتونه نه بدلېږي." });
 Object.assign(resources.en.translation.admin, {
   resourceList: { search: "Search", searchPlaceholder: "Search by title, name, or description...", sort: "Sort by", defaultSort: "Default order", newest: "Newest", oldest: "Oldest", alphaAsc: "Name: A to Z", alphaDesc: "Name: Z to A", customOrder: "Display order", pageSize: "Rows", showing: "Showing {{start}}–{{end}} of {{total}}", pageLabel: "Page {{page}} of {{pages}}", previous: "Previous", next: "Next", noResults: "No records match your search." },
 });

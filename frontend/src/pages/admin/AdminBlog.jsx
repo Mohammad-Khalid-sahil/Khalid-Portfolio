@@ -11,7 +11,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import AdminTable from "@/components/admin/AdminTable";
-import LocalizedTextFields from "@/components/admin/LocalizedTextFields";
+import { addAdminTranslations } from "@/services/adminTranslationService";
 
 function toInputDate(value) {
   if (!value) return "";
@@ -35,16 +35,15 @@ function useTags() {
 
 function PostForm({ post, categories, tags, onClose, onSaved }) {
   const { t } = useTranslation();
+  const [isTranslating, setIsTranslating] = useState(false);
   const {
     register,
     handleSubmit,
     control,
     setError,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      translations: post?.translations || { fa: {}, ps: {} },
       title: post?.title || "",
       slug: post?.slug || "",
       cover: post?.cover || "",
@@ -81,13 +80,12 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
     },
   });
 
-  function submit(values) {
-    mutation.mutate({
-      ...values,
-      translations: Object.fromEntries(["fa", "ps"].map((locale) => {
-        const localized = Object.fromEntries(Object.entries(values.translations?.[locale] || {}).filter(([, value]) => String(value || "").trim()).map(([key, value]) => [key, String(value).trim()]));
-        return [locale, localized];
-      }).filter(([, localized]) => Object.keys(localized).length)),
+  async function submit(values) {
+    setIsTranslating(true);
+    try {
+      const formValues = values;
+      const payload = {
+      ...formValues,
       tags: Array.isArray(values.tags) ? values.tags : [values.tags].filter(Boolean),
       seoKeywords: values.seoKeywords
         ? values.seoKeywords
@@ -97,7 +95,14 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
         : [],
       readingTime: values.readingTime === "" ? undefined : Number(values.readingTime),
       publishedAt: values.publishedAt || null,
-    });
+      };
+      const translated = await addAdminTranslations("blog", payload, ["title", "excerpt", "content", "seoTitle", "seoDescription"], post || {}, post?.translations || {});
+      mutation.mutate(translated);
+    } catch (error) {
+      toast.error(error?.message || t("common.saveFailed"));
+    } finally {
+      setIsTranslating(false);
+    }
   }
 
   return (
@@ -119,6 +124,7 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
         </div>
 
         <form onSubmit={handleSubmit(submit)} className="admin-form space-y-4">
+          <p className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-xs text-[var(--color-text-muted)]">{t("admin.cmsTranslationsHint")}</p>
           <div>
             <label htmlFor="post-title" className="mb-1.5 block font-mono text-xs text-[var(--color-text-muted)]">{t("admin.blog.titleRequired")}</label>
             <input
@@ -129,7 +135,6 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
               className="w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent px-3 py-2 text-sm text-[var(--color-text-primary)] outline-none focus:border-[var(--color-primary)]"
             />
             {errors.title && <p id="post-title-error" role="alert" className="mt-1 text-xs text-[var(--color-danger)]">{errors.title.message}</p>}
-            <LocalizedTextFields name="title" label={t("admin.blog.titleRequired")} register={register} watch={watch} errors={errors} maxLength={200} />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -164,7 +169,6 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
               {...register("excerpt")}
               className="w-full resize-none rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent px-3 py-2 text-sm text-[var(--color-text-primary)] outline-none focus:border-[var(--color-primary)]"
             />
-            <LocalizedTextFields name="excerpt" label={t("admin.blog.excerpt")} register={register} watch={watch} errors={errors} maxLength={500} multiline />
           </div>
 
           <div>
@@ -179,7 +183,6 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
               className="w-full resize-none rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent px-3 py-2 text-sm text-[var(--color-text-primary)] outline-none focus:border-[var(--color-primary)]"
             />
             {errors.content && <p id="post-content-error" role="alert" className="mt-1 text-xs text-[var(--color-danger)]">{errors.content.message}</p>}
-            <LocalizedTextFields name="content" label={t("admin.blog.contentRequired")} register={register} watch={watch} errors={errors} maxLength={50000} multiline />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -190,7 +193,6 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
                 {...register("seoTitle")}
                 className="w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent px-3 py-2 text-sm text-[var(--color-text-primary)] outline-none focus:border-[var(--color-primary)]"
               />
-              <LocalizedTextFields name="seoTitle" label={t("admin.blog.seoTitle")} register={register} watch={watch} errors={errors} maxLength={200} />
             </div>
             <div>
               <label htmlFor="post-seo-keywords" className="mb-1.5 block font-mono text-xs text-[var(--color-text-muted)]">{t("admin.blog.seoKeywords")}</label>
@@ -210,7 +212,6 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
               {...register("seoDescription")}
               className="w-full resize-none rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent px-3 py-2 text-sm text-[var(--color-text-primary)] outline-none focus:border-[var(--color-primary)]"
             />
-            <LocalizedTextFields name="seoDescription" label={t("admin.blog.seoDescription")} register={register} watch={watch} errors={errors} maxLength={300} multiline />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -285,10 +286,10 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
             </button>
             <button
               type="submit"
-              disabled={mutation.isPending}
+              disabled={mutation.isPending || isTranslating}
               className="rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2 font-mono text-sm font-medium text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
             >
-              {mutation.isPending ? t("common.saving") : t("common.save")}
+              {isTranslating ? t("common.saving") : mutation.isPending ? t("common.saving") : t("common.save")}
             </button>
           </div>
         </form>

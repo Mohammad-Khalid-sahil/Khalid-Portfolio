@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { optionalUrl } from "./common.js";
+import { optionalUrl, localizedTranslations } from "./common.js";
 
 const LANGUAGES = ["en", "fa", "ps"];
 
@@ -17,4 +17,5 @@ export const updateSettingsValidator = [
   body("seo.keywords").optional().isArray({ max: 30 }),
   body("seo.keywords.*").optional().trim().isLength({ max: 50 }),
   optionalUrl(body("seo.ogImage")),
+  localizedTranslations(["siteDescription", "metaTitle", "metaDescription", "keywords"]),
 ];
