@@ -87,9 +87,9 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="container-page relative grid w-full items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-20">
+      <div className="container-page relative grid w-full min-w-0 grid-cols-1 items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-20">
         {/* Copy column */}
-        <motion.div style={{ opacity: copyOpacity }} className="relative text-center lg:text-start">
+        <motion.div style={{ opacity: copyOpacity }} className="relative w-full min-w-0 text-center lg:text-start">
           <motion.div {...reveal(0.05)} className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
             {profile?.availability && (
               <span className="ds-glass inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)]">
@@ -108,11 +108,11 @@ export default function Hero() {
             <span className="text-[var(--color-primary)]" dir="ltr">{"//"}</span> {greeting}
           </motion.p>
 
-          <h1 className="ds-display mt-3 text-[clamp(2.9rem,8.4vw,6.6rem)] font-bold text-[var(--color-text-primary)]">
+          <h1 className="ds-display mx-auto mt-3 w-full min-w-0 max-w-full text-[clamp(2.25rem,8.4vw,6.6rem)] font-bold leading-[1.08] text-[var(--color-text-primary)] sm:text-[clamp(2.9rem,8.4vw,6.6rem)] lg:mx-0">
             {isLoading ? (
               <span className="mx-auto block h-24 max-w-xl animate-pulse rounded-2xl bg-[var(--color-card)] lg:mx-0" />
             ) : displayName ? (
-              <motion.span {...reveal(0.25, 30)} className="block break-words">
+              <motion.span {...reveal(0.25, 30)} className="block max-w-full break-words [overflow-wrap:anywhere]">
                 {leadName}
                 {tailName && <> <span className="ds-gradient-text">{tailName}</span></>}
                 <span className="text-[var(--color-primary)]">.</span>
@@ -123,20 +123,20 @@ export default function Hero() {
           </h1>
 
           {profile?.title && (
-            <motion.p {...reveal(0.38)} className="mt-6 flex flex-wrap items-center justify-center gap-3 font-[var(--font-display)] text-xl font-medium text-[var(--color-text-secondary)] sm:text-2xl lg:justify-start">
+            <motion.p {...reveal(0.38)} className="mt-6 flex min-w-0 max-w-full flex-wrap items-center justify-center gap-3 font-[var(--font-display)] text-lg font-medium text-[var(--color-text-secondary)] sm:text-2xl lg:justify-start">
               <span aria-hidden="true" className="hidden h-px w-10 bg-gradient-to-r from-[var(--color-primary)] to-transparent sm:block rtl:bg-gradient-to-l" />
-              <span className="ds-caret">{profile.title}</span>
+              <span className="ds-caret min-w-0 max-w-full break-words">{profile.title}</span>
             </motion.p>
           )}
 
           {profile?.tagline && (
-            <motion.p {...reveal(0.48)} className="mx-auto mt-6 max-w-xl text-pretty text-base leading-8 text-[var(--color-text-muted)] sm:text-lg lg:mx-0">
+            <motion.p {...reveal(0.48)} className="mx-auto mt-6 w-full min-w-0 max-w-xl text-pretty text-base leading-8 text-[var(--color-text-muted)] sm:text-lg lg:mx-0">
               {profile.tagline}
             </motion.p>
           )}
           {isError && <div className="mt-5"><ErrorState message={t("pages.about.error")} onRetry={refetch} /></div>}
 
-          <motion.div {...reveal(0.58)} className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
+          <motion.div {...reveal(0.58)} className="mt-10 flex w-full min-w-0 flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
             <Button href="/projects" size="lg" magnetic>
               {t("hero.viewWork")} <FiArrowRight className="rtl-flip transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
             </Button>
@@ -150,7 +150,7 @@ export default function Hero() {
             </Button>
           </motion.div>
 
-          <motion.div {...reveal(0.7)} className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+          <motion.div {...reveal(0.7)} className="mt-8 flex w-full min-w-0 flex-wrap items-center justify-center gap-3 lg:justify-start">
             <span className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-text-muted)] rtl:tracking-normal">{t("hero.socialLabel")}</span>
             <span aria-hidden="true" className="h-px w-8 bg-[var(--color-border)]" />
             <SocialLinks profile={profile} platforms={PROFILE_SOCIAL_KEYS} showUnconfigured={false} size="md" className="gap-2.5" />
@@ -163,7 +163,7 @@ export default function Hero() {
           initial={reduce ? false : { opacity: 0, y: 40, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: reduce ? 0 : 1.1, delay: reduce ? 0 : 0.3, ease: EASE }}
-          className="relative mx-auto w-full max-w-[34rem] [perspective:1400px]"
+          className="relative mx-auto w-full min-w-0 max-w-[34rem] [perspective:1400px]"
         >
           <motion.div style={reduce ? undefined : { rotateX: tiltX, rotateY: tiltY }} className="relative [transform-style:preserve-3d]">
             <div aria-hidden="true" className="absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-primary)_22%,transparent),transparent)] blur-2xl" />
@@ -199,7 +199,7 @@ export default function Hero() {
             </div>
 
             {/* Terminal window, offset for depth */}
-            <div className="relative -mt-3 ms-6 sm:ms-14 [transform:translateZ(40px)]">
+            <div className="relative -mt-3 ms-6 w-[calc(100%-1.5rem)] sm:ms-14 sm:w-[calc(100%-3.5rem)] [transform:translateZ(40px)]">
               <Terminal />
             </div>
 
