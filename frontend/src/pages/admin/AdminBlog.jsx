@@ -96,8 +96,13 @@ function PostForm({ post, categories, tags, onClose, onSaved }) {
       readingTime: values.readingTime === "" ? undefined : Number(values.readingTime),
       publishedAt: values.publishedAt || null,
       };
-      const translated = await addAdminTranslations("blog", payload, ["title", "excerpt", "content", "seoTitle", "seoDescription"], post || {}, post?.translations || {});
-      mutation.mutate(translated);
+      const translationResult = await addAdminTranslations("blog", payload, ["title", "excerpt", "content", "seoTitle", "seoDescription"], post || {}, post?.translations || {});
+      try {
+        await mutation.mutateAsync(translationResult.payload);
+      } catch {
+        return;
+      }
+      if (!translationResult.complete) toast.error(t("admin.translationUnavailableSaved"));
     } catch (error) {
       toast.error(error?.message || t("common.saveFailed"));
     } finally {

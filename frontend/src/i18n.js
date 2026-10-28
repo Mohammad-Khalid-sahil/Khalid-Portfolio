@@ -1753,6 +1753,9 @@ resources.ps.translation.sections.github.rateLimited = "ګیټ‌هاب غوښت
 Object.assign(resources.en.translation.admin, { cmsTranslationsHint: "Enter descriptive content in English. Dari and Pashto translations are generated when you save; names, URLs, and technical values stay unchanged." });
 Object.assign(resources.fa.translation.admin, { cmsTranslationsHint: "متن‌های توضیحی را به انگلیسی وارد کنید؛ هنگام ذخیره ترجمهٔ دری و پشتو ساخته می‌شود. نام‌ها، نشانی‌ها و مقادیر فنی تغییر نمی‌کنند." });
 Object.assign(resources.ps.translation.admin, { cmsTranslationsHint: "تشریحي متنونه په انګلیسي ولیکئ؛ د خوندي کولو پر مهال دري او پښتو ژباړه جوړېږي. نومونه، پتې او تخنیکي ارزښتونه نه بدلېږي." });
+Object.assign(resources.en.translation.admin, { translationUnavailableSaved: "Saved. Automatic translation is unavailable right now, so edited text will appear in English for other languages until translated." });
+Object.assign(resources.fa.translation.admin, { translationUnavailableSaved: "ذخیره شد. ترجمهٔ خودکار فعلاً در دسترس نیست؛ متنِ ویرایش‌شده تا زمان ترجمه در زبان‌های دیگر انگلیسی نمایش داده می‌شود." });
+Object.assign(resources.ps.translation.admin, { translationUnavailableSaved: "خوندي شو. اوسمهال اتومات ژباړه نه کېږي؛ بدل شوی متن به تر ژباړل کېدو پورې په نورو ژبو کې انګلیسي ښکاري." });
 Object.assign(resources.en.translation.admin, {
   resourceList: { search: "Search", searchPlaceholder: "Search by title, name, or description...", sort: "Sort by", defaultSort: "Default order", newest: "Newest", oldest: "Oldest", alphaAsc: "Name: A to Z", alphaDesc: "Name: Z to A", customOrder: "Display order", pageSize: "Rows", showing: "Showing {{start}}–{{end}} of {{total}}", pageLabel: "Page {{page}} of {{pages}}", previous: "Previous", next: "Next", noResults: "No records match your search." },
 });

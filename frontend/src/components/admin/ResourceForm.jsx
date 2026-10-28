@@ -229,10 +229,11 @@ export default function ResourceForm({ title, fields, record, resource, onSubmit
       const localizedFields = fields.filter((field) => field.localized).map((field) => field.name);
       setIsTranslating(localizedFields.length > 0);
       const original = Object.fromEntries(localizedFields.map((name) => [name, record?.[name]]));
-      const translatedPayload = localizedFields.length
+      const translationResult = localizedFields.length
         ? await addAdminTranslations(resource, payload, localizedFields, original, record?.translations)
-        : payload;
-      await onSubmit(translatedPayload);
+        : { payload, complete: true };
+      await onSubmit(translationResult.payload);
+      if (!translationResult.complete) toast.error(t("admin.translationUnavailableSaved"));
     } catch (error) {
       const details = Array.isArray(error?.details)
         ? error.details

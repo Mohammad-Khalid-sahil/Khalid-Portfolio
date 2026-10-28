@@ -27,20 +27,33 @@ export async function addAdminTranslations(resource, payload, fields, original =
     ps: { ...(existing?.ps || {}) },
   };
   let generated = { fa: {}, ps: {} };
+  let complete = true;
   if (Object.keys(changed).length) {
-    const response = await api.post("/cms-translations/translate", { resource, content: changed });
-    generated = response.data?.translations || generated;
+    try {
+      const response = await api.post("/cms-translations/translate", { resource, content: changed });
+      generated = response.data?.translations || generated;
+    } catch {
+      complete = false;
+    }
   }
 
   for (const field of touched) {
     for (const locale of ["fa", "ps"]) {
-      delete translations[locale][field];
-      if (Object.prototype.hasOwnProperty.call(generated[locale] || {}, field)) {
-        translations[locale][field] = generated[locale][field];
+      if (complete) {
+        delete translations[locale][field];
+        if (Object.prototype.hasOwnProperty.call(generated[locale] || {}, field)) {
+          translations[locale][field] = generated[locale][field];
+        }
+      } else if (Object.prototype.hasOwnProperty.call(changed, field)) {
+        // Do not leave a stale translation attached to newly edited English text.
+        delete translations[locale][field];
       }
     }
   }
 
   const saved = Object.fromEntries(Object.entries(translations).filter(([, values]) => Object.keys(values).length));
-  return { ...payload, ...(Object.keys(saved).length ? { translations: saved } : { translations: {} }) };
+  return {
+    payload: { ...payload, ...(Object.keys(saved).length ? { translations: saved } : { translations: {} }) },
+    complete,
+  };
 }

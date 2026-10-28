@@ -174,8 +174,13 @@ function ProfileForm({ profile }) {
       socialSettings: values.socialSettings,
       stats: textToStats(values.statsText),
       };
-      const translated = await addAdminTranslations("profile", payload, ["title", "tagline", "bio", "specialization", "careerGoals", "interests"], profile || {}, profile?.translations || {});
-      mutation.mutate(translated);
+      const translationResult = await addAdminTranslations("profile", payload, ["title", "tagline", "bio", "specialization", "careerGoals", "interests"], profile || {}, profile?.translations || {});
+      try {
+        await mutation.mutateAsync(translationResult.payload);
+      } catch {
+        return;
+      }
+      if (!translationResult.complete) toast.error(t("admin.translationUnavailableSaved"));
     } catch (error) {
       toast.error(error?.message || t("common.updateFailed"));
     } finally {
@@ -403,8 +408,13 @@ function SettingsForm({ settings }) {
         metaDescription: settings?.seo?.metaDescription,
         keywords: settings?.seo?.keywords,
       };
-      const translated = await addAdminTranslations("settings", sourceValues, Object.keys(sourceValues), originalValues, settings?.translations || {});
-      mutation.mutate({ ...payload, translations: translated.translations || {} });
+      const translationResult = await addAdminTranslations("settings", sourceValues, Object.keys(sourceValues), originalValues, settings?.translations || {});
+      try {
+        await mutation.mutateAsync({ ...payload, translations: translationResult.payload.translations || {} });
+      } catch {
+        return;
+      }
+      if (!translationResult.complete) toast.error(t("admin.translationUnavailableSaved"));
     } catch (error) {
       toast.error(error?.message || t("common.updateFailed"));
     } finally {
