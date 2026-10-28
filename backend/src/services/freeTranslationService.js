@@ -1,4 +1,39 @@
-const MYMEMORY_ENDPOINT = "https://api.mymemory.translated.net/get";
+const PROVIDERS = [
+  {
+    endpoint: "https://translate.googleapis.com/translate_a/single",
+    buildUrl(source, target) {
+      const url = new URL(this.endpoint);
+      url.searchParams.set("client", "gtx");
+      url.searchParams.set("sl", "en");
+      url.searchParams.set("tl", target);
+      url.searchParams.set("dt", "t");
+      url.searchParams.set("q", source);
+      return url;
+    },
+    async read(response) {
+      const result = await response.json();
+      const translated = Array.isArray(result?.[0])
+        ? result[0].map((part) => part?.[0]).filter((part) => typeof part === "string").join("")
+        : "";
+      return translated || null;
+    },
+  },
+  {
+    endpoint: "https://api.mymemory.translated.net/get",
+    buildUrl(source, target) {
+      const url = new URL(this.endpoint);
+      url.searchParams.set("q", source);
+      url.searchParams.set("langpair", `en|${target}`);
+      return url;
+    },
+    async read(response) {
+      const result = await response.json();
+      return result?.responseStatus === 200 && typeof result?.responseData?.translatedText === "string"
+        ? result.responseData.translatedText
+        : null;
+    },
+  },
+];
 const MAX_QUERY_BYTES = 450;
 
 function byteLength(value) {
@@ -36,27 +71,17 @@ async function translateChunk(chunk, target, fetchImpl) {
   const source = chunk.slice(leading.length, chunk.length - trailing.length);
   if (!source) return chunk;
 
-  const url = new URL(MYMEMORY_ENDPOINT);
-  url.searchParams.set("q", source);
-  url.searchParams.set("langpair", `en|${target}`);
-
-  let response;
-  try {
-    response = await fetchImpl(url, { signal: AbortSignal.timeout(10000) });
-  } catch {
-    throw new Error("Free translation service is unavailable");
+  for (const provider of PROVIDERS) {
+    try {
+      const response = await fetchImpl(provider.buildUrl(source, target), { signal: AbortSignal.timeout(10000) });
+      if (!response.ok) continue;
+      const translated = await provider.read(response);
+      if (translated) return `${leading}${translated}${trailing}`;
+    } catch {
+      // Try the next provider when this one is down, rate-limited, or returns an invalid response.
+    }
   }
-  if (!response.ok) throw new Error("Free translation service is unavailable");
-
-  let result;
-  try {
-    result = await response.json();
-  } catch {
-    throw new Error("Free translation service returned an invalid response");
-  }
-  const translated = result?.responseStatus === 200 && result?.responseData?.translatedText;
-  if (typeof translated !== "string") throw new Error("Free translation service returned no translation");
-  return `${leading}${translated}${trailing}`;
+  throw new Error("Free translation services are unavailable");
 }
 
 async function translateValue(value, target, fetchImpl) {
@@ -71,13 +96,15 @@ async function translateValue(value, target, fetchImpl) {
   throw new Error("Translation values must be strings or string arrays");
 }
 
-/** Translate validated CMS content through MyMemory's anonymous free tier. */
+/** Translate validated CMS content through free providers with an automatic fallback. */
 export async function translateCmsContent(content, fetchImpl = fetch) {
   const translations = { fa: {}, ps: {} };
-  for (const [field, value] of Object.entries(content)) {
-    translations.fa[field] = await translateValue(value, "fa", fetchImpl);
-    translations.ps[field] = await translateValue(value, "ps", fetchImpl);
-  }
+  await Promise.all(Object.entries(content).map(async ([field, value]) => {
+    [translations.fa[field], translations.ps[field]] = await Promise.all([
+      translateValue(value, "fa", fetchImpl),
+      translateValue(value, "ps", fetchImpl),
+    ]);
+  }));
   return translations;
 }
 

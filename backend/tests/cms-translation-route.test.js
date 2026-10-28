@@ -22,12 +22,12 @@ test("all CMS translation forms work without an AI provider key", async (t) => {
   const requestedTargets = [];
   global.fetch = async (input, options) => {
     const url = new URL(input);
-    if (url.hostname !== "api.mymemory.translated.net") return originalFetch(input, options);
-    const target = url.searchParams.get("langpair").split("|")[1];
+    if (url.hostname !== "translate.googleapis.com") return originalFetch(input, options);
+    const target = url.searchParams.get("tl");
     requestedTargets.push(target);
     return {
       ok: true,
-      json: async () => ({ responseStatus: 200, responseData: { translatedText: `${target}: ${url.searchParams.get("q")}` } }),
+      json: async () => [[[`${target}: ${url.searchParams.get("q")}`, url.searchParams.get("q")]]],
     };
   };
   t.after(() => { global.fetch = originalFetch; });
@@ -57,6 +57,7 @@ test("all CMS translation forms work without an AI provider key", async (t) => {
     assert.equal(json.data.translations.ps[field], "ps: Portfolio");
   }
 
-  assert.deepEqual(requestedTargets, forms.flatMap(() => ["fa", "ps"]));
+  assert.equal(requestedTargets.filter((target) => target === "fa").length, forms.length);
+  assert.equal(requestedTargets.filter((target) => target === "ps").length, forms.length);
   assert.equal(process.env.AI_API_KEY, undefined);
 });
