@@ -59,5 +59,12 @@ test("all CMS translation forms work without an AI provider key", async (t) => {
 
   assert.equal(requestedTargets.filter((target) => target === "fa").length, forms.length);
   assert.equal(requestedTargets.filter((target) => target === "ps").length, forms.length);
+
+  const longContentResponse = await originalFetch(`http://127.0.0.1:${server.address().port}/api/cms-translations/translate`, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+    body: JSON.stringify({ resource: "projects", content: { description: "A".repeat(3000) } }),
+  });
+  assert.equal(longContentResponse.status, 200, "long project copy should be translated in chunks");
   assert.equal(process.env.AI_API_KEY, undefined);
 });

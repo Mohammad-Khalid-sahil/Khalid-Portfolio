@@ -68,9 +68,7 @@ router.post("/translate", protect, canTranslate, translationJsonParser, sanitize
       throw ApiError.badRequest("Translation values must be text or text lists");
     }
   }
-  if (totalCharacters > 2500) {
-    throw ApiError.serviceUnavailable("This free translator supports up to 2,500 source characters per save. The English content can still be saved.");
-  }
+  if (totalCharacters > 60000) throw ApiError.badRequest("Translation request is too large");
 
   let translations;
   try {
