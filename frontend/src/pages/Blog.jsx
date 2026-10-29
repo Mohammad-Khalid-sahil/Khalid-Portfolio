@@ -12,6 +12,7 @@ export default function Blog() {
   const { t } = useTranslation();
   const { data: response, isLoading, isError, refetch } = usePosts();
   const posts = response?.data || [];
+  const hasSinglePost = posts.length === 1;
 
   return (
     <>
@@ -44,7 +45,7 @@ export default function Blog() {
         )}
 
         {!isError && !isLoading && posts.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className={hasSinglePost ? "mx-auto grid max-w-5xl grid-cols-1 gap-6" : "grid gap-6 md:grid-cols-2 lg:grid-cols-3"}>
             {posts.map((post, i) => (
               <motion.article
                 key={post._id}
@@ -52,9 +53,9 @@ export default function Blog() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className={`group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl ${i === 0 ? "md:col-span-2 lg:col-span-2 lg:flex-row" : ""}`}
+                className={`group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl ${hasSinglePost ? "lg:flex-row" : i === 0 ? "md:col-span-2 lg:col-span-2 lg:flex-row" : ""}`}
               >
-                <div className={`relative overflow-hidden bg-[var(--color-surface)] ${i === 0 ? "aspect-[16/9] lg:aspect-auto lg:min-h-[22rem] lg:w-[54%] lg:shrink-0" : "aspect-[16/10]"}`}>
+                <div className={`relative overflow-hidden bg-[var(--color-surface)] ${hasSinglePost || i === 0 ? "aspect-[16/9] lg:aspect-auto lg:min-h-[22rem] lg:w-[54%] lg:shrink-0" : "aspect-[16/10]"}`}>
                   {post.cover ? <img src={post.cover} alt={post.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" /> : <div className="h-full min-h-40 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_65%)]" />}
                   <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-950/50 to-transparent" />
                   {post.category?.name && <span className="absolute start-4 top-4 rounded-full border border-white/20 bg-gray-950/65 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">{post.category.name}</span>}
@@ -70,7 +71,7 @@ export default function Blog() {
                     </span>
                     <Link
                       to={`/blog/${post.slug}`}
-                      className="flex items-center gap-1 text-[var(--color-primary)] opacity-0 transition-opacity group-hover:opacity-100"
+                      className="flex items-center gap-1 text-[var(--color-primary)] transition-colors hover:text-[var(--color-secondary)]"
                     >
                       {t("pages.blog.read")} <FiArrowRight className="rtl-flip" size={12} />
                     </Link>
