@@ -1734,3 +1734,213 @@ html[dir="rtl"] .ds-ai-launcher { padding: 0.45rem 0.45rem 0.45rem 1rem; }
 
   .ds-project:hover .ds-project__media img { transform: none; }
 }
+
+
+/* ---------- Portfolio-wide visual refinement ---------- */
+body {
+  line-height: 1.62;
+}
+
+html:not([dir="rtl"]) :is(h1, h2, h3, h4) {
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+html[dir="rtl"] :is(h1, h2, h3, h4) {
+  line-height: 1.38;
+  text-wrap: pretty;
+}
+
+.public-site-shell {
+  background-image:
+    radial-gradient(ellipse 62rem 36rem at 92% 0%, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 72%),
+    radial-gradient(ellipse 48rem 36rem at 0% 38%, color-mix(in srgb, var(--color-secondary) 6%, transparent), transparent 72%);
+  background-attachment: fixed;
+}
+
+[data-theme="light"] .public-site-shell {
+  background-image:
+    radial-gradient(ellipse 62rem 38rem at 92% 0%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 72%),
+    radial-gradient(ellipse 52rem 38rem at 0% 40%, color-mix(in srgb, var(--color-secondary) 10%, transparent), transparent 72%),
+    linear-gradient(180deg, #f3f5ff, #f8faff 42%, #f0f7ff);
+}
+
+.home-hero {
+  min-height: min(52rem, calc(100svh - 5.25rem));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 54rem 38rem at 76% 40%, color-mix(in srgb, var(--color-primary) 9%, transparent), transparent 70%),
+    radial-gradient(ellipse 42rem 30rem at 8% 80%, color-mix(in srgb, var(--color-secondary) 6%, transparent), transparent 72%);
+  background-size: 140% 140%, 145% 145%;
+  animation: home-ambient-shift 24s ease-in-out infinite alternate;
+}
+
+[data-theme="light"] .home-hero {
+  background:
+    radial-gradient(ellipse 56rem 38rem at 76% 40%, color-mix(in srgb, var(--color-primary) 13%, transparent), transparent 70%),
+    radial-gradient(ellipse 44rem 32rem at 8% 80%, color-mix(in srgb, var(--color-secondary) 10%, transparent), transparent 72%);
+}
+
+.hero-title {
+  font-size: clamp(3.25rem, 8.1vw, 7.1rem);
+  line-height: 0.99;
+  letter-spacing: -0.055em;
+}
+
+html[dir="rtl"] .hero-title {
+  line-height: 1.22;
+  letter-spacing: 0;
+}
+
+.hero-profile-card {
+  border-color: color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+  background:
+    radial-gradient(ellipse 30rem 13rem at 100% 0%, color-mix(in srgb, var(--color-primary) 13%, transparent), transparent 72%),
+    linear-gradient(145deg, color-mix(in srgb, var(--color-secondary) 5%, var(--color-card)), var(--color-card) 62%);
+  animation: hero-card-breathe 8s ease-in-out infinite alternate;
+}
+
+[data-theme="light"] .hero-profile-card {
+  border-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-border));
+  background:
+    radial-gradient(ellipse 30rem 13rem at 100% 0%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 72%),
+    linear-gradient(145deg, #ffffff, #f4f5ff 72%, #eff8ff);
+}
+
+.ds-card {
+  border-radius: 1.6rem;
+  border-color: color-mix(in srgb, var(--color-primary) 11%, var(--color-border));
+  background:
+    radial-gradient(ellipse 22rem 14rem at 100% 0%, color-mix(in srgb, var(--color-primary) 9%, transparent), transparent 72%),
+    linear-gradient(160deg, color-mix(in srgb, var(--color-secondary) 4%, var(--color-card)), var(--color-card) 58%);
+  box-shadow: var(--ds-shadow-md), inset 0 1px 0 color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+}
+
+[data-theme="light"] .ds-card,
+[data-theme="light"] .ds-project {
+  background:
+    radial-gradient(ellipse 24rem 15rem at 100% 0%, color-mix(in srgb, var(--color-primary) 11%, transparent), transparent 72%),
+    linear-gradient(155deg, #ffffff 30%, #f7f8ff 78%, #f1f8ff);
+  box-shadow: 0 14px 36px -24px rgb(48 54 125 / 33%), 0 1px 0 rgb(255 255 255 / 90%) inset;
+}
+
+.ds-card--interactive:hover {
+  transform: translateY(-6px) scale(1.008);
+  border-color: color-mix(in srgb, var(--color-primary) 48%, var(--color-border));
+  box-shadow: var(--ds-shadow-lg), 0 24px 54px -36px var(--ds-glow);
+}
+
+.ds-chip {
+  padding: 0.38rem 0.82rem;
+  border-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-border));
+}
+
+.ds-section-title {
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.ds-section-title::after {
+  content: "";
+  display: block;
+  width: 3.4rem;
+  height: 3px;
+  margin-block-start: 0.8rem;
+  border-radius: 999px;
+  background: var(--gradient-brand);
+  background-size: 220% 100%;
+  animation: ds-heading-accent 6s ease-in-out infinite alternate;
+}
+
+.ds-section-title--centered::after { margin-inline: auto; }
+
+html[dir="rtl"] .ds-section-title {
+  line-height: 1.42;
+  letter-spacing: 0;
+}
+
+.ds-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.ds-page-hero {
+  min-height: 20rem;
+}
+
+.ds-page-hero .container-page {
+  padding-block: clamp(4.5rem, 8vw, 7rem);
+}
+
+.ds-page-hero h1 {
+  font-size: clamp(2.7rem, 5.8vw, 4.8rem);
+  line-height: 1.08;
+}
+
+.ds-page-hero p {
+  line-height: 1.85;
+}
+
+.public-site-shell article:not(.ds-card) {
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 42px -30px color-mix(in srgb, var(--color-primary) 38%, transparent);
+  transition: transform 420ms var(--ds-ease), box-shadow 420ms var(--ds-ease), border-color 300ms ease;
+}
+
+.public-site-shell article:not(.ds-card):hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 52px -30px color-mix(in srgb, var(--color-primary) 44%, transparent);
+}
+
+@keyframes home-ambient-shift {
+  from { background-position: 0% 40%, 100% 60%; }
+  to { background-position: 100% 60%, 0% 35%; }
+}
+
+@keyframes hero-card-breathe {
+  from { box-shadow: 0 18px 48px -32px var(--ds-glow), 0 0 0 1px color-mix(in srgb, var(--color-primary) 16%, transparent); }
+  to { box-shadow: 0 26px 58px -32px var(--ds-glow), 0 0 0 1px color-mix(in srgb, var(--color-secondary) 32%, transparent); }
+}
+
+@keyframes ds-heading-accent {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+.admin-card {
+  border-radius: 1.35rem;
+  background:
+    radial-gradient(ellipse 28rem 14rem at 100% 0%, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 72%),
+    var(--color-card);
+  transition: transform 350ms var(--ds-ease), border-color 250ms ease, box-shadow 350ms ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 32%, var(--color-border));
+}
+
+[data-theme="light"] .admin-card {
+  background:
+    radial-gradient(ellipse 28rem 14rem at 100% 0%, color-mix(in srgb, var(--color-primary) 9%, transparent), transparent 72%),
+    linear-gradient(145deg, #ffffff, #f7f8ff);
+}
+
+@media (max-width: 639px) {
+  .home-hero { min-height: unset; }
+  .hero-title { font-size: clamp(3.05rem, 13vw, 4.2rem); }
+  html[dir="rtl"] .hero-title { font-size: clamp(2.7rem, 11vw, 3.8rem); }
+  .ds-page-hero { min-height: unset; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-site-shell article:not(.ds-card):hover,
+  .ds-card--interactive:hover,
+  .admin-card:hover { transform: none; }
+
+  .home-hero,
+  .hero-profile-card,
+  .ds-section-title::after { animation: none; }
+}
