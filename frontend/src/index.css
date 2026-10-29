@@ -1974,3 +1974,44 @@ html[dir="rtl"] .ds-section-title {
     font-size: clamp(3rem, 6.4vw, 4.3rem);
   }
 }
+
+/* English public typography: calmer line lengths and consistent hierarchy. */
+html:not([dir="rtl"]) .public-site-shell :is(h1, h2, h3, h4) {
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+html:not([dir="rtl"]) .public-site-shell .ds-display:not(.hero-title) {
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
+
+html:not([dir="rtl"]) .public-site-shell :is(h1, .ds-page-hero h1) {
+  line-height: 1.12;
+}
+
+html:not([dir="rtl"]) .public-site-shell :is(h2, .ds-section-title) {
+  line-height: 1.16;
+}
+
+html:not([dir="rtl"]) .public-site-shell :is(h3, h4) {
+  line-height: 1.24;
+  text-wrap: pretty;
+}
+
+html:not([dir="rtl"]) .public-site-shell p:not([class*="text-xs"]):not([class*="font-mono"]),
+html:not([dir="rtl"]) .public-site-shell li {
+  text-wrap: pretty;
+}
+
+html:not([dir="rtl"]) .public-site-shell .ds-card p[class*="text-sm"],
+html:not([dir="rtl"]) .public-site-shell .ds-project p[class*="text-sm"] {
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 639px) {
+  html:not([dir="rtl"]) .public-site-shell .ds-display:not(.hero-title) {
+    line-height: 1.24;
+  }
+}
