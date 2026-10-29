@@ -25,10 +25,10 @@ export default function SectionHeading({ eyebrow, title, description, index, ali
           {!centered && <span aria-hidden="true" className="ds-eyebrow__rule" />}
         </span>
       )}
-      <h2 className={`ds-display text-balance text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl lg:text-[3.25rem] ${titleClassName}`}>
+      <h2 className={`ds-section-title ${centered ? "ds-section-title--centered" : ""} ds-display text-balance text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl lg:text-5xl ${titleClassName}`}>
         {title}
       </h2>
-      {description && <p className={`text-pretty text-base leading-relaxed text-[var(--color-text-muted)] sm:text-lg ${descriptionClassName}`}>{description}</p>}
+      {description && <p className={`text-pretty text-[0.95rem] leading-relaxed text-[var(--color-text-muted)] sm:text-base ${descriptionClassName}`}>{description}</p>}
       {children}
     </motion.div>
   );
