@@ -58,7 +58,7 @@ export default function BlogPreview() {
 
         {!isError && !isLoading && posts.length > 0 && (
           <motion.div 
-            className="mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3"
+            className={posts.length === 1 ? "mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-7" : "mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3"}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
