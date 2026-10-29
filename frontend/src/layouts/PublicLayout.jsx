@@ -11,7 +11,7 @@ export default function PublicLayout() {
   usePageAnalyticsTracking();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-background)]">
+    <div className="public-site-shell flex min-h-screen flex-col bg-[var(--color-background)]">
       <Navbar />
       <main className="flex-1">
         <Outlet />
