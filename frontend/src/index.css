@@ -1928,6 +1928,14 @@ html[dir="rtl"] .ds-section-title {
     linear-gradient(145deg, #ffffff, #f7f8ff);
 }
 
+
+/* Preserve the Hero display scale from the global inner-page heading rhythm. */
+html:not([dir="rtl"]) .public-site-shell .home-hero .hero-title {
+  line-height: 0.99;
+  letter-spacing: -0.055em;
+  text-wrap: initial;
+}
+
 @media (max-width: 639px) {
   .home-hero { min-height: unset; }
   .hero-title { font-size: clamp(3.05rem, 13vw, 4.2rem); }
@@ -1976,7 +1984,7 @@ html[dir="rtl"] .ds-section-title {
 }
 
 /* English public typography: calmer line lengths and consistent hierarchy. */
-html:not([dir="rtl"]) .public-site-shell :is(h1, h2, h3, h4) {
+html:not([dir="rtl"]) .public-site-shell :is(h1, h2, h3, h4):not(.hero-title) {
   letter-spacing: -0.028em;
   text-wrap: balance;
 }
@@ -1986,7 +1994,7 @@ html:not([dir="rtl"]) .public-site-shell .ds-display:not(.hero-title) {
   line-height: 1.2;
 }
 
-html:not([dir="rtl"]) .public-site-shell :is(h1, .ds-page-hero h1) {
+html:not([dir="rtl"]) .public-site-shell :is(h1:not(.hero-title), .ds-page-hero h1) {
   line-height: 1.12;
 }
 
