@@ -19,8 +19,8 @@ import { cleanBrandName } from "@/utils/displayContent";
 const EASE = [0.22, 1, 0.36, 1];
 const CHIP_POSITIONS = [
   "-top-5 end-6 sm:end-10",
-  "top-[42%] -start-4 sm:-start-10",
-  "-bottom-6 end-[18%]",
+  "top-[42%] -start-3 sm:-start-8",
+  "-bottom-5 end-[8%]",
 ];
 
 export default function Hero() {
@@ -72,11 +72,11 @@ export default function Hero() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="ds-grid ds-grid-fade absolute inset-0 opacity-80" />
         <motion.div className="absolute inset-0" style={{ background: spotlight }} />
-        <div className="absolute -top-40 start-[8%] h-[28rem] w-[28rem] rounded-full bg-[var(--color-primary)]/15 blur-[120px]" />
-        <div className="absolute bottom-0 end-[-6rem] h-[24rem] w-[24rem] rounded-full bg-[var(--color-secondary)]/10 blur-[110px]" />
+        <div className="hero-ambient-orb hero-ambient-orb--primary absolute -top-40 start-[8%] h-[28rem] w-[28rem] rounded-full bg-[var(--color-primary)]/15 blur-[120px]" />
+        <div className="hero-ambient-orb hero-ambient-orb--secondary absolute bottom-0 end-[-6rem] h-[24rem] w-[24rem] rounded-full bg-[var(--color-secondary)]/10 blur-[110px]" />
         <svg className="absolute inset-x-0 top-0 h-full w-full opacity-[0.35]" preserveAspectRatio="none" viewBox="0 0 1200 800" fill="none">
           <path d="M0 620 C 300 520, 420 760, 720 600 S 1100 420, 1200 480" stroke="url(#hero-line)" strokeWidth="1" />
-          <path d="M0 680 C 260 600, 500 800, 780 660 S 1080 520, 1200 560" stroke="url(#hero-line)" strokeWidth="1" strokeDasharray="4 8" />
+          <path className="hero-flow-line" d="M0 680 C 260 600, 500 800, 780 660 S 1080 520, 1200 560" stroke="url(#hero-line)" strokeWidth="1" strokeDasharray="4 8" />
           <defs>
             <linearGradient id="hero-line" x1="0" x2="1200" y1="0" y2="0" gradientUnits="userSpaceOnUse">
               <stop stopColor="var(--color-primary)" stopOpacity="0" />
@@ -104,18 +104,21 @@ export default function Hero() {
             )}
           </motion.div>
 
-          <motion.p {...reveal(0.15)} className="mt-8 font-mono text-sm text-[var(--color-text-muted)]">
-            <span className="text-[var(--color-primary)]" dir="ltr">{"//"}</span> {greeting}
+          <motion.p {...reveal(0.15)} className="mt-8 font-[var(--font-display)] text-base font-semibold tracking-wide text-[var(--color-primary)] sm:text-lg">
+            {greeting}
           </motion.p>
 
-          <h1 className="ds-display mx-auto mt-3 w-full min-w-0 max-w-full text-[clamp(2.25rem,8.4vw,6.6rem)] font-bold leading-[1.08] text-[var(--color-text-primary)] sm:text-[clamp(2.9rem,8.4vw,6.6rem)] lg:mx-0">
+          <h1 className="ds-display relative isolate mx-auto mt-3 w-full min-w-0 max-w-full text-[clamp(2.25rem,8.4vw,6.6rem)] font-bold leading-[1.08] text-[var(--color-text-primary)] sm:text-[clamp(2.9rem,8.4vw,6.6rem)] lg:mx-0">
             {isLoading ? (
               <span className="mx-auto block h-24 max-w-xl animate-pulse rounded-2xl bg-[var(--color-card)] lg:mx-0" />
             ) : displayName ? (
-              <motion.span {...reveal(0.25, 30)} className="block max-w-full break-words [overflow-wrap:anywhere]">
-                {leadName}
-                {tailName && <> <span className="ds-gradient-text">{tailName}</span></>}
-                <span className="text-[var(--color-primary)]">.</span>
+              <motion.span {...reveal(0.25, 30)} className="relative isolate z-10 block max-w-full break-words [overflow-wrap:anywhere]">
+                <span aria-hidden="true" className="hero-name-aura pointer-events-none absolute inset-x-[-8%] inset-y-[8%] z-0" />
+                <span className="relative z-10">
+                  {leadName}
+                  {tailName && <> <span className="ds-gradient-text">{tailName}</span></>}
+                  <span className="text-[var(--color-primary)]">.</span>
+                </span>
               </motion.span>
             ) : (
               <span className="text-3xl font-semibold">{t("phase4.misc.heroEmpty")}</span>
@@ -123,9 +126,9 @@ export default function Hero() {
           </h1>
 
           {profile?.title && (
-            <motion.p {...reveal(0.38)} className="mt-6 flex min-w-0 max-w-full flex-wrap items-center justify-center gap-3 font-[var(--font-display)] text-lg font-medium text-[var(--color-text-secondary)] sm:text-2xl lg:justify-start">
+            <motion.p {...reveal(0.38)} className="mt-5 flex min-w-0 max-w-full flex-wrap items-center justify-center gap-3 font-[var(--font-display)] text-[clamp(1.2rem,2.3vw,1.8rem)] font-semibold leading-tight tracking-tight lg:justify-start">
               <span aria-hidden="true" className="hidden h-px w-10 bg-gradient-to-r from-[var(--color-primary)] to-transparent sm:block rtl:bg-gradient-to-l" />
-              <span className="ds-caret min-w-0 max-w-full break-words">{profile.title}</span>
+              <span className="ds-gradient-text min-w-0 max-w-full break-words">{profile.title}</span>
             </motion.p>
           )}
 
@@ -199,7 +202,7 @@ export default function Hero() {
             </div>
 
             {/* Terminal window, offset for depth */}
-            <div className="relative -mt-3 ms-6 w-[calc(100%-1.5rem)] sm:ms-14 sm:w-[calc(100%-3.5rem)] [transform:translateZ(40px)]">
+            <div className="relative z-0 -mt-3 ms-6 w-[calc(100%-1.5rem)] sm:ms-14 sm:w-[calc(100%-3.5rem)]">
               <Terminal />
             </div>
 
@@ -210,7 +213,7 @@ export default function Hero() {
                 initial={reduce ? false : { opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: reduce ? 0 : 1 + index * 0.18, duration: 0.6, ease: EASE }}
-                className={`absolute z-10 hidden sm:block ${CHIP_POSITIONS[index]}`}
+                className={`absolute z-30 hidden sm:block ${CHIP_POSITIONS[index]}`}
               >
                 <span className={`ds-glass ds-float ${index % 2 ? "ds-float--delay" : ""} flex items-center gap-2 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-[var(--color-text-primary)] shadow-[var(--ds-shadow-md)]`}>
                   <span className="grid h-7 w-7 place-items-center rounded-lg bg-[var(--color-primary)]/12 text-[var(--color-primary)]">
