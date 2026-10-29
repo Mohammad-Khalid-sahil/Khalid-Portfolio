@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function PageHero({ eyebrow, title, description }) {
   return (
-    <section className="relative isolate overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+    <section className="ds-page-hero relative isolate overflow-hidden border-b border-[var(--color-border)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,color-mix(in_srgb,var(--color-primary)_4%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--color-primary)_4%,transparent)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       <div className="container-page py-16 md:py-24">
         <motion.div
