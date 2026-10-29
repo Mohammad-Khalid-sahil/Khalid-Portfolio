@@ -86,9 +86,9 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="container-page relative grid w-full items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-20">
+      <div className="container-page relative grid w-full min-w-0 grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-12 xl:gap-20">
         {/* Copy column */}
-        <motion.div style={{ opacity: copyOpacity }} className="relative text-center lg:text-start">
+        <motion.div style={{ opacity: copyOpacity }} className="relative min-w-0 text-center lg:text-start">
           <motion.div {...reveal(0.05)} className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
             {profile?.availability && (
               <span className="ds-glass inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)]">
@@ -165,7 +165,7 @@ export default function Hero() {
           initial={reduce ? false : { opacity: 0, y: 40, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: reduce ? 0 : 1.1, delay: reduce ? 0 : 0.3, ease: EASE }}
-          className="relative mx-auto w-full max-w-[37rem] [perspective:1400px]"
+          className="relative mx-auto w-full min-w-0 max-w-[37rem] [perspective:1400px]"
         >
           <motion.div style={reduce ? undefined : { rotateX: tiltX, rotateY: tiltY }} className="relative [transform-style:preserve-3d]">
             <div aria-hidden="true" className="absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-primary)_22%,transparent),transparent)] blur-2xl" />
@@ -201,7 +201,7 @@ export default function Hero() {
             </div>
 
             {/* Terminal window, offset for depth */}
-            <div className="relative z-0 -mt-3 ms-6 sm:ms-14">
+            <div className="hero-terminal relative z-0 -mt-3 ms-4 sm:ms-8 lg:ms-10">
               <Terminal />
             </div>
 
