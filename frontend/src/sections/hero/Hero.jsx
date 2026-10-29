@@ -22,7 +22,6 @@ const CHIP_POSITIONS = [
   "top-[42%] -start-3 sm:-start-8",
   "-bottom-5 end-[8%]",
 ];
-
 export default function Hero() {
   const { t } = useTranslation();
   const reduce = useReducedMotion();
@@ -66,7 +65,7 @@ export default function Hero() {
       id="home"
       ref={sectionRef}
       onPointerMove={handlePointerMove}
-      className="relative isolate overflow-hidden pb-10 pt-8 md:pb-14 md:pt-14 lg:min-h-[calc(100svh-84px)]"
+      className="home-hero relative isolate overflow-hidden pb-12 pt-10 md:pb-16 md:pt-16 lg:min-h-[calc(100svh-84px)]"
     >
       {/* Background composition */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
@@ -87,9 +86,9 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="container-page relative grid w-full min-w-0 grid-cols-1 items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-20">
+      <div className="container-page relative grid w-full items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 xl:gap-20">
         {/* Copy column */}
-        <motion.div style={{ opacity: copyOpacity }} className="relative w-full min-w-0 text-center lg:text-start">
+        <motion.div style={{ opacity: copyOpacity }} className="relative text-center lg:text-start">
           <motion.div {...reveal(0.05)} className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
             {profile?.availability && (
               <span className="ds-glass inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)]">
@@ -108,11 +107,11 @@ export default function Hero() {
             {greeting}
           </motion.p>
 
-          <h1 className="ds-display relative isolate mx-auto mt-3 w-full min-w-0 max-w-full text-[clamp(2.25rem,8.4vw,6.6rem)] font-bold leading-[1.08] text-[var(--color-text-primary)] sm:text-[clamp(2.9rem,8.4vw,6.6rem)] lg:mx-0">
+          <h1 className="hero-title ds-display relative isolate mt-3 font-bold text-[var(--color-text-primary)]">
             {isLoading ? (
-              <span className="mx-auto block h-24 max-w-xl animate-pulse rounded-2xl bg-[var(--color-card)] lg:mx-0" />
+              <span className="relative z-10 mx-auto block h-24 max-w-xl animate-pulse rounded-2xl bg-[var(--color-card)] lg:mx-0" />
             ) : displayName ? (
-              <motion.span {...reveal(0.25, 30)} className="relative isolate z-10 block max-w-full break-words [overflow-wrap:anywhere]">
+              <motion.span {...reveal(0.25, 30)} className="relative isolate z-10 block break-words">
                 <span aria-hidden="true" className="hero-name-aura pointer-events-none absolute inset-x-[-8%] inset-y-[8%] z-0" />
                 <span className="relative z-10">
                   {leadName}
@@ -121,25 +120,25 @@ export default function Hero() {
                 </span>
               </motion.span>
             ) : (
-              <span className="text-3xl font-semibold">{t("phase4.misc.heroEmpty")}</span>
+              <span className="relative z-10 text-3xl font-semibold">{t("phase4.misc.heroEmpty")}</span>
             )}
           </h1>
 
           {profile?.title && (
-            <motion.p {...reveal(0.38)} className="mt-5 flex min-w-0 max-w-full flex-wrap items-center justify-center gap-3 font-[var(--font-display)] text-[clamp(1.2rem,2.3vw,1.8rem)] font-semibold leading-tight tracking-tight lg:justify-start">
+            <motion.p {...reveal(0.38)} className="mt-5 flex flex-wrap items-center justify-center gap-3 font-[var(--font-display)] text-[clamp(1.2rem,2.3vw,1.8rem)] font-semibold leading-tight tracking-tight lg:justify-start">
               <span aria-hidden="true" className="hidden h-px w-10 bg-gradient-to-r from-[var(--color-primary)] to-transparent sm:block rtl:bg-gradient-to-l" />
-              <span className="ds-gradient-text min-w-0 max-w-full break-words">{profile.title}</span>
+              <span className="ds-gradient-text">{profile.title}</span>
             </motion.p>
           )}
 
           {profile?.tagline && (
-            <motion.p {...reveal(0.48)} className="mx-auto mt-6 w-full min-w-0 max-w-xl text-pretty text-base leading-8 text-[var(--color-text-muted)] sm:text-lg lg:mx-0">
+            <motion.p {...reveal(0.48)} className="mx-auto mt-6 max-w-xl text-pretty text-base leading-8 text-[var(--color-text-muted)] sm:text-lg lg:mx-0">
               {profile.tagline}
             </motion.p>
           )}
           {isError && <div className="mt-5"><ErrorState message={t("pages.about.error")} onRetry={refetch} /></div>}
 
-          <motion.div {...reveal(0.58)} className="mt-10 flex w-full min-w-0 flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
+          <motion.div {...reveal(0.58)} className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
             <Button href="/projects" size="lg" magnetic>
               {t("hero.viewWork")} <FiArrowRight className="rtl-flip transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
             </Button>
@@ -153,7 +152,7 @@ export default function Hero() {
             </Button>
           </motion.div>
 
-          <motion.div {...reveal(0.7)} className="mt-8 flex w-full min-w-0 flex-wrap items-center justify-center gap-3 lg:justify-start">
+          <motion.div {...reveal(0.7)} className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
             <span className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-text-muted)] rtl:tracking-normal">{t("hero.socialLabel")}</span>
             <span aria-hidden="true" className="h-px w-8 bg-[var(--color-border)]" />
             <SocialLinks profile={profile} platforms={PROFILE_SOCIAL_KEYS} showUnconfigured={false} size="md" className="gap-2.5" />
@@ -166,16 +165,16 @@ export default function Hero() {
           initial={reduce ? false : { opacity: 0, y: 40, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: reduce ? 0 : 1.1, delay: reduce ? 0 : 0.3, ease: EASE }}
-          className="relative mx-auto w-full min-w-0 max-w-[34rem] [perspective:1400px]"
+          className="relative mx-auto w-full max-w-[37rem] [perspective:1400px]"
         >
           <motion.div style={reduce ? undefined : { rotateX: tiltX, rotateY: tiltY }} className="relative [transform-style:preserve-3d]">
             <div aria-hidden="true" className="absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-primary)_22%,transparent),transparent)] blur-2xl" />
 
             {/* Profile identity card */}
-            <div className="ds-card relative overflow-hidden p-5 sm:p-6">
+            <div className="hero-profile-card ds-card relative overflow-hidden p-6 sm:p-7">
               <div aria-hidden="true" className="ds-dots absolute inset-0 opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_70%)]" />
               <div className="relative flex items-center gap-4">
-                <div className="relative h-20 w-20 shrink-0 sm:h-24 sm:w-24">
+                <div className="relative h-22 w-22 shrink-0 sm:h-28 sm:w-28">
                   <div aria-hidden="true" className="ds-orbit absolute -inset-1.5 rounded-[1.6rem] bg-[conic-gradient(from_0deg,var(--color-primary),transparent_40%,var(--color-secondary),transparent_80%,var(--color-primary))] opacity-80" />
                   <div className="absolute inset-0 overflow-hidden rounded-[1.4rem] border-2 border-[var(--color-card)] bg-[var(--color-surface-muted)]">
                     <ProfilePhoto src={profile?.avatar || DEFAULT_PROFILE_IMAGE} name={profile?.name} alt={profile?.name} className="text-2xl" />
@@ -202,7 +201,7 @@ export default function Hero() {
             </div>
 
             {/* Terminal window, offset for depth */}
-            <div className="relative z-0 -mt-3 ms-6 w-[calc(100%-1.5rem)] sm:ms-14 sm:w-[calc(100%-3.5rem)]">
+            <div className="relative z-0 -mt-3 ms-6 sm:ms-14">
               <Terminal />
             </div>
 

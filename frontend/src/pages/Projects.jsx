@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
@@ -164,7 +164,7 @@ export default function Projects() {
                       {t("sections.projects.title")}
                     </h2>
                   </div>
-                  <div className={featuredProjects.length === 1 ? "mx-auto max-w-2xl" : "grid gap-6 lg:grid-cols-2"}>
+                  <div className={featuredProjects.length === 1 ? "mx-auto max-w-5xl" : "grid gap-6 lg:grid-cols-2"}>
                     {featuredProjects.map((project, index) => renderProjectCard(project, index, true))}
                   </div>
                 </motion.div>
@@ -179,7 +179,7 @@ export default function Projects() {
                     {hasActiveFilters ? t("pages.projects.title") : t("nav.projects")}
                   </h2>
                 </div>
-                <div className={filteredProjects.length === 1 ? "mx-auto max-w-md" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>
+                <div className={filteredProjects.length === 1 ? "mx-auto max-w-5xl" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>
                   {filteredProjects.map((project, index) => renderProjectCard(project, index))}
                 </div>
               </div>

@@ -39,7 +39,7 @@ export default function Services() {
         )}
 
         {!isLoading && !isError && services?.length > 0 && (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className={services.length === 1 ? "mx-auto grid max-w-4xl gap-5" : "grid gap-5 md:grid-cols-2 lg:grid-cols-3"}>
             {services.map((service, i) => {
               const Icon = ICONS[service.icon] || FiCode;
               return (
@@ -49,7 +49,7 @@ export default function Services() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.4, delay: i * 0.06 }}
-                  className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-7 ${i === 0 ? "md:col-span-2" : ""}`}
+                  className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-8 ${services.length > 1 && i === 0 ? "md:col-span-2" : ""}`}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">

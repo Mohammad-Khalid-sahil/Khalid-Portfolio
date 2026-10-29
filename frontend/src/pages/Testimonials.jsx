@@ -34,7 +34,7 @@ export default function Testimonials() {
         )}
 
         {!isLoading && !isError && testimonials?.length > 0 && (
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className={testimonials.length === 1 ? "mx-auto grid max-w-4xl gap-5" : "grid gap-5 md:grid-cols-2 lg:grid-cols-3"}>
             {testimonials.map((t, i) => (
               <motion.blockquote
                 key={t._id}

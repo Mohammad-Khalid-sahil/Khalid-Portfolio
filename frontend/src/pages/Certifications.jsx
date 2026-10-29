@@ -35,7 +35,7 @@ export default function Certifications() {
         )}
 
         {!isLoading && !isError && certifications?.length > 0 && (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={certifications.length === 1 ? "mx-auto grid max-w-3xl gap-5" : "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"}>
             {certifications.map((cert, i) => (
               <motion.div
                 key={cert._id}

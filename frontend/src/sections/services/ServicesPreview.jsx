@@ -37,7 +37,7 @@ export default function ServicesPreview() {
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
             variants={stagger(0, 0.08)}
-            className="mt-14 grid gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4"
+            className={services.length === 1 ? "mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-5" : "mt-14 grid gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4"}
           >
             {services.map((service, index) => {
               const Icon = ICONS[service.icon] || FiCode;

@@ -65,7 +65,7 @@ export default function Skills() {
         )}
 
         {!isLoading && !isError && categories.length > 0 && (
-          <div className="grid gap-7 lg:grid-cols-2">
+          <div className={categories.length === 1 ? "mx-auto grid max-w-4xl gap-7" : "grid gap-7 lg:grid-cols-2"}>
             {categories.map((cat) => (
               <div
                 key={cat.id}
