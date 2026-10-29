@@ -1944,3 +1944,33 @@ html[dir="rtl"] .ds-section-title {
   .hero-profile-card,
   .ds-section-title::after { animation: none; }
 }
+
+
+/* Keep the hero card stack inside its grid column on laptop widths. */
+.home-hero .container-page {
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.home-hero .container-page > *,
+.home-hero .hero-terminal,
+.home-hero .hero-profile-card {
+  min-width: 0;
+}
+
+.home-hero .hero-terminal {
+  max-width: calc(100% - 1rem);
+}
+
+@media (min-width: 1024px) {
+  .home-hero .container-page {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .home-hero .hero-title {
+    font-size: clamp(3rem, 6.4vw, 4.3rem);
+  }
+}
