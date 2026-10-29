@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mk-portfolio-v1';
+const CACHE_NAME = 'mk-portfolio-v2';
 const APP_SHELL = ['/', '/index.html', '/offline.html', '/manifest.webmanifest', '/favicon.svg', '/icons/icon-192.svg', '/icons/icon-512.svg'];
 
 self.addEventListener('install', (event) => {
