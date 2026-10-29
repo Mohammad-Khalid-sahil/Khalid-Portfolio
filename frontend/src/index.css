@@ -337,6 +337,15 @@ button:disabled {
   .admin-login__overlay { background: radial-gradient(ellipse 17rem 22rem at 50% 50%, color-mix(in srgb, var(--color-background) 86%, transparent), color-mix(in srgb, var(--color-background) 58%, transparent) 72%, transparent); }
 }
 
+/* Animated vector brand mark shared across navigation, footer, and admin. */
+.brand-mark-art { overflow: hidden; }
+.brand-mark-orbit { transform-box: view-box; transform-origin: 24px 24px; animation: brand-orbit 16s linear infinite; }
+.brand-mark-core { transform-origin: 24px 24px; animation: brand-core-pulse 3.8s ease-in-out infinite; }
+.brand-mark-glint { opacity: 0; animation: brand-glint 6s ease-in-out infinite; }
+@keyframes brand-orbit { to { transform: rotate(360deg); } }
+@keyframes brand-core-pulse { 0%, 100% { opacity: .62; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.04); } }
+@keyframes brand-glint { 0%, 68%, 100% { opacity: 0; transform: translateX(-12px); } 78% { opacity: .72; } 88% { opacity: 0; transform: translateX(20px); } }
+
 @media (prefers-reduced-motion: reduce) {
   .animated-code-background__region,
   .animated-code-background__line,
@@ -580,6 +589,27 @@ html[dir="rtl"] .rtl-flip {
 .ds-grid-fade {
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
   mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+
+.hero-ambient-orb--primary { animation: hero-orb-drift 18s ease-in-out infinite alternate; }
+.hero-ambient-orb--secondary { animation: hero-orb-drift 22s ease-in-out -8s infinite alternate-reverse; }
+.hero-flow-line { animation: hero-flow 18s linear infinite; }
+.hero-name-aura {
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 38% 52%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 68%);
+  filter: blur(30px);
+  opacity: .62;
+  animation: hero-name-glow 10s ease-in-out infinite alternate;
+}
+
+@keyframes hero-orb-drift {
+  from { transform: translate3d(-1.5rem, 0, 0) scale(.94); }
+  to { transform: translate3d(1.5rem, 1.25rem, 0) scale(1.06); }
+}
+@keyframes hero-flow { to { stroke-dashoffset: -96; } }
+@keyframes hero-name-glow {
+  from { transform: scale(.92) translateX(-.4rem); opacity: .42; }
+  to { transform: scale(1.04) translateX(.4rem); opacity: .72; }
 }
 
 .ds-dots {
@@ -1660,6 +1690,13 @@ html[dir="rtl"] .ds-ai-launcher { padding: 0.45rem 0.45rem 0.45rem 1rem; }
   .ds-particles i,
   .ds-gradient-border::before,
   .ds-brand-text,
+  .brand-mark-orbit,
+  .brand-mark-core,
+  .brand-mark-glint,
+  .hero-ambient-orb--primary,
+  .hero-ambient-orb--secondary,
+  .hero-flow-line,
+  .hero-name-aura,
   .admin-modal,
   html.lang-switching main {
     animation: none !important;
