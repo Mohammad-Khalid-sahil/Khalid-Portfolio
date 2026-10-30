@@ -134,9 +134,6 @@ export default function Navbar() {
               </button>
               <LanguageSwitcher />
               <ThemeToggle />
-              <Link to="/admin/login" aria-label={t("common.adminLogin")} title={t("common.adminLogin")} className={iconButton}>
-                <FiLock size={14} />
-              </Link>
               {resumeUrl && (
                 <Button href={resumeUrl} download size="sm" className="ms-1">
                   {t("nav.resume")} <FiArrowUpRight className="rtl-flip" size={14} />
@@ -230,9 +227,6 @@ export default function Navbar() {
                 <button type="button" onClick={() => { closeMobileMenu(); openCommandPalette(); }} aria-label={t("common.searchWithShortcut")} className={iconButton}>
                   <FiCommand size={15} />
                 </button>
-                <Link to="/admin/login" onClick={closeMobileMenu} aria-label={t("common.adminLogin")} className={iconButton}>
-                  <FiLock size={14} />
-                </Link>
                 {resumeUrl && (
                   <Button href={resumeUrl} download size="sm" className="ms-auto">
                     <FiDownload size={14} /> {t("nav.resume")}
