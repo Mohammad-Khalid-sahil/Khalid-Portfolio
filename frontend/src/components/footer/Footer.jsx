@@ -167,12 +167,6 @@ export default function Footer() {
       >
         <p className="flex flex-col items-center justify-center gap-3 text-center text-xs font-medium text-[var(--color-text-muted)] sm:flex-row sm:justify-between">
           <span>© {new Date().getFullYear()} {p.name}. {t("footer.built")}</span>
-          <a 
-            href="/admin/login" 
-            className="text-[var(--color-text-muted)] transition-colors duration-300 hover:text-[var(--color-primary)]"
-          >
-            {t("admin.label")}
-          </a>
         </p>
       </motion.div>
     </footer>
