@@ -35,7 +35,8 @@ export default function AssistantPage() {
     if (!value || isLoading) return;
 
     const nextUserMessage = { role: "user", content: value };
-    const history = [...messages, nextUserMessage].slice(-8).map(({ role, content }) => ({ role, content }));
+    // The current prompt is sent separately as `message`; keep only earlier turns here.
+    const history = messages.slice(-6).map(({ role, content }) => ({ role, content }));
 
     setMessages((current) => [...current, nextUserMessage]);
     setDraft("");
@@ -170,3 +171,4 @@ export default function AssistantPage() {
     </section>
   );
 }
+

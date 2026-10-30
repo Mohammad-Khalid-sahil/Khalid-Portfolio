@@ -92,9 +92,10 @@ describe("generatePortfolioReply with mocked provider", () => {
 
     const knowledge = { profile: null, skills: [], projects: [], services: [], experience: [], education: [], certifications: [], blog: [], github: null };
 
-    const answer = await generatePortfolioReply("Hello provider test", knowledge);
+    const answer = await generatePortfolioReply("What skills are listed in the portfolio?", knowledge);
     assert.match(answer, /Provider: This is a provider response/);
 
     global.fetch = realFetch;
   });
 });
+
