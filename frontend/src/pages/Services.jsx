@@ -39,7 +39,7 @@ export default function Services() {
         )}
 
         {!isLoading && !isError && services?.length > 0 && (
-          <div className={services.length === 1 ? "mx-auto grid max-w-3xl gap-4 auto-rows-fr" : "grid gap-4 auto-rows-fr md:grid-cols-2 xl:grid-cols-3"}>
+          <div className={services.length === 1 ? "mx-auto grid max-w-4xl gap-5" : "grid gap-5 md:grid-cols-2 lg:grid-cols-3"}>
             {services.map((service, i) => {
               const Icon = ICONS[service.icon] || FiCode;
               return (
@@ -49,10 +49,10 @@ export default function Services() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.4, delay: i * 0.06 }}
-                  className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-6"
+                  className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-8 ${services.length > 1 && i === 0 ? "md:col-span-2" : ""}`}
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">
+                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">
                       <Icon size={22} />
                     </div>
                     {service.featured && (
@@ -61,13 +61,13 @@ export default function Services() {
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-4 font-[var(--font-display)] text-lg leading-snug font-semibold text-[var(--color-text-primary)]">
+                  <h3 className="mt-5 font-[var(--font-display)] text-xl font-semibold text-[var(--color-text-primary)]">
                     {service.title}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-6 text-[var(--color-text-muted)]">{service.description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{service.description}</p>
 
                   {service.features?.length > 0 && (
-                    <ul className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-sm text-[var(--color-text-muted)] sm:grid-cols-2">
+                    <ul className="mt-4 space-y-1.5 text-sm text-[var(--color-text-muted)]">
                       {service.features.map((f) => (
                         <li key={f} className="flex gap-2">
                           <span className="text-[var(--color-primary)]">→</span> {f}
@@ -77,11 +77,11 @@ export default function Services() {
                   )}
 
                   {service.technologies?.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-1.5">
+                    <div className="mt-4 flex flex-wrap gap-2">
                       {service.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className="rounded-full border border-[var(--color-border)] px-2 py-0.5 font-mono text-[0.68rem] text-[var(--color-text-muted)]"
+                          className="rounded-full border border-[var(--color-border)] px-2.5 py-1 font-mono text-xs text-[var(--color-text-muted)]"
                         >
                           {tech}
                         </span>
@@ -97,7 +97,7 @@ export default function Services() {
 
                   <Link
                     to="/contact"
-                    className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-[var(--color-primary)] hover:underline"
+                    className="mt-5 inline-flex items-center gap-1.5 font-mono text-sm text-[var(--color-primary)] hover:underline"
                   >
                     {service.ctaText || t("pages.services.defaultCta")} <FiArrowRight className="rtl-flip" size={13} />
                   </Link>
