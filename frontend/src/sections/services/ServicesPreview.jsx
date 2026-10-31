@@ -37,7 +37,7 @@ export default function ServicesPreview() {
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
             variants={stagger(0, 0.08)}
-            className={services.length === 1 ? "mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-5" : "mt-14 grid gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4"}
+            className={services.length === 1 ? "mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-5" : "mt-14 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"}
           >
             {services.map((service, index) => {
               const Icon = ICONS[service.icon] || FiCode;
@@ -54,11 +54,11 @@ export default function ServicesPreview() {
                       </span>
                       <span className="font-mono text-xs text-[var(--color-text-muted)]" dir="ltr">/{String(index + 1).padStart(2, "0")}</span>
                     </div>
-                    <h3 className="mt-7 font-[var(--font-display)] text-xl font-semibold text-[var(--color-text-primary)]">{service.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-[var(--color-text-muted)]">{service.description}</p>
+                    <h3 className="mt-7 line-clamp-2 min-h-[3.5rem] font-[var(--font-display)] text-xl font-semibold text-[var(--color-text-primary)]">{service.title}</h3>
+                    <p className="mt-3 line-clamp-3 min-h-[5.25rem] text-sm leading-7 text-[var(--color-text-secondary)]">{service.description}</p>
                     {service.features?.length > 0 && (
                       <ul className="mt-6 space-y-2.5 border-t border-[var(--color-border)] pt-5">
-                        {service.features.map((feature) => (
+                        {service.features.slice(0, 3).map((feature) => (
                           <li key={feature} className="flex items-start gap-2.5 text-sm text-[var(--color-text-secondary)]">
                             <FiCheck className="mt-0.5 shrink-0" size={14} style={{ color: `var(${tone})` }} />{feature}
                           </li>
@@ -66,8 +66,8 @@ export default function ServicesPreview() {
                       </ul>
                     )}
                     {service.technologies?.length > 0 && (
-                      <div className="mt-6 flex flex-wrap gap-1.5">
-                        {service.technologies.map((technology) => <span key={technology} className="ds-chip">{technology}</span>)}
+                      <div className="mt-6 flex max-h-8 flex-wrap gap-1.5 overflow-hidden">
+                        {service.technologies.slice(0, 3).map((technology) => <span key={technology} className="ds-chip">{technology}</span>)}
                       </div>
                     )}
                     {service.startingPrice && <p className="mt-6 text-sm font-semibold text-[var(--color-text-primary)]">{t("pages.services.startingAt", { price: service.startingPrice })}</p>}
