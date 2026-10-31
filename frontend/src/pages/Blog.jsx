@@ -12,7 +12,6 @@ export default function Blog() {
   const { t } = useTranslation();
   const { data: response, isLoading, isError, refetch } = usePosts();
   const posts = response?.data || [];
-  const hasSinglePost = posts.length === 1;
 
   return (
     <>
