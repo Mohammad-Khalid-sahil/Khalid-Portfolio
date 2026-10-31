@@ -1912,7 +1912,7 @@ html[dir="rtl"] .ds-section-title {
   line-height: 1.75;
 }
 
-.public-site-shell article:not(.ds-card) :is(.text-\\[var\\(--color-text-muted\\)\\], .text-\\[var\\(--color-text-secondary\\)\\]) {
+.public-site-shell article:not(.ds-card) :is(.text-\[var\(--color-text-muted\)\\], .text-\[var\(--color-text-secondary\)\\]) {
   color: var(--color-text-secondary);
 }
 
