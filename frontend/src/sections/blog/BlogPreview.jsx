@@ -48,7 +48,7 @@ export default function BlogPreview() {
 
         {isError && <div className="mt-10"><ErrorState message={t("pages.blog.error")} onRetry={refetch} /></div>}
         {!isError && isLoading && (
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {[0, 1, 2].map((item) => <CardSkeleton key={item} />)}
           </div>
         )}
@@ -58,7 +58,7 @@ export default function BlogPreview() {
 
         {!isError && !isLoading && posts.length > 0 && (
           <motion.div 
-            className={posts.length === 1 ? "mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-7" : "mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3"}
+            className={posts.length === 1 ? "mx-auto mt-12 grid max-w-sm grid-cols-1 gap-5" : posts.length === 2 ? "mx-auto mt-12 grid max-w-3xl gap-5 sm:grid-cols-2" : "mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3"}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -127,7 +127,7 @@ export default function BlogPreview() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.15 }}
                   >
-                    <h3 className="font-[var(--font-display)] text-xl font-bold leading-tight text-[var(--color-text-primary)]">
+                    <h3 className="line-clamp-2 font-[var(--font-display)] text-xl font-bold leading-tight text-[var(--color-text-primary)]">
                       <Link 
                         to={`/blog/${post.slug}`} 
                         className="transition-colors duration-300 hover:text-[var(--color-primary)]"
@@ -139,7 +139,7 @@ export default function BlogPreview() {
 
                   {/* Excerpt */}
                   <motion.p 
-                    className="flex-1 text-sm leading-7 text-[var(--color-text-muted)]"
+                    className="line-clamp-3 flex-1 text-sm leading-7 text-[var(--color-text-muted)]"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
