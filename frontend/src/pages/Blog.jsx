@@ -32,7 +32,7 @@ export default function Blog() {
         {isError && <ErrorState message={t("pages.blog.error")} onRetry={refetch} />}
 
         {!isError && isLoading && (
-          <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
@@ -44,7 +44,7 @@ export default function Blog() {
         )}
 
         {!isError && !isLoading && posts.length > 0 && (
-          <div className={posts.length === 1 ? "mx-auto grid max-w-md grid-cols-1 gap-6" : posts.length === 2 ? "mx-auto grid max-w-4xl gap-6 sm:grid-cols-2" : "mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"}>
+          <div className={posts.length === 1 ? "mx-auto grid max-w-sm grid-cols-1 gap-5" : posts.length === 2 ? "mx-auto grid max-w-3xl gap-5 sm:grid-cols-2" : "mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3"}>
             {posts.map((post, i) => (
               <motion.article
                 key={post._id}
