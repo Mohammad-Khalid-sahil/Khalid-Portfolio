@@ -1810,7 +1810,7 @@ html[dir="rtl"] .hero-title {
 }
 
 .ds-card {
-  border-radius: 1.6rem;
+  border-radius: 1.25rem;
   border-color: color-mix(in srgb, var(--color-primary) 11%, var(--color-border));
   background:
     radial-gradient(ellipse 22rem 14rem at 100% 0%, color-mix(in srgb, var(--color-primary) 9%, transparent), transparent 72%),
@@ -1827,7 +1827,7 @@ html[dir="rtl"] .hero-title {
 }
 
 .ds-card--interactive:hover {
-  transform: translateY(-6px) scale(1.008);
+  transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--color-primary) 48%, var(--color-border));
   box-shadow: var(--ds-shadow-lg), 0 24px 54px -36px var(--ds-glow);
 }
@@ -1884,14 +1884,42 @@ html[dir="rtl"] .ds-section-title {
 }
 
 .public-site-shell article:not(.ds-card) {
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
+  border-color: color-mix(in srgb, var(--color-primary) 14%, var(--color-border));
+  background:
+    radial-gradient(ellipse 22rem 14rem at 100% 0%, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 72%),
+    var(--color-card);
   box-shadow: 0 16px 42px -30px color-mix(in srgb, var(--color-primary) 38%, transparent);
-  transition: transform 420ms var(--ds-ease), box-shadow 420ms var(--ds-ease), border-color 300ms ease;
+  transition: transform 420ms var(--ds-ease), background-color 300ms ease, box-shadow 420ms var(--ds-ease), border-color 300ms ease;
 }
 
 .public-site-shell article:not(.ds-card):hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
   box-shadow: 0 24px 52px -30px color-mix(in srgb, var(--color-primary) 44%, transparent);
+}
+
+.public-site-shell article:not(.ds-card) :is(h2, h3) {
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.02rem + 0.3vw, 1.35rem);
+  font-weight: 700;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.public-site-shell article:not(.ds-card) :is(p, li) {
+  line-height: 1.75;
+}
+
+.public-site-shell article:not(.ds-card) :is(.text-\\[var\\(--color-text-muted\\)\\], .text-\\[var\\(--color-text-secondary\\)\\]) {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="light"] .public-site-shell article:not(.ds-card) {
+  background:
+    radial-gradient(ellipse 22rem 14rem at 100% 0%, color-mix(in srgb, var(--color-primary) 6%, transparent), transparent 72%),
+    var(--color-card);
 }
 
 @keyframes home-ambient-shift {
