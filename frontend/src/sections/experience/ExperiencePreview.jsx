@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DEFAULT_RESUME_URL } from "@/config/profileAssets";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiBriefcase, FiCalendar, FiCheckCircle, FiDownload, FiCode, FiStar } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,7 @@ const itemVariants = {
 
 export default function ExperiencePreview() {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const { data: experiences, isLoading, isError, refetch } = useExperiences();
   const { data: profile } = useProfile();
   const [filter, setFilter] = useState("all");
@@ -74,44 +75,21 @@ export default function ExperiencePreview() {
         {!isLoading && !isError && items.length === 0 && <p className="mt-12 text-center text-[var(--color-text-muted)]">{t("pages.experience.empty")}</p>}
 
         {!isLoading && !isError && items.length > 0 && (
-          <motion.div className="relative mx-auto mt-16 max-w-4xl" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.05 }}>
-            <div className="space-y-6 md:space-y-8">
-              {items.map((experience, index) => (
+          <motion.div className={items.length === 1 ? "relative mx-auto mt-16 grid max-w-md grid-cols-1 gap-5" : items.length === 2 ? "relative mx-auto mt-16 grid max-w-4xl grid-cols-1 gap-5 md:grid-cols-2" : "relative mx-auto mt-16 grid max-w-4xl grid-cols-1 gap-5 md:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"} variants={containerVariants} initial={reduceMotion ? false : "hidden"} whileInView={reduceMotion ? undefined : "visible"} viewport={{ once: true, amount: 0.05 }}>
+              {items.map((experience) => (
                 <motion.article
                   key={experience._id}
                   variants={itemVariants}
-                  className="group relative"
+                  className="group relative h-full min-w-0"
                 >
-                  {/* Timeline dot */}
-                  <motion.div 
-                    className="absolute -start-4 top-6 z-10 hidden md:grid h-7 w-7 place-items-center"
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 200 }}
-                  >
-                    <div className="absolute h-7 w-7 rounded-full border-4 border-[var(--color-surface)] bg-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/30" />
-                    {experience.isCurrent && (
-                      <motion.div 
-                        className="absolute h-7 w-7 rounded-full border-2 border-[var(--color-primary)]"
-                        animate={{ scale: [1, 1.3, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                    )}
-                  </motion.div>
-
-                  {/* Timeline line */}
-                  {index < items.length - 1 && (
-                    <div className="absolute -start-[15px] top-16 hidden h-12 w-px bg-gradient-to-b from-[var(--color-primary)]/40 to-transparent md:block" />
-                  )}
-
-                  {/* Experience card */}
-                  <div className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-card)] via-[var(--color-card)] to-[var(--color-surface-muted)] p-6 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-[var(--color-primary)]/40 hover:shadow-2xl hover:shadow-[var(--color-primary)]/10 md:ps-12 md:p-8">
+                  <div className="relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[color-mix(in_srgb,var(--color-primary)_16%,var(--color-border))] bg-[var(--color-card)] p-5 shadow-[0_18px_55px_-38px_color-mix(in_srgb,var(--color-primary)_55%,transparent)] transition-all duration-500 hover:-translate-y-1.5 hover:border-[var(--color-primary)]/45 hover:shadow-[0_28px_70px_-38px_color-mix(in_srgb,var(--color-primary)_60%,transparent)] sm:p-5">
+                    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-[radial-gradient(ellipse_at_top_left,color-mix(in_srgb,var(--color-primary)_13%,transparent),transparent_72%)] opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div aria-hidden="true" className="absolute inset-y-7 start-0 w-1 rounded-e-full bg-gradient-to-b from-[var(--color-primary)] via-[var(--color-secondary)] to-transparent opacity-70 transition-all duration-500 group-hover:inset-y-5 group-hover:opacity-100" />
                     
                     {/* Current badge */}
                     {experience.isCurrent && (
                       <motion.div 
-                        className="absolute end-6 top-6 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 px-3 py-1 text-xs font-semibold text-[var(--color-secondary)]"
+                        className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-[var(--color-secondary)]/30 bg-[var(--color-secondary)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-secondary)]"
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
@@ -123,37 +101,37 @@ export default function ExperiencePreview() {
                     )}
 
                     {/* Header with icon */}
-                    <div className="mb-5 flex items-start gap-4">
+                    <div className="mb-4 flex min-h-[4.5rem] items-start gap-3 sm:gap-3.5">
                       <motion.div 
-                        className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/15 text-[var(--color-primary)]"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/15 text-[var(--color-primary)]"
+                        whileHover={reduceMotion ? undefined : { scale: 1.06, rotate: 4 }}
                         transition={{ type: "spring", stiffness: 300 }}
                       >
-                        <FiBriefcase size={24} />
+                        <FiBriefcase size={20} />
                       </motion.div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{experience.position}</h3>
-                        <p className="mt-1.5 font-semibold text-[var(--color-primary)]">{experience.company}</p>
-                        {experience.location && <p className="mt-1 text-sm text-[var(--color-text-muted)]">{experience.location}</p>}
+                        <h3 className="line-clamp-2 break-words font-[var(--font-display)] text-lg font-bold leading-snug text-[var(--color-text-primary)]">{experience.position}</h3>
+                        <p className="mt-1 font-semibold text-[var(--color-primary)]">{experience.company}</p>
+                        {experience.location && <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">{experience.location}</p>}
                       </div>
                     </div>
 
                     {/* Date range */}
                     <motion.div 
-                      className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/50 px-4 py-2 text-sm font-medium text-[var(--color-text-muted)]"
+                      className="mb-4 inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/50 px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.1 }}
                     >
                       <FiCalendar size={15} className="text-[var(--color-primary)]" />
-                      {formatDate(experience.startDate)} — {experience.isCurrent ? <span className="text-[var(--color-secondary)] font-semibold">{t("pages.experience.present")}</span> : formatDate(experience.endDate)}
+                      {formatDate(experience.startDate)} â€” {experience.isCurrent ? <span className="text-[var(--color-secondary)] font-semibold">{t("pages.experience.present")}</span> : formatDate(experience.endDate)}
                     </motion.div>
 
                     {/* Description */}
                     {experience.description && (
                       <motion.p 
-                        className="text-base leading-7 text-[var(--color-text-secondary)]"
+                        className="line-clamp-4 min-h-[5.5rem] text-sm leading-[1.4rem] text-[var(--color-text-secondary)]"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
@@ -166,7 +144,7 @@ export default function ExperiencePreview() {
                     {/* Responsibilities */}
                     {experience.responsibilities?.length > 0 && (
                       <motion.div 
-                        className="mt-6"
+                        className="mt-4"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
@@ -176,8 +154,8 @@ export default function ExperiencePreview() {
                           <FiCode size={16} className="text-[var(--color-primary)]" />
                           {t("common.responsibilities")}
                         </h4>
-                        <ul className="mt-4 space-y-2.5 text-sm leading-7 text-[var(--color-text-secondary)]">
-                          {experience.responsibilities.map((item, idx) => (
+                        <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+                          {experience.responsibilities.slice(0, 2).map((item, idx) => (
                             <motion.li 
                               key={item} 
                               className="flex gap-3 items-start"
@@ -187,7 +165,7 @@ export default function ExperiencePreview() {
                               transition={{ delay: 0.25 + idx * 0.05 }}
                             >
                               <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--color-primary)]" />
-                              <span>{item}</span>
+                              <span className="line-clamp-2">{item}</span>
                             </motion.li>
                           ))}
                         </ul>
@@ -197,7 +175,7 @@ export default function ExperiencePreview() {
                     {/* Achievements */}
                     {experience.achievements?.length > 0 && (
                       <motion.div 
-                        className="mt-6"
+                        className="mt-4"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
@@ -207,10 +185,10 @@ export default function ExperiencePreview() {
                           <FiCheckCircle size={16} className="text-[var(--color-secondary)]" />
                           {t("adminValidation.fields.achievements")}
                         </h4>
-                        <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-secondary)]">
-                          {experience.achievements.map((achievement) => (
+                        <ul className="mt-2 space-y-1.5 text-sm leading-6 text-[var(--color-secondary)]">
+                          {experience.achievements.slice(0, 1).map((achievement) => (
                             <li key={achievement} className="flex gap-2 items-start">
-                              <span className="text-lg">✨</span>
+                              <span className="text-lg">âœ¨</span>
                               <span>{achievement}</span>
                             </li>
                           ))}
@@ -221,13 +199,13 @@ export default function ExperiencePreview() {
                     {/* Technologies */}
                     {experience.technologies?.length > 0 && (
                       <motion.div 
-                        className="mt-6 flex flex-wrap gap-2"
+                        className="mt-auto flex flex-wrap gap-2 pt-5"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
                       >
-                        {experience.technologies.map((tech, idx) => (
+                        {experience.technologies.slice(0, 5).map((tech, idx) => (
                           <motion.div
                             key={tech}
                             initial={{ opacity: 0, scale: 0.8 }}
@@ -247,7 +225,6 @@ export default function ExperiencePreview() {
                   </div>
                 </motion.article>
               ))}
-            </div>
           </motion.div>
         )}
 
@@ -304,10 +281,11 @@ export default function ExperiencePreview() {
           transition={{ delay: 0.3 }}
         >
           <Link to="/education" className="text-[var(--color-primary)] font-medium hover:text-[var(--color-secondary)] transition-colors">{t("pages.experience.viewEducation")}</Link>
-          <span className="text-[var(--color-border)]">•</span>
+          <span className="text-[var(--color-border)]">â€¢</span>
           <Link to="/certifications" className="text-[var(--color-primary)] font-medium hover:text-[var(--color-secondary)] transition-colors">{t("pages.experience.viewCertifications")}</Link>
         </motion.div>
       </div>
     </section>
   );
 }
+
