@@ -39,7 +39,7 @@ export default function Services() {
         )}
 
         {!isLoading && !isError && services?.length > 0 && (
-          <div className={services.length === 1 ? "mx-auto grid max-w-4xl gap-5" : "grid gap-5 md:grid-cols-2 lg:grid-cols-3"}>
+          <div className={services.length === 1 ? "mx-auto grid max-w-2xl gap-5" : services.length === 2 ? "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2" : "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"}>
             {services.map((service, i) => {
               const Icon = ICONS[service.icon] || FiCode;
               return (
@@ -49,7 +49,7 @@ export default function Services() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.4, delay: i * 0.06 }}
-                  className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-8 ${services.length > 1 && i === 0 ? "md:col-span-2" : ""}`}
+                  className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-7"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">
@@ -64,13 +64,13 @@ export default function Services() {
                   <h3 className="mt-5 font-[var(--font-display)] text-xl font-semibold text-[var(--color-text-primary)]">
                     {service.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{service.description}</p>
+                  <p className="mt-2 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-[var(--color-text-muted)]">{service.description}</p>
 
                   {service.features?.length > 0 && (
-                    <ul className="mt-4 space-y-1.5 text-sm text-[var(--color-text-muted)]">
-                      {service.features.map((f) => (
+                    <ul className="mt-4 space-y-1.5 text-sm leading-6 text-[var(--color-text-muted)]">
+                      {service.features.slice(0, 2).map((f) => (
                         <li key={f} className="flex gap-2">
-                          <span className="text-[var(--color-primary)]">→</span> {f}
+                          <span className="text-[var(--color-primary)]">â†’</span> {f}
                         </li>
                       ))}
                     </ul>
@@ -78,7 +78,7 @@ export default function Services() {
 
                   {service.technologies?.length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {service.technologies.map((tech) => (
+                      {service.technologies.slice(0, 3).map((tech) => (
                         <span
                           key={tech}
                           className="rounded-full border border-[var(--color-border)] px-2.5 py-1 font-mono text-xs text-[var(--color-text-muted)]"
@@ -119,3 +119,4 @@ export default function Services() {
     </>
   );
 }
+
