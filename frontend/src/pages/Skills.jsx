@@ -69,14 +69,14 @@ export default function Skills() {
             {categories.map((cat) => (
               <div
                 key={cat.id}
-                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6"
+                className="ds-card p-5 sm:p-6"
               >
                 <h2 className="border-b border-[var(--color-border)] pb-4 font-[var(--font-display)] text-xl font-semibold text-[var(--color-text-primary)]">
                   {cat.label}
                 </h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {cat.skills.map((skill) => (
-                    <article key={skill._id || skill.name} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--color-primary)]/50 hover:shadow-lg">
+                    <article key={skill._id || skill.name} className="ds-card ds-card--interactive p-4">
                       <div className="mb-4 flex items-start justify-between gap-3">
                         <span className="font-[var(--font-display)] text-sm font-semibold text-[var(--color-text-primary)]">
                           {skill.name}
