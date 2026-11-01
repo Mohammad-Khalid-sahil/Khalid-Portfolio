@@ -16,13 +16,13 @@ export default function Testimonials() {
 
   if (isLoading || isError || !testimonials?.length) {
     return (
-      <section className="relative overflow-hidden bg-[var(--color-background)] py-24 sm:py-28">
+      <section className="ds-section overflow-hidden bg-[var(--color-background)]">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute end-0 top-1/4 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
           <div className="absolute start-0 bottom-0 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
         </div>
         <div className="container-page">
-          <SectionHeading eyebrow={t("sections.testimonials.eyebrow")} title={t("sections.testimonials.title")} align="center" />
+          <SectionHeading index="08" eyebrow={t("sections.testimonials.eyebrow")} title={t("sections.testimonials.title")} maxWidth="max-w-3xl" />
           <div className="mt-12">
             {isLoading && <SectionLoader label={t("pages.testimonials.loading")} />}
             {isError && <ErrorState message={t("pages.testimonials.error")} onRetry={refetch} />}
@@ -46,7 +46,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-[var(--color-background)] py-24 sm:py-28">
+    <section className="ds-section overflow-hidden bg-[var(--color-background)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute end-0 top-1/4 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
         <div className="absolute start-0 bottom-0 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
@@ -54,7 +54,7 @@ export default function Testimonials() {
       </div>
 
       <div className="container-page">
-        <SectionHeading eyebrow={t("sections.testimonials.eyebrow")} title={t("sections.testimonials.title")} align="center" />
+        <SectionHeading index="08" eyebrow={t("sections.testimonials.eyebrow")} title={t("sections.testimonials.title")} maxWidth="max-w-3xl" />
 
         <div className="relative mx-auto mt-16 max-w-3xl">
           {/* Testimonial card carousel */}
