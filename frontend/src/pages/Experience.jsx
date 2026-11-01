@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import { ErrorState } from "@/components/loaders/ErrorState";
 import { SectionLoader } from "@/components/loaders/SectionLoader";
 import Seo, { buildBreadcrumbSchema } from "@/components/seo/Seo";
+import PageHero from "@/components/common/PageHero";
 import { useExperiences } from "@/hooks/queries/useCareer";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { formatDate } from "@/components/common/TimelineItem";
@@ -40,7 +41,13 @@ export default function Experience() {
         jsonLd={[buildBreadcrumbSchema([{ name: t("nav.home"), path: "/" }, { name: t("nav.experience"), path: "/experience" }])]}
       />
 
-      <section className="relative overflow-hidden bg-[var(--color-surface)] py-24 sm:py-28">
+      <PageHero
+        eyebrow={t("pages.experience.eyebrow")}
+        title={t("pages.experience.heroTitle")}
+        description={t("pages.experience.heroDescription")}
+      />
+
+      <section className="relative overflow-hidden bg-[var(--color-surface)] py-16 sm:py-20">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute start-0 top-1/4 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
           <div className="absolute end-0 bottom-0 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
@@ -48,24 +55,6 @@ export default function Experience() {
         </div>
 
         <div className="container-page">
-          <motion.header
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto max-w-3xl text-center"
-          >
-            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 px-4 py-2 text-sm font-semibold text-[var(--color-primary)]">
-              <FiBriefcase size={15} />
-              {t("pages.experience.eyebrow")}
-            </span>
-            <h1 className="mt-5 font-[var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text-primary)] sm:text-4xl lg:text-5xl">
-              {t("pages.experience.heroTitle")}
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[var(--color-text-muted)] sm:text-lg">
-              {t("pages.experience.heroDescription")}
-            </p>
-          </motion.header>
-
           {!isLoading && !isError && (experiences || []).length > 0 && (
             <motion.nav
               initial={{ opacity: 0, y: 20 }}
