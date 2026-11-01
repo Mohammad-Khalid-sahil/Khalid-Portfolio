@@ -49,7 +49,7 @@ export default function SkillsPreview() {
   const categories = groupSkillsByCategory(skills, (key) => t(`categories.${key === "devops" ? "tools" : key}`));
 
   return (
-    <section id="skills" className="ds-section overflow-hidden">
+    <section id="skills" className="ds-section scroll-mt-20 overflow-hidden">
       <div aria-hidden="true" className="ds-dots pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem] opacity-50 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
       <div className="container-page">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
