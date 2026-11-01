@@ -19,7 +19,7 @@ export default function ServicesPreview() {
   const { data: services, isLoading, isError, refetch } = useServiceOfferings();
 
   return (
-    <section id="services" className="ds-section overflow-hidden">
+    <section id="services" className="ds-section scroll-mt-20 overflow-hidden">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,transparent,color-mix(in_srgb,var(--color-surface)_80%,transparent)_20%,color-mix(in_srgb,var(--color-surface)_80%,transparent)_80%,transparent)]" />
       <div className="container-page">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
