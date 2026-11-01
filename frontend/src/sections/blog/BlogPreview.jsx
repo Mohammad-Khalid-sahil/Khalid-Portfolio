@@ -27,7 +27,7 @@ export default function BlogPreview() {
   const posts = (response?.data || []).slice(0, 3);
 
   return (
-    <section id="blog" className="relative overflow-hidden bg-[var(--color-background)] py-24 sm:py-28">
+    <section id="blog" className="ds-section scroll-mt-20 overflow-hidden bg-[var(--color-background)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute start-0 top-0 h-80 w-80 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
         <div className="absolute end-0 bottom-1/3 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
@@ -42,7 +42,7 @@ export default function BlogPreview() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <SectionHeading eyebrow={t("pages.blog.eyebrow")} title={t("pages.blog.heroTitle")} description={t("pages.blog.heroDescription")} />
+          <SectionHeading index="06" eyebrow={t("pages.blog.eyebrow")} title={t("pages.blog.heroTitle")} description={t("pages.blog.heroDescription")} maxWidth="max-w-3xl" />
           <Button href="/blog" variant="outline">{t("nav.blog")} <FiArrowRight className="rtl-flip" /></Button>
         </motion.div>
 
