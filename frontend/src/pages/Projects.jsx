@@ -70,7 +70,7 @@ export default function Projects() {
         jsonLd={[buildBreadcrumbSchema([{ name: t("nav.home"), path: "/" }, { name: t("nav.projects"), path: "/projects" }])]}
       />
 
-      <section id="projects" className="relative overflow-hidden bg-[var(--color-background)] py-24 sm:py-28">
+      <section id="projects" className="relative overflow-hidden bg-[var(--color-background)] pb-20 pt-32 sm:py-28">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute end-0 top-1/4 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
           <div className="absolute start-0 bottom-0 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
@@ -82,7 +82,7 @@ export default function Projects() {
             eyebrow={t("sections.projects.eyebrow")}
             title={t("pages.projects.heroTitle")}
             description={t("pages.projects.heroDescription")}
-            align="center"
+            align="left"
             maxWidth="max-w-3xl"
             titleClassName="text-3xl sm:text-4xl lg:text-5xl"
             descriptionClassName="max-w-2xl text-base leading-8 sm:text-lg"
