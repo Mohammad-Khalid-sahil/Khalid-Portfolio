@@ -156,11 +156,8 @@ export default function Projects() {
                   transition={{ duration: shouldReduceMotion ? 0 : 0.7 }}
                   className="mt-14"
                 >
-                  <div className="mb-6">
-                    <span className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">
-                      {t("pages.projects.eyebrow")}
-                    </span>
-                    <h2 className="mt-2 font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
+                  <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4">
+                    <h2 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
                       {t("sections.projects.title")}
                     </h2>
                   </div>
@@ -171,11 +168,8 @@ export default function Projects() {
               )}
 
               <div className="mt-14">
-                <div className="mb-6">
-                  <span className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">
-                    {t("pages.projects.eyebrow")}
-                  </span>
-                  <h2 className="mt-2 font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
+                <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4">
+                    <h2 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
                     {hasActiveFilters ? t("pages.projects.title") : t("nav.projects")}
                   </h2>
                 </div>
