@@ -21,6 +21,15 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
 
+function countWords(content = "") {
+  const text = String(content)
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .trim();
+
+  return text ? text.split(/\s+/u).filter(Boolean).length : 0;
+}
+
 export default function BlogPreview() {
   const { t } = useTranslation();
   const { data: response, isLoading, isError, refetch } = usePosts({ limit: 3 });
@@ -64,7 +73,9 @@ export default function BlogPreview() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            {posts.map((post, index) => (
+            {posts.map((post, index) => {
+              const wordCount = countWords(post.content);
+              return (
               <motion.article
                 key={post._id}
                 variants={itemVariants}
@@ -164,7 +175,7 @@ export default function BlogPreview() {
                       <span className="text-[var(--color-border)]">•</span>
                       <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--color-text-muted)]">
                         <FiBookOpen size={13} className="text-[var(--color-secondary)]" />
-                        {post.readingTime > 1 ? t("pages.blog.words") : t("pages.blog.word")}
+                        {t(`pages.blog.${wordCount === 1 ? "word" : "words"}`, { count: wordCount })}
                       </span>
                     </div>
                     <Link 
@@ -176,7 +187,8 @@ export default function BlogPreview() {
                   </motion.div>
                 </div>
               </motion.article>
-            ))}
+              );
+            })}
           </motion.div>
         )}
       </div>
