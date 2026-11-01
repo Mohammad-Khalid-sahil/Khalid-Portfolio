@@ -54,7 +54,7 @@ export default function FeaturedProjects() {
   }
 
   return (
-    <section id="projects" className="ds-section scroll-mt-20 overflow-hidden">
+    <section id="projects" className="ds-section scroll-mt-36 overflow-hidden sm:scroll-mt-28">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute end-0 top-1/4 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
         <div className="absolute start-0 bottom-0 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
@@ -69,16 +69,16 @@ export default function FeaturedProjects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mt-12 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between"
+          className="mt-8 flex min-w-0 flex-col gap-4 sm:mt-12 sm:gap-5 lg:flex-row lg:items-center lg:justify-between"
         >
-          <label className="relative w-full lg:max-w-sm">
+          <label className="relative w-full min-w-0 lg:max-w-sm">
             <FiSearch className="absolute start-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" size={16} />
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("pages.projects.search")} aria-label={t("pages.projects.search")} className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] py-3 pe-4 ps-11 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)]/40 focus:ring-4 focus:ring-[var(--color-primary)]/10" />
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("pages.projects.search")} aria-label={t("pages.projects.search")} className="min-h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] py-3 pe-4 ps-11 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)]/40 focus:ring-4 focus:ring-[var(--color-primary)]/10" />
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid w-full grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:justify-end lg:w-auto">
             {categories.map((item) => {
               const active = category === item.id;
-              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
+              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} className={`flex min-h-12 min-w-0 items-center justify-center whitespace-nowrap rounded-xl px-2.5 text-xs font-semibold transition-all duration-300 sm:px-4 sm:text-sm ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
             })}
           </div>
         </motion.div>
