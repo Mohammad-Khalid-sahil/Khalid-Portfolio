@@ -54,7 +54,7 @@ export default function FeaturedProjects() {
   }
 
   return (
-    <section id="projects" className="relative scroll-mt-20 overflow-hidden bg-[var(--color-background)] pb-20 pt-32 sm:py-28">
+    <section id="projects" className="ds-section scroll-mt-20 overflow-hidden">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute end-0 top-1/4 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
         <div className="absolute start-0 bottom-0 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
@@ -62,7 +62,7 @@ export default function FeaturedProjects() {
       </div>
 
       <div className="container-page">
-        <SectionHeading eyebrow={t("sections.projects.eyebrow")} title={t("pages.projects.heroTitle")} description={t("pages.projects.heroDescription")} align="left" />
+        <SectionHeading index="04" eyebrow={t("sections.projects.eyebrow")} title={t("pages.projects.heroTitle")} description={t("pages.projects.heroDescription")} maxWidth="max-w-3xl" />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
