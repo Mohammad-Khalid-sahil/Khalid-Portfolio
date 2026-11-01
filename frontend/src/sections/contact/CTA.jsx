@@ -5,7 +5,7 @@ import Button from "@/components/ui/Button";
 export default function CTA() {
   const { t } = useTranslation();
   return (
-    <section id="contact" className="container-page pb-24">
+    <section id="contact" className="container-page scroll-mt-20 pb-24">
       <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] px-8 py-16 text-center">
         <div
           aria-hidden
