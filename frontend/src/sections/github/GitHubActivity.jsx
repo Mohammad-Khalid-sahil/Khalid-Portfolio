@@ -60,10 +60,10 @@ export default function GitHubActivity() {
 
   if (isError) {
     return (
-      <section className="border-y border-[var(--color-border)] bg-[var(--color-surface)] py-20 md:py-24">
+      <section className="ds-section border-y border-[var(--color-border)] bg-[var(--color-surface)]">
         <div className="container-page">
           <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading eyebrow={t("sections.github.eyebrow")} title={t("sections.github.title")} />
+            <SectionHeading index="07" eyebrow={t("sections.github.eyebrow")} title={t("sections.github.title")} maxWidth="max-w-3xl" />
             {profileLink}
           </div>
           <div className="mt-8 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-6">
@@ -88,7 +88,7 @@ export default function GitHubActivity() {
   }
 
   return (
-    <section className="border-y border-[var(--color-border)] bg-[var(--color-surface)] py-20 md:py-24">
+    <section className="ds-section border-y border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="container-page">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
