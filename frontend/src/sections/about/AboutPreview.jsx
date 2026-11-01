@@ -33,7 +33,7 @@ export default function AboutPreview() {
   const interests = profile?.interests || [];
 
   return (
-    <section id="about" className="ds-section overflow-hidden">
+    <section id="about" className="ds-section scroll-mt-20 overflow-hidden">
       <div className="container-page">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading index="01" eyebrow={t("sections.about.eyebrow")} title={t("sections.about.title")} maxWidth="max-w-3xl" />
