@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import SectionHeading from "@/components/ui/SectionHeading";
+import PageHero from "@/components/common/PageHero";
 import ProjectCard from "@/components/cards/ProjectCard";
 import Button from "@/components/ui/Button";
 import { useProjects } from "@/hooks/queries/useProjects";
@@ -70,23 +70,14 @@ export default function Projects() {
         jsonLd={[buildBreadcrumbSchema([{ name: t("nav.home"), path: "/" }, { name: t("nav.projects"), path: "/projects" }])]}
       />
 
-      <section id="projects" className="relative overflow-hidden bg-[var(--color-background)] pb-20 pt-32 sm:py-28">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute end-0 top-1/4 h-72 w-72 rounded-full bg-[var(--color-primary)]/5 blur-3xl" />
-          <div className="absolute start-0 bottom-0 h-80 w-80 rounded-full bg-[var(--color-secondary)]/5 blur-3xl" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,color-mix(in_srgb,var(--color-primary)_3%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--color-primary)_3%,transparent)_1px,transparent_1px)] bg-[size:40px_40px]" />
-        </div>
+      <PageHero
+        id="projects"
+        eyebrow={t("pages.projects.eyebrow")}
+        title={t("pages.projects.heroTitle")}
+        description={t("pages.projects.heroDescription")}
+      />
 
-        <div className="container-page">
-          <SectionHeading
-            eyebrow={t("sections.projects.eyebrow")}
-            title={t("pages.projects.heroTitle")}
-            description={t("pages.projects.heroDescription")}
-            align="left"
-            maxWidth="max-w-3xl"
-            titleClassName="text-3xl sm:text-4xl lg:text-5xl"
-            descriptionClassName="max-w-2xl text-base leading-8 sm:text-lg"
-          />
+      <section className="container-page pb-20 pt-10 sm:pt-12">
 
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
@@ -204,7 +195,6 @@ export default function Projects() {
               </Button>
             </div>
           </motion.div>
-        </div>
       </section>
     </>
   );
