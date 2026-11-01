@@ -91,12 +91,12 @@ export default function FeaturedProjects() {
         {!isError && !isLoading && filtered.length > 0 && (
           <>
             {showFeatured && <motion.div initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.7 }} className="mt-14">
-              <div className="mb-6"><span className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">{t("pages.projects.eyebrow")}</span><h3 className="mt-2 font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{t("sections.projects.title")}</h3></div>
+              <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4"><h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{t("sections.projects.title")}</h3></div>
               <div className={featured.length === 1 ? "mx-auto max-w-2xl" : "grid gap-6 lg:grid-cols-2"}>{featured.map((project, index) => projectCard(project, index, true))}</div>
             </motion.div>}
 
             <div className="mt-14">
-              <div className="mb-6"><span className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">{t("pages.projects.eyebrow")}</span><h3 className="mt-2 font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{trimmedQuery || category !== "all" ? t("pages.projects.title") : t("nav.projects")}</h3></div>
+              <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4"><h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{trimmedQuery || category !== "all" ? t("pages.projects.title") : t("nav.projects")}</h3></div>
               <div className={filtered.length === 1 ? "mx-auto max-w-md" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>{filtered.map((project, index) => projectCard(project, index))}</div>
             </div>
           </>
