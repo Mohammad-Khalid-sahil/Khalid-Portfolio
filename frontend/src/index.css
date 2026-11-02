@@ -2023,3 +2023,32 @@ html:not([dir="rtl"]) .public-site-shell .ds-project p[class*="text-sm"] {
     line-height: 1.24;
   }
 }
+
+
+/* Shared animated surfaces for service, article and experience collections. */
+.ds-service-card,
+.ds-blog-card,
+.ds-experience-card { isolation: isolate; transition: transform 420ms var(--ds-ease), border-color 260ms ease, box-shadow 420ms var(--ds-ease); }
+.ds-service-card::before,
+.ds-blog-card::before,
+.ds-experience-card::before { content:""; position:absolute; z-index:-1; inset:0; pointer-events:none; opacity:0; background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--color-primary) 11%,transparent),transparent 68%); transition:opacity 350ms ease; }
+.ds-service-card__glow { position:absolute; z-index:-1; inset-inline-end:-3rem; top:-4rem; width:9rem; aspect-ratio:1; border-radius:50%; pointer-events:none; background:radial-gradient(circle,color-mix(in srgb,var(--color-primary) 22%,transparent),transparent 70%); opacity:.5; transition:transform 500ms var(--ds-ease),opacity 350ms ease; }
+.ds-service-card:hover .ds-service-card__glow { transform:translate(-.7rem,.7rem) scale(1.12); opacity:.8; }
+.ds-service-card:hover,.ds-blog-card:hover,.ds-experience-card:hover { transform:translateY(-4px); border-color:color-mix(in srgb,var(--color-primary) 40%,var(--color-border)); box-shadow:var(--ds-shadow-lg),0 24px 44px -34px color-mix(in srgb,var(--color-primary) 65%,transparent); }
+.ds-service-card:hover::before,.ds-blog-card:hover::before,.ds-experience-card:hover::before { opacity:1; }
+.ds-service-card__icon { transition:transform 350ms var(--ds-ease),color 250ms ease,background-color 250ms ease; }
+.ds-service-card:hover .ds-service-card__icon { transform:translateY(-2px) rotate(-5deg); }
+.ds-blog-card__media img { transition:transform 700ms var(--ds-ease); }
+.ds-blog-card:hover .ds-blog-card__media img { transform:scale(1.045); }
+@media (max-width:767px) {
+  .ds-glass { -webkit-backdrop-filter:none; backdrop-filter:none; background:color-mix(in srgb,var(--color-card) 94%,transparent); }
+  .ds-card .backdrop-blur,.ds-card .backdrop-blur-md,.ds-card .backdrop-blur-lg { -webkit-backdrop-filter:none; backdrop-filter:none; }
+  .ds-spotlight::before,.ds-spotlight::after { display:none; }
+  .ds-float,.ds-aurora__blob { animation:none !important; }
+  .ds-aurora__blob { filter:blur(68px); }
+  .ds-service-card:hover,.ds-blog-card:hover,.ds-experience-card:hover { transform:translateY(-2px); }
+}
+@media (hover:none) {
+  .ds-service-card:hover,.ds-blog-card:hover,.ds-experience-card:hover { transform:none; }
+  .ds-service-card:hover::before,.ds-blog-card:hover::before,.ds-experience-card:hover::before { opacity:0; }
+}

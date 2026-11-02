@@ -12,6 +12,7 @@ const CATEGORY_TONES = {
 };
 
 function setSpotlight(event) {
+  if (event.pointerType !== "mouse") return;
   const rect = event.currentTarget.getBoundingClientRect();
   event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
   event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
@@ -171,10 +172,10 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
 
   return (
     <motion.article
-      initial={reduce ? false : { opacity: 0, y: 36, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={reduce ? false : { opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: reduce ? 0 : 0.85, delay: reduce || showcase ? 0 : (index % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: reduce ? 0 : 0.48, delay: reduce || showcase ? 0 : (index % 3) * 0.055, ease: [0.22, 1, 0.36, 1] }}
       onPointerMove={setSpotlight}
       className={`group ds-card ds-spotlight ds-card--interactive flex h-full p-3 ${showcase ? "flex-col gap-4 lg:grid lg:grid-cols-[1.25fr_1fr] lg:gap-4" : "flex-col"}`}
     >

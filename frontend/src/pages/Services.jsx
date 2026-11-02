@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiCode, FiSmartphone, FiServer, FiDatabase, FiArrowRight, FiStar } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ const ICONS = { FiCode, FiSmartphone, FiServer, FiDatabase };
 
 export default function Services() {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const { data: services, isLoading, isError, refetch } = useServiceOfferings();
 
   return (
@@ -39,20 +40,14 @@ export default function Services() {
         )}
 
         {!isLoading && !isError && services?.length > 0 && (
-          <div className={services.length === 1 ? "mx-auto grid max-w-2xl gap-5" : services.length === 2 ? "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2" : "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"}>
+          <motion.div initial={reduceMotion ? false : "hidden"} whileInView={reduceMotion ? undefined : "show"} viewport={{ once: true, amount: 0.08 }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }} className={services.length === 1 ? "mx-auto grid max-w-2xl gap-5" : services.length === 2 ? "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2" : "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"}>
             {services.map((service, i) => {
               const Icon = ICONS[service.icon] || FiCode;
               return (
-                <motion.div
-                  key={service._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.4, delay: i * 0.06 }}
-                  className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl sm:p-7"
-                >
+                <motion.article key={service._id} variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } } }} className="ds-card ds-service-card group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl p-6 sm:p-7">
+                  <span aria-hidden="true" className="ds-service-card__glow" />
                   <div className="flex items-start justify-between gap-4">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">
+                    <div className="ds-service-card__icon grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">
                       <Icon size={22} />
                     </div>
                     {service.featured && (
@@ -101,10 +96,10 @@ export default function Services() {
                   >
                     {service.ctaText || t("pages.services.defaultCta")} <FiArrowRight className="rtl-flip" size={13} />
                   </Link>
-                </motion.div>
+                </motion.article>
               );
             })}
-          </div>
+          </motion.div>
         )}
 
         <div className="mt-14 flex flex-col items-center justify-between gap-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 text-center sm:flex-row sm:text-start md:p-9">

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiClock, FiBookOpen, FiTrendingUp } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -32,6 +32,7 @@ function countWords(content = "") {
 
 export default function BlogPreview() {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const { data: response, isLoading, isError, refetch } = usePosts({ limit: 3 });
   const posts = (response?.data || []).slice(0, 3);
 
@@ -69,8 +70,8 @@ export default function BlogPreview() {
           <motion.div 
             className={posts.length === 1 ? "mx-auto mt-12 grid max-w-sm grid-cols-1 gap-5" : posts.length === 2 ? "mx-auto mt-12 grid max-w-3xl gap-5 sm:grid-cols-2" : "mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3"}
             variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
+            initial={reduceMotion ? false : "hidden"}
+            whileInView={reduceMotion ? undefined : "visible"}
             viewport={{ once: true, amount: 0.1 }}
           >
             {posts.map((post, index) => {
@@ -79,19 +80,18 @@ export default function BlogPreview() {
               <motion.article
                 key={post._id}
                 variants={itemVariants}
-                className="group flex flex-col h-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-card)] via-[var(--color-card)] to-[var(--color-surface-muted)] shadow-sm transition-all duration-500 hover:-translate-y-3 hover:border-[var(--color-primary)]/40 hover:shadow-2xl hover:shadow-[var(--color-primary)]/15"
+                className="ds-card ds-blog-card group flex h-full flex-col overflow-hidden rounded-2xl"
               >
                 {/* Image container with category overlay */}
                 <div className="relative block overflow-hidden bg-[var(--color-surface)]">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-secondary)]/10">
+                  <div className="ds-blog-card__media relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-secondary)]/10">
                     {post.cover ? (
-                      <motion.img 
+                      <img
                         src={post.cover} 
                         alt="" 
                         loading="lazy" 
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1 }}
+                        decoding="async"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
                       <div className="h-full w-full bg-[conic-gradient(from_0deg,var(--color-primary)/20,var(--color-secondary)/20,var(--color-primary)/20)]" />

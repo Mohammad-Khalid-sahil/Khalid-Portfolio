@@ -1,6 +1,5 @@
-import { useRef } from "react";
 import { DEFAULT_RESUME_URL } from "@/config/profileAssets";
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { FiArrowRight, FiDownload, FiMapPin, FiMail } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { useProfile } from "@/hooks/queries/useProfile";
@@ -25,7 +24,6 @@ const CHIP_POSITIONS = [
 export default function Hero() {
   const { t } = useTranslation();
   const reduce = useReducedMotion();
-  const sectionRef = useRef(null);
   const { data: profile, isLoading, isError, refetch } = useProfile();
   const { data: skills = [] } = useSkills();
   const displayName = cleanBrandName(profile?.name);
@@ -43,9 +41,6 @@ export default function Hero() {
   const spotlight = useMotionTemplate`radial-gradient(38rem circle at ${mx}% ${my}%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 60%)`;
   const tiltX = useSpring(useTransform(my, [0, 100], [4, -4]), { stiffness: 120, damping: 20 });
   const tiltY = useSpring(useTransform(mx, [0, 100], [-5, 5]), { stiffness: 120, damping: 20 });
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
-  const visualY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 90]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.8], [1, reduce ? 1 : 0.2]);
 
   function handlePointerMove(event) {
     if (reduce || event.pointerType !== "mouse") return;
@@ -63,7 +58,6 @@ export default function Hero() {
   return (
     <section
       id="home"
-      ref={sectionRef}
       onPointerMove={handlePointerMove}
       className="home-hero relative isolate overflow-hidden pb-12 pt-10 md:pb-16 md:pt-16 lg:min-h-[calc(100svh-84px)]"
     >
@@ -88,7 +82,7 @@ export default function Hero() {
 
       <div className="container-page relative grid w-full min-w-0 grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-12 xl:gap-20">
         {/* Copy column */}
-        <motion.div style={{ opacity: copyOpacity }} className="relative min-w-0 text-center lg:text-start">
+        <motion.div className="relative min-w-0 text-center lg:text-start">
           <motion.div {...reveal(0.05)} className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
             {profile?.availability && (
               <span className="ds-glass inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-secondary)]">
@@ -161,7 +155,6 @@ export default function Hero() {
 
         {/* Visual column: terminal + profile card + floating stack chips */}
         <motion.div
-          style={{ y: visualY }}
           initial={reduce ? false : { opacity: 0, y: 40, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: reduce ? 0 : 1.1, delay: reduce ? 0 : 0.3, ease: EASE }}

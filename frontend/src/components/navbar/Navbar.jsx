@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DEFAULT_RESUME_URL } from "@/config/profileAssets";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { FiMenu, FiX, FiCommand, FiLock, FiArrowUpRight, FiDownload } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { navLinks } from "@/constants/siteData";
@@ -30,8 +30,6 @@ export default function Navbar() {
   const resumeUrl = profile?.resumeUrl || DEFAULT_RESUME_URL;
   const isHome = pathname === "/";
   const activeSection = useActiveSection(SECTION_IDS, isHome);
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
 
   function navigateToSection(event, to) {
     if (pathname !== "/") return;
@@ -166,11 +164,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          <motion.span
-            aria-hidden="true"
-            style={{ scaleX: progress }}
-            className={`ds-progress absolute inset-x-4 bottom-0 h-px transition-opacity duration-500 ${scrolled ? "opacity-100" : "opacity-0"}`}
-          />
         </motion.nav>
       </header>
 

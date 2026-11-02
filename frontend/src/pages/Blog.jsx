@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { FiClock, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -10,6 +10,7 @@ import Seo, { buildBreadcrumbSchema } from "@/components/seo/Seo";
 
 export default function Blog() {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const { data: response, isLoading, isError, refetch } = usePosts();
   const posts = response?.data || [];
 
@@ -44,18 +45,15 @@ export default function Blog() {
         )}
 
         {!isError && !isLoading && posts.length > 0 && (
-          <div className={posts.length === 1 ? "mx-auto grid max-w-sm grid-cols-1 gap-5" : posts.length === 2 ? "mx-auto grid max-w-3xl gap-5 sm:grid-cols-2" : "mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3"}>
-            {posts.map((post, i) => (
+          <motion.div initial={reduceMotion ? false : "hidden"} whileInView={reduceMotion ? undefined : "show"} viewport={{ once: true, amount: 0.08 }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.075 } } }} className={posts.length === 1 ? "mx-auto grid max-w-sm grid-cols-1 gap-5" : posts.length === 2 ? "mx-auto grid max-w-3xl gap-5 sm:grid-cols-2" : "mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3"}>
+            {posts.map((post) => (
               <motion.article
                 key={post._id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/50 hover:shadow-xl"
+                variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: reduceMotion ? 0 : 0.48, ease: [0.22, 1, 0.36, 1] } } }}
+                className="ds-card ds-blog-card group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl"
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-[var(--color-surface)]">
-                  {post.cover ? <img src={post.cover} alt={post.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" /> : <div className="h-full min-h-40 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_65%)]" />}
+                <div className="ds-blog-card__media relative aspect-[16/10] overflow-hidden bg-[var(--color-surface)]">
+                  {post.cover ? <img src={post.cover} alt={post.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" /> : <div className="h-full min-h-40 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_65%)]" />}
                   <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-950/50 to-transparent" />
                   {post.category?.name && <span className="absolute start-4 top-4 rounded-full border border-white/20 bg-gray-950/65 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">{post.category.name}</span>}
                 </div>
@@ -78,7 +76,7 @@ export default function Blog() {
                 </div>
               </motion.article>
             ))}
-          </div>
+          </motion.div>
         )}
       </section>
     </>

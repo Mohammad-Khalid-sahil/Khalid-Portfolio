@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { DEFAULT_RESUME_URL } from "@/config/profileAssets";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { FiArrowRight, FiBriefcase, FiCalendar, FiCheckCircle, FiDownload } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -15,6 +15,7 @@ import { formatDate } from "@/components/common/TimelineItem";
 
 export default function Experience() {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const { data: experiences, isLoading, isError, refetch } = useExperiences();
   const { data: profile } = useProfile();
   const [filter, setFilter] = useState("all");
@@ -103,10 +104,10 @@ export default function Experience() {
                   return (
                     <motion.article
                       key={experience._id}
-                      initial={{ opacity: 0, x: isLeft ? -35 : 35 }}
-                      whileInView={{ opacity: 1, x: 0 }}
+                      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.15 }}
-                      transition={{ duration: 0.7 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.48, delay: reduceMotion ? 0 : (index % 2) * 0.05, ease: [0.22, 1, 0.36, 1] }}
                       className="relative lg:grid lg:grid-cols-2 lg:gap-16"
                     >
                       <span aria-hidden="true" className="absolute start-3 top-8 z-10 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--color-surface)] bg-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20 lg:start-1/2">
@@ -121,7 +122,7 @@ export default function Experience() {
                       </div>
 
                       <div className={["ps-10 lg:row-start-1", isLeft ? "lg:col-start-1" : "lg:col-start-2"].join(" ")}>
-                        <article className="group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/30 hover:shadow-2xl">
+                        <article className="ds-experience-card group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/30 hover:shadow-2xl">
                           <header className="border-b border-[var(--color-border)] p-6 sm:p-7">
                             <div className="flex items-start gap-4">
                               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)]">

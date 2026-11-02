@@ -6,12 +6,12 @@ import { useServiceOfferings } from "@/hooks/queries/useServiceOfferings";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
 import SpotlightCard from "@/components/ui/SpotlightCard";
-import { rise, stagger } from "@/components/ui/Reveal";
 import { SectionLoader } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
 
 const ICONS = { FiCode, FiSmartphone, FiServer, FiDatabase };
 const TONES = ["--color-primary", "--color-secondary", "--color-accent"];
+const serviceReveal = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } } };
 
 export default function ServicesPreview() {
   const { t } = useTranslation();
@@ -34,16 +34,16 @@ export default function ServicesPreview() {
         {!isLoading && !isError && services?.length > 0 && (
           <motion.div
             initial={reduce ? false : "hidden"}
-            whileInView="show"
+            whileInView={reduce ? undefined : "show"}
             viewport={{ once: true, amount: 0.1 }}
-            variants={stagger(0, 0.08)}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: reduce ? 0 : 0.07 } } }}
             className={services.length === 1 ? "mx-auto mt-14 grid max-w-2xl gap-5" : services.length === 2 ? "mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2" : "mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"}
           >
             {services.map((service, index) => {
               const Icon = ICONS[service.icon] || FiCode;
               const tone = TONES[index % TONES.length];
               return (
-                <motion.div key={service._id} variants={rise} className="h-full">
+                <motion.div key={service._id} variants={serviceReveal} className="h-full">
                   <SpotlightCard as="article" className="group flex h-full flex-col p-6 sm:p-7">
                     <div className="flex items-start justify-between">
                       <span
