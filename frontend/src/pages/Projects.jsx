@@ -1,15 +1,17 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import PageHero from "@/components/common/PageHero";
 import ProjectCard from "@/components/cards/ProjectCard";
+import Marquee from "@/components/ui/Marquee";
 import Button from "@/components/ui/Button";
 import { useProjects } from "@/hooks/queries/useProjects";
 import { CardSkeleton } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
 import Seo, { buildBreadcrumbSchema } from "@/components/seo/Seo";
+import ExperienceTimeline from "@/components/common/ExperienceTimeline";
 
 const CATEGORY_IDS = ["all", "web", "mobile", "backend", "ai", "ui-ux", "other"];
 
@@ -98,8 +100,19 @@ export default function Projects() {
               />
             </label>
 
-            <div className="flex flex-wrap gap-2">
-              {categories.map((item) => {
+            <div role="group" aria-label={t("pages.projects.title")} className="w-full min-w-0 lg:w-auto">
+              <Marquee duration={24} className="sm:hidden">
+                {categories.map((item) => {
+                  const active = category === item.id;
+                  return (
+                    <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`min-h-12 shrink-0 whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </Marquee>
+              <div className="hidden flex-wrap justify-end gap-2.5 sm:flex">
+                {categories.map((item) => {
                 const active = category === item.id;
                 return (
                   <button
@@ -108,7 +121,7 @@ export default function Projects() {
                     onClick={() => setCategory(item.id)}
                     aria-pressed={active}
                     className={[
-                      "rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
+                      "min-h-12 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
                       active
                         ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20"
                         : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]",
@@ -117,7 +130,8 @@ export default function Projects() {
                     {item.label}
                   </button>
                 );
-              })}
+                })}
+              </div>
             </div>
           </motion.div>
 
@@ -152,21 +166,17 @@ export default function Projects() {
                       {t("sections.projects.title")}
                     </h2>
                   </div>
-                  <div className={featuredProjects.length === 1 ? "mx-auto max-w-5xl" : "grid gap-6 lg:grid-cols-2"}>
-                    {featuredProjects.map((project, index) => renderProjectCard(project, index, true))}
-                  </div>
+                  <ExperienceTimeline items={featuredProjects} getMeta={(project, index) => project.type || (typeof project.category === "object" ? project.category?.name : project.category) || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => renderProjectCard(project, index, true)} />
                 </motion.div>
               )}
 
               <div className="mt-14">
                 <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4">
-                    <h2 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
+                  <h2 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
                     {hasActiveFilters ? t("pages.projects.title") : t("nav.projects")}
                   </h2>
                 </div>
-                <div className={filteredProjects.length === 1 ? "mx-auto max-w-5xl" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>
-                  {filteredProjects.map((project, index) => renderProjectCard(project, index))}
-                </div>
+                <ExperienceTimeline items={filteredProjects} getMeta={(project, index) => project.type || (typeof project.category === "object" ? project.category?.name : project.category) || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => renderProjectCard(project, index)} />
               </div>
             </>
           )}

@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from "framer-motion";
 import { FiArrowRight, FiArrowUpRight, FiCheck, FiCode, FiSmartphone, FiServer, FiDatabase } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -8,14 +7,12 @@ import Button from "@/components/ui/Button";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import { SectionLoader } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
+import ExperienceTimeline from "@/components/common/ExperienceTimeline";
 
 const ICONS = { FiCode, FiSmartphone, FiServer, FiDatabase };
 const TONES = ["--color-primary", "--color-secondary", "--color-accent"];
-const serviceReveal = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } } };
-
 export default function ServicesPreview() {
   const { t } = useTranslation();
-  const reduce = useReducedMotion();
   const { data: services, isLoading, isError, refetch } = useServiceOfferings();
 
   return (
@@ -32,29 +29,22 @@ export default function ServicesPreview() {
         {!isLoading && !isError && !services?.length && <p className="mt-10 text-center text-[var(--color-text-muted)]">{t("pages.services.empty")}</p>}
 
         {!isLoading && !isError && services?.length > 0 && (
-          <motion.div
-            initial={reduce ? false : "hidden"}
-            whileInView={reduce ? undefined : "show"}
-            viewport={{ once: true, amount: 0.1 }}
-            variants={{ hidden: {}, show: { transition: { staggerChildren: reduce ? 0 : 0.07 } } }}
-            className={services.length === 1 ? "mx-auto mt-14 grid max-w-2xl gap-5" : services.length === 2 ? "mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2" : "mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2 xl:max-w-6xl xl:grid-cols-3"}
-          >
-            {services.map((service, index) => {
+          <ExperienceTimeline items={services.slice(0, 4)} className="mt-14" getMeta={(service, index) => service.startingPrice ? t("pages.services.startingAt", { price: service.startingPrice }) : `/${String(index + 1).padStart(2, "0")}`} renderItem={(service, index) => {
               const Icon = ICONS[service.icon] || FiCode;
               const tone = TONES[index % TONES.length];
               return (
-                <motion.div key={service._id} variants={serviceReveal} className="h-full">
-                  <SpotlightCard as="article" className="ds-experience-card group flex h-full flex-col p-6 sm:p-7">
-                    <div className="flex items-start justify-between">
+                <div className="h-full">
+                  <SpotlightCard as="article" className="ds-experience-card group flex h-full flex-col overflow-hidden p-0">
+                    <header className="flex items-start gap-4 border-b border-[var(--color-border)] p-6 sm:p-7">
                       <span
-                        className="grid h-12 w-12 place-items-center rounded-2xl border border-[var(--color-border)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-[-6deg]"
+                        className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-[-6deg]"
                         style={{ color: `var(${tone})`, background: `color-mix(in srgb, var(${tone}) 10%, transparent)` }}
                       >
                         <Icon size={21} />
                       </span>
-                      <span className="font-mono text-xs text-[var(--color-text-muted)]" dir="ltr">/{String(index + 1).padStart(2, "0")}</span>
-                    </div>
-                    <h3 className="mt-7 line-clamp-2 min-h-[3.5rem] font-[var(--font-display)] text-xl font-semibold text-[var(--color-text-primary)]">{service.title}</h3>
+                      <h3 className="min-w-0 flex-1 font-[var(--font-display)] text-xl font-bold text-[var(--color-text-primary)]">{service.title}</h3>
+                    </header>
+                    <div className="flex flex-1 flex-col p-6 sm:p-7">
                     <p className="mt-3 line-clamp-3 min-h-[5.25rem] text-sm leading-7 text-[var(--color-text-muted)]">{service.description}</p>
                     {service.features?.length > 0 && (
                       <ul className="mt-6 space-y-2.5 border-t border-[var(--color-border)] pt-5">
@@ -77,14 +67,13 @@ export default function ServicesPreview() {
                         <FiArrowUpRight className="rtl-flip transition-transform duration-300 group-hover:rotate-45" size={16} />
                       </span>
                     </Link>
+                    </div>
                   </SpotlightCard>
-                </motion.div>
+                </div>
               );
-            })}
-          </motion.div>
+            }} />
         )}
       </div>
     </section>
   );
 }
-

@@ -6,9 +6,11 @@ import { useTranslation } from "react-i18next";
 import { useProjects } from "@/hooks/queries/useProjects";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ProjectCard from "@/components/cards/ProjectCard";
+import Marquee from "@/components/ui/Marquee";
 import Button from "@/components/ui/Button";
 import { CardSkeleton } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
+import ExperienceTimeline from "@/components/common/ExperienceTimeline";
 
 const CATEGORY_IDS = ["all", "web", "mobile", "backend", "ai", "ui-ux", "other"];
 
@@ -75,11 +77,19 @@ export default function FeaturedProjects() {
             <FiSearch className="absolute start-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" size={16} />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("pages.projects.search")} aria-label={t("pages.projects.search")} className="min-h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] py-3 pe-4 ps-11 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)]/40 focus:ring-4 focus:ring-[var(--color-primary)]/10" />
           </label>
-          <div role="group" aria-label={t("pages.projects.title")} className="flex w-full min-w-0 snap-x snap-mandatory gap-2.5 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:justify-end sm:overflow-visible sm:pb-0 lg:w-auto">
-            {categories.map((item) => {
+          <div role="group" aria-label={t("pages.projects.title")} className="w-full min-w-0 sm:w-auto">
+            <Marquee duration={24} className="sm:hidden">
+              {categories.map((item) => {
+                const active = category === item.id;
+                return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`min-h-12 shrink-0 whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
+              })}
+            </Marquee>
+            <div className="hidden flex-wrap justify-end gap-2.5 sm:flex">
+              {categories.map((item) => {
               const active = category === item.id;
               return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`flex min-h-12 shrink-0 snap-start items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
-            })}
+              })}
+            </div>
           </div>
         </motion.div>
 
@@ -90,14 +100,14 @@ export default function FeaturedProjects() {
 
         {!isError && !isLoading && filtered.length > 0 && (
           <>
-            {showFeatured && <motion.div initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.7 }} className="mt-14">
+            {showFeatured && <div className="mt-14">
               <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4"><h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{t("sections.projects.title")}</h3></div>
-              <div className={featured.length === 1 ? "mx-auto max-w-2xl" : "grid gap-6 lg:grid-cols-2"}>{featured.map((project, index) => projectCard(project, index, true))}</div>
-            </motion.div>}
+              <ExperienceTimeline items={featured.slice(0, 4)} getMeta={(project, index) => project.type || project.category?.name || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => projectCard(project, index, true)} />
+            </div>}
 
             <div className="mt-14">
               <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4"><h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{trimmedQuery || category !== "all" ? t("pages.projects.title") : t("nav.projects")}</h3></div>
-              <div className={filtered.length === 1 ? "mx-auto max-w-md" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>{filtered.map((project, index) => projectCard(project, index))}</div>
+              <ExperienceTimeline items={filtered.slice(0, 8)} getMeta={(project, index) => project.type || project.category?.name || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => projectCard(project, index)} />
             </div>
           </>
         )}

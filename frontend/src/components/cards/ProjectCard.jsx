@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiArrowUpRight, FiExternalLink, FiGithub, FiStar } from "react-icons/fi";
+import { FiArrowRight, FiArrowUpRight, FiCode, FiExternalLink, FiGithub, FiStar } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { resolveMediaUrl } from "@/utils/resolveMediaUrl";
 import TechIcon from "@/components/ui/TechIcon";
@@ -72,15 +72,26 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
   const features = (project.features || []).slice(0, showcase ? 4 : featured ? 4 : 3);
   const number = String(index + 1).padStart(2, "0");
 
+  const header = (
+    <header className="flex items-start gap-4 border-b border-[var(--color-border)] p-5 sm:p-6">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)]"><FiCode size={20} /></span>
+      <div className="min-w-0 flex-1">
+        <h3 className="line-clamp-2 font-[var(--font-display)] text-lg font-bold leading-snug text-[var(--color-text-primary)] sm:text-xl">{project.title}</h3>
+        {badgeLabel && <p className="mt-1.5 text-sm font-semibold" style={{ color: `var(${tone})` }}>{badgeLabel}</p>}
+      </div>
+      <span className="mt-1 shrink-0 font-mono text-xs text-[var(--color-text-muted)]" dir="ltr">{number}</span>
+    </header>
+  );
+
   const media = (
-    <div className={`relative overflow-hidden rounded-[1.1rem] border border-[var(--color-border)] bg-[var(--color-surface)] ${showcase ? "h-full min-h-[16rem]" : ""}`}>
+    <div className="relative overflow-hidden bg-[var(--color-surface)]">
       <div className="flex items-center gap-1.5 border-b border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface-muted)_70%,transparent)] px-3 py-2" dir="ltr">
         <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
         <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
         <span className="h-2 w-2 rounded-full bg-[#28c840]" />
         <span className="ms-2 truncate rounded-md bg-[var(--color-card)] px-2 py-0.5 font-mono text-[0.62rem] text-[var(--color-text-muted)]">{hostLabel(project)}</span>
       </div>
-      <div className={`ds-media-zoom relative overflow-hidden ${showcase ? "h-[calc(100%-2rem)] min-h-[14rem]" : featured ? "aspect-[16/9]" : "aspect-[16/10]"}`}>
+      <div className="ds-media-zoom relative aspect-[16/10] overflow-hidden">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
@@ -102,10 +113,7 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
             {t("ui.viewProject")} <FiArrowUpRight className="rtl-flip" size={14} />
           </span>
         </span>
-        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
-          {badgeLabel ? (
-            <span className="ds-glass rounded-full px-3 py-1 text-[0.7rem] font-semibold" style={{ color: `var(${tone})` }}>{badgeLabel}</span>
-          ) : <span />}
+        <div className="absolute inset-x-3 top-3 flex items-start justify-end gap-2">
           {showFeaturedBadge && (
             <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)] px-2.5 py-1 text-[0.7rem] font-semibold text-white shadow-[0_8px_20px_-8px_var(--ds-glow)]">
               <FiStar size={11} /> {t("pages.services.featured")}
@@ -117,13 +125,7 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
   );
 
   const body = (
-    <div className={`flex flex-1 flex-col ${showcase ? "p-2 sm:p-4 lg:p-6" : "px-2 pb-2 pt-5 sm:px-3"}`}>
-      <div className="flex items-start justify-between gap-4">
-        <h3 className={`font-[var(--font-display)] font-semibold tracking-tight text-[var(--color-text-primary)] ${showcase ? "text-2xl sm:text-3xl lg:text-[2.1rem] lg:leading-tight" : featured ? "text-2xl" : "text-xl"}`}>
-          {project.title}
-        </h3>
-        <span className="mt-1 shrink-0 font-mono text-xs text-[var(--color-text-muted)]" dir="ltr">{number}</span>
-      </div>
+    <div className="flex flex-1 flex-col p-5 sm:p-6">
       <p className={`mt-3 text-sm leading-7 text-[var(--color-text-muted)] ${showcase ? "sm:text-base sm:leading-8" : "ds-clamp-3"}`}>
         {project.description}
       </p>
@@ -177,8 +179,9 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: reduce ? 0 : 0.48, delay: reduce || showcase ? 0 : (index % 3) * 0.055, ease: [0.22, 1, 0.36, 1] }}
       onPointerMove={setSpotlight}
-      className={`group ds-card ds-experience-card ds-spotlight ds-card--interactive flex h-full p-3 ${showcase ? "flex-col gap-4 lg:grid lg:grid-cols-[1.25fr_1fr] lg:gap-4" : "flex-col"}`}
+      className="group ds-card ds-experience-card ds-spotlight ds-card--interactive flex h-full flex-col overflow-hidden rounded-2xl p-0"
     >
+      {header}
       {media}
       {body}
     </motion.article>

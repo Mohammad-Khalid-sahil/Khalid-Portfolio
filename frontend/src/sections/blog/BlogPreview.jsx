@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiClock, FiBookOpen, FiTrendingUp } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -7,19 +7,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
 import { CardSkeleton } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-};
+import ExperienceTimeline from "@/components/common/ExperienceTimeline";
 
 function countWords(content = "") {
   const text = String(content)
@@ -32,7 +20,6 @@ function countWords(content = "") {
 
 export default function BlogPreview() {
   const { t } = useTranslation();
-  const reduceMotion = useReducedMotion();
   const { data: response, isLoading, isError, refetch } = usePosts({ limit: 3 });
   const posts = (response?.data || []).slice(0, 3);
 
@@ -67,21 +54,21 @@ export default function BlogPreview() {
         )}
 
         {!isError && !isLoading && posts.length > 0 && (
-          <motion.div 
-            className={posts.length === 1 ? "mx-auto mt-12 grid max-w-sm grid-cols-1 gap-5" : posts.length === 2 ? "mx-auto mt-12 grid max-w-3xl gap-5 sm:grid-cols-2" : "mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 xl:grid-cols-3"}
-            variants={containerVariants}
-            initial={reduceMotion ? false : "hidden"}
-            whileInView={reduceMotion ? undefined : "visible"}
-            viewport={{ once: true, amount: 0.1 }}
-          >
-            {posts.map((post, index) => {
+          <ExperienceTimeline items={posts} className="mt-12" getMeta={(post) => post.category?.name || t("pages.blog.minRead", { count: post.readingTime })} renderItem={(post, index) => {
               const wordCount = countWords(post.content);
               return (
-              <motion.article
-                key={post._id}
-                variants={itemVariants}
+              <article
                 className="ds-card ds-experience-card ds-blog-card group flex h-full flex-col overflow-hidden rounded-2xl"
               >
+                <header className="flex items-start gap-4 border-b border-[var(--color-border)] p-5 sm:p-6">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)]"><FiBookOpen size={19} /></span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="line-clamp-2 font-[var(--font-display)] text-lg font-bold leading-snug text-[var(--color-text-primary)] sm:text-xl">
+                      <Link to={`/blog/${post.slug}`} className="transition-colors duration-300 hover:text-[var(--color-primary)]">{post.title}</Link>
+                    </h3>
+                    {post.category?.name && <p className="mt-1.5 text-xs font-semibold text-[var(--color-primary)]">{post.category.name}</p>}
+                  </div>
+                </header>
                 {/* Image container with category overlay */}
                 <div className="relative block overflow-hidden bg-[var(--color-surface)]">
                   <div className="ds-blog-card__media relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-secondary)]/10">
@@ -102,71 +89,34 @@ export default function BlogPreview() {
                     
                     {/* Category badge */}
                     {post.category?.name && (
-                      <motion.span 
+                      <span
                         className="absolute start-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 px-3.5 py-1.5 text-xs font-semibold text-[var(--color-primary)] backdrop-blur-md"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
                       >
                         <FiTrendingUp size={13} />
                         {post.category.name}
-                      </motion.span>
+                      </span>
                     )}
 
                     {/* Featured badge for first post */}
                     {index === 0 && (
-                      <motion.div 
+                      <span
                         className="absolute end-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-[var(--color-secondary)]/30 bg-[var(--color-secondary)]/10 px-3 py-1.5 text-xs font-bold text-[var(--color-secondary)]"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.15 }}
                       >
                         ⭐ Featured
-                      </motion.div>
+                      </span>
                     )}
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="flex flex-1 flex-col gap-4 p-6 sm:p-7">
-                  {/* Title */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 }}
-                  >
-                    <h3 className="line-clamp-2 font-[var(--font-display)] text-xl font-bold leading-tight text-[var(--color-text-primary)]">
-                      <Link 
-                        to={`/blog/${post.slug}`} 
-                        className="transition-colors duration-300 hover:text-[var(--color-primary)]"
-                      >
-                        {post.title}
-                      </Link>
-                    </h3>
-                  </motion.div>
-
                   {/* Excerpt */}
-                  <motion.p 
-                    className="line-clamp-3 flex-1 text-sm leading-7 text-[var(--color-text-muted)]"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                  >
+                  <p className="line-clamp-3 flex-1 text-sm leading-7 text-[var(--color-text-muted)]">
                     {post.excerpt}
-                  </motion.p>
+                  </p>
 
                   {/* Meta footer */}
-                  <motion.div 
-                    className="flex items-center justify-between gap-4 border-t border-[var(--color-border)] pt-4"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.25 }}
-                  >
+                  <div className="flex items-center justify-between gap-4 border-t border-[var(--color-border)] pt-4">
                     <div className="flex items-center gap-3">
                       <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--color-text-muted)]">
                         <FiClock size={13} className="text-[var(--color-primary)]" />
@@ -184,12 +134,11 @@ export default function BlogPreview() {
                     >
                       {t("pages.blog.read")} <FiArrowRight className="rtl-flip" size={14} />
                     </Link>
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.article>
+              </article>
               );
-            })}
-          </motion.div>
+            }} />
         )}
       </div>
     </section>
