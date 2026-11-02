@@ -102,7 +102,7 @@ export default function Experience() {
                   );
 
                   return (
-                    <motion.article
+                    <motion.div
                       key={experience._id}
                       initial={reduceMotion ? false : { opacity: 0, y: 18 }}
                       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -122,7 +122,7 @@ export default function Experience() {
                       </div>
 
                       <div className={["ps-10 lg:row-start-1", isLeft ? "lg:col-start-1" : "lg:col-start-2"].join(" ")}>
-                        <article className="ds-experience-card group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/30 hover:shadow-2xl">
+                        <article className="ds-card ds-experience-card group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl p-0">
                           <header className="border-b border-[var(--color-border)] p-6 sm:p-7">
                             <div className="flex items-start gap-4">
                               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)]">
@@ -194,7 +194,7 @@ export default function Experience() {
                           </div>
                         </article>
                       </div>
-                    </motion.article>
+                    </motion.div>
                   );
                 })}
               </div>
