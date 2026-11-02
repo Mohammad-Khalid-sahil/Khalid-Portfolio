@@ -101,7 +101,7 @@ export default function Projects() {
             </label>
 
             <div role="group" aria-label={t("pages.projects.title")} className="w-full min-w-0 lg:w-auto">
-              <Marquee duration={24} className="sm:hidden">
+              <Marquee duration={24} className="ds-marquee--mobile-only">
                 {categories.map((item) => {
                   const active = category === item.id;
                   return (
