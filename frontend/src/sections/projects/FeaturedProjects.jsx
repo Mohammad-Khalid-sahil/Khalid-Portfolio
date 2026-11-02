@@ -75,10 +75,10 @@ export default function FeaturedProjects() {
             <FiSearch className="absolute start-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" size={16} />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("pages.projects.search")} aria-label={t("pages.projects.search")} className="min-h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] py-3 pe-4 ps-11 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)]/40 focus:ring-4 focus:ring-[var(--color-primary)]/10" />
           </label>
-          <div className="grid w-full grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:justify-end lg:w-auto">
+          <div role="group" aria-label={t("pages.projects.title")} className="flex w-full min-w-0 snap-x snap-mandatory gap-2.5 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:justify-end sm:overflow-visible sm:pb-0 lg:w-auto">
             {categories.map((item) => {
               const active = category === item.id;
-              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} className={`flex min-h-12 min-w-0 items-center justify-center whitespace-nowrap rounded-xl px-2.5 text-xs font-semibold transition-all duration-300 sm:px-4 sm:text-sm ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
+              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`flex min-h-12 shrink-0 snap-start items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
             })}
           </div>
         </motion.div>

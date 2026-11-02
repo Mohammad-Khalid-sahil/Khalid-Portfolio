@@ -11,7 +11,6 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
 import { SectionLoader } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
-import TechIcon from "@/components/ui/TechIcon";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -60,9 +59,8 @@ export default function ExperiencePreview() {
                 type="button"
                 onClick={() => setFilter(value)}
                 aria-pressed={filter === value}
-                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className={`rounded-full border px-6 py-2.5 text-sm font-semibold transition-all duration-300 ${filter === value ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/25" : "border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-surface-muted)]"}`}
+                className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 ${filter === value ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}
               >
                 {label}
               </motion.button>
@@ -82,9 +80,7 @@ export default function ExperiencePreview() {
                   variants={itemVariants}
                   className="group relative h-full min-w-0"
                 >
-                  <div className="relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[color-mix(in_srgb,var(--color-primary)_16%,var(--color-border))] bg-[var(--color-card)] p-5 shadow-[0_18px_55px_-38px_color-mix(in_srgb,var(--color-primary)_55%,transparent)] transition-all duration-500 hover:-translate-y-1.5 hover:border-[var(--color-primary)]/45 hover:shadow-[0_28px_70px_-38px_color-mix(in_srgb,var(--color-primary)_60%,transparent)] sm:p-5">
-                    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-[radial-gradient(ellipse_at_top_left,color-mix(in_srgb,var(--color-primary)_13%,transparent),transparent_72%)] opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
-                    <div aria-hidden="true" className="absolute inset-y-7 start-0 w-1 rounded-e-full bg-gradient-to-b from-[var(--color-primary)] via-[var(--color-secondary)] to-transparent opacity-70 transition-all duration-500 group-hover:inset-y-5 group-hover:opacity-100" />
+                  <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-lg shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/30 hover:shadow-2xl">
                     
                     {/* Current badge */}
                     {experience.isCurrent && (
@@ -100,25 +96,20 @@ export default function ExperiencePreview() {
                       </motion.div>
                     )}
 
-                    {/* Header with icon */}
-                    <div className="mb-4 flex min-h-[4.5rem] items-start gap-3 sm:gap-3.5">
-                      <motion.div 
-                        className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-secondary)]/15 text-[var(--color-primary)]"
-                        whileHover={reduceMotion ? undefined : { scale: 1.06, rotate: 4 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
-                        <FiBriefcase size={20} />
-                      </motion.div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="line-clamp-2 break-words font-[var(--font-display)] text-lg font-bold leading-snug text-[var(--color-text-primary)]">{experience.position}</h3>
-                        <p className="mt-1 font-semibold text-[var(--color-primary)]">{experience.company}</p>
-                        {experience.location && <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">{experience.location}</p>}
+                    <header className="border-b border-[var(--color-border)] p-6 sm:p-7">
+                      <div className="flex items-start gap-4">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-primary)]"><FiBriefcase size={21} /></span>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="break-words font-[var(--font-display)] text-xl font-bold text-[var(--color-text-primary)] sm:text-2xl">{experience.position}</h3>
+                          <p className="mt-1 font-semibold text-[var(--color-primary)]">{experience.company}</p>
+                          {experience.location && <p className="mt-2 text-sm text-[var(--color-text-muted)]">{experience.location}</p>}
+                        </div>
                       </div>
-                    </div>
-
+                    </header>
+                    <div className="flex flex-1 flex-col p-6 sm:p-7">
                     {/* Date range */}
                     <motion.div 
-                      className="mb-4 inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/50 px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]"
+                      className="mb-4 inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--color-text-muted)]"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
@@ -131,7 +122,7 @@ export default function ExperiencePreview() {
                     {/* Description */}
                     {experience.description && (
                       <motion.p 
-                        className="line-clamp-4 min-h-[5.5rem] text-sm leading-[1.4rem] text-[var(--color-text-secondary)]"
+                        className="text-sm leading-7 text-[var(--color-text-muted)]"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
@@ -154,18 +145,18 @@ export default function ExperiencePreview() {
                           <FiCode size={16} className="text-[var(--color-primary)]" />
                           {t("common.responsibilities")}
                         </h4>
-                        <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-                          {experience.responsibilities.slice(0, 2).map((item, idx) => (
+                        <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--color-text-muted)]">
+                          {experience.responsibilities.map((item, idx) => (
                             <motion.li 
                               key={item} 
-                              className="flex gap-3 items-start"
+                              className="flex items-start gap-3 text-sm leading-6 text-[var(--color-text-muted)]"
                               initial={{ opacity: 0, x: -10 }}
                               whileInView={{ opacity: 1, x: 0 }}
                               viewport={{ once: true }}
                               transition={{ delay: 0.25 + idx * 0.05 }}
                             >
-                              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--color-primary)]" />
-                              <span className="line-clamp-2">{item}</span>
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-primary)]" />
+                              <span>{item}</span>
                             </motion.li>
                           ))}
                         </ul>
@@ -185,12 +176,9 @@ export default function ExperiencePreview() {
                           <FiCheckCircle size={16} className="text-[var(--color-secondary)]" />
                           {t("adminValidation.fields.achievements")}
                         </h4>
-                        <ul className="mt-2 space-y-1.5 text-sm leading-6 text-[var(--color-secondary)]">
-                          {experience.achievements.slice(0, 1).map((achievement) => (
-                            <li key={achievement} className="flex gap-2 items-start">
-                              <span className="text-lg">âœ¨</span>
-                              <span>{achievement}</span>
-                            </li>
+                        <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--color-primary)]">
+                          {experience.achievements.map((achievement) => (
+                            <li key={achievement}>★ {achievement}</li>
                           ))}
                         </ul>
                       </motion.div>
@@ -198,30 +186,17 @@ export default function ExperiencePreview() {
 
                     {/* Technologies */}
                     {experience.technologies?.length > 0 && (
-                      <motion.div 
-                        className="mt-auto flex flex-wrap gap-2 pt-5"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                      >
-                        {experience.technologies.slice(0, 5).map((tech, idx) => (
-                          <motion.div
-                            key={tech}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.35 + idx * 0.05 }}
-                            whileHover={{ scale: 1.05, y: -2 }}
-                          >
-                            <TechIcon 
-                              name={tech} 
-                              className="h-6 w-6"
-                            />
-                          </motion.div>
+                      <motion.div className="mt-7 flex flex-wrap gap-2 pt-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                        {experience.technologies.map((tech) => (
+                          <span key={tech} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-muted)] px-3 py-2 text-xs font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]">{tech}</span>
                         ))}
                       </motion.div>
                     )}
+                    <Link to="/projects" className="group/link mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]">
+                      {t("nav.projects")}
+                      <FiArrowRight className="rtl-flip transition-transform duration-300 group-hover/link:translate-x-1" />
+                    </Link>
+                    </div>
                   </div>
                 </motion.article>
               ))}

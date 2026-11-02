@@ -1055,7 +1055,7 @@ const resources = {
       },
       footer: {
         navigation: "ناوېګېشن",
-        more: "نور",
+        more: "بیشتر",
         built: "له React، Node.js او MongoDB سره جوړ شوی.",
       },
     },
