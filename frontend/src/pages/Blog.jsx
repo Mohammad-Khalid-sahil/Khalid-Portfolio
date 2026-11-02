@@ -50,7 +50,7 @@ export default function Blog() {
               <motion.article
                 key={post._id}
                 variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: reduceMotion ? 0 : 0.48, ease: [0.22, 1, 0.36, 1] } } }}
-                className="ds-card ds-blog-card group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl"
+                className="ds-card ds-experience-card ds-blog-card group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl"
               >
                 <div className="ds-blog-card__media relative aspect-[16/10] overflow-hidden bg-[var(--color-surface)]">
                   {post.cover ? <img src={post.cover} alt={post.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" /> : <div className="h-full min-h-40 bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_65%)]" />}

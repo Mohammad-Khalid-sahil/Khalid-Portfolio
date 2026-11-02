@@ -44,7 +44,7 @@ export default function ServicesPreview() {
               const tone = TONES[index % TONES.length];
               return (
                 <motion.div key={service._id} variants={serviceReveal} className="h-full">
-                  <SpotlightCard as="article" className="group flex h-full flex-col p-6 sm:p-7">
+                  <SpotlightCard as="article" className="ds-experience-card group flex h-full flex-col p-6 sm:p-7">
                     <div className="flex items-start justify-between">
                       <span
                         className="grid h-12 w-12 place-items-center rounded-2xl border border-[var(--color-border)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-[-6deg]"

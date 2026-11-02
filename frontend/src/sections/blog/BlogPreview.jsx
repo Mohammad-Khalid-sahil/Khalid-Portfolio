@@ -80,7 +80,7 @@ export default function BlogPreview() {
               <motion.article
                 key={post._id}
                 variants={itemVariants}
-                className="ds-card ds-blog-card group flex h-full flex-col overflow-hidden rounded-2xl"
+                className="ds-card ds-experience-card ds-blog-card group flex h-full flex-col overflow-hidden rounded-2xl"
               >
                 {/* Image container with category overlay */}
                 <div className="relative block overflow-hidden bg-[var(--color-surface)]">

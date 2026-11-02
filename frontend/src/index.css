@@ -2028,7 +2028,16 @@ html:not([dir="rtl"]) .public-site-shell .ds-project p[class*="text-sm"] {
 /* Shared animated surfaces for service, article and experience collections. */
 .ds-service-card,
 .ds-blog-card,
-.ds-experience-card { isolation: isolate; transition: transform 420ms var(--ds-ease), border-color 260ms ease, box-shadow 420ms var(--ds-ease); }
+.ds-experience-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--ds-radius-xl);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-text-primary) 2.5%, transparent), transparent 40%), var(--color-card);
+  box-shadow: var(--ds-shadow-md);
+  isolation: isolate;
+  transition: transform 420ms var(--ds-ease), border-color 260ms ease, box-shadow 420ms var(--ds-ease);
+}
 .ds-service-card::before,
 .ds-blog-card::before,
 .ds-experience-card::before { content:""; position:absolute; z-index:-1; inset:0; pointer-events:none; opacity:0; background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--color-primary) 11%,transparent),transparent 68%); transition:opacity 350ms ease; }

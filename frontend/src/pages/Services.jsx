@@ -44,7 +44,7 @@ export default function Services() {
             {services.map((service, i) => {
               const Icon = ICONS[service.icon] || FiCode;
               return (
-                <motion.article key={service._id} variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } } }} className="ds-card ds-service-card group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl p-6 sm:p-7">
+                <motion.article key={service._id} variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } } }} className="ds-card ds-experience-card ds-service-card group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl p-6 sm:p-7">
                   <span aria-hidden="true" className="ds-service-card__glow" />
                   <div className="flex items-start justify-between gap-4">
                     <div className="ds-service-card__icon grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">

@@ -177,7 +177,7 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: reduce ? 0 : 0.48, delay: reduce || showcase ? 0 : (index % 3) * 0.055, ease: [0.22, 1, 0.36, 1] }}
       onPointerMove={setSpotlight}
-      className={`group ds-card ds-spotlight ds-card--interactive flex h-full p-3 ${showcase ? "flex-col gap-4 lg:grid lg:grid-cols-[1.25fr_1fr] lg:gap-4" : "flex-col"}`}
+      className={`group ds-card ds-experience-card ds-spotlight ds-card--interactive flex h-full p-3 ${showcase ? "flex-col gap-4 lg:grid lg:grid-cols-[1.25fr_1fr] lg:gap-4" : "flex-col"}`}
     >
       {media}
       {body}
