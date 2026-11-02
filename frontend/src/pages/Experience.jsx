@@ -93,7 +93,7 @@ export default function Experience() {
 
           {!isLoading && !isError && filtered.length > 0 && (
             <div className="relative mx-auto mt-16 max-w-5xl">
-              <div aria-hidden="true" className="absolute bottom-0 start-3 top-0 w-px bg-gradient-to-b from-transparent via-[var(--color-primary)]/30 to-transparent lg:start-1/2 lg:-translate-x-1/2" />
+              <div aria-hidden="true" className="pointer-events-none absolute bottom-0 start-[11px] top-0 z-[1] w-[2px] bg-gradient-to-b from-transparent via-[var(--color-primary)]/70 to-transparent lg:start-1/2 lg:-translate-x-1/2" />
               <div className="space-y-12 lg:space-y-20">
                 {filtered.map((experience, index) => {
                   const isLeft = index % 2 === 0;
@@ -104,8 +104,8 @@ export default function Experience() {
                   return (
                     <motion.div
                       key={experience._id}
-                      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-                      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                      initial={reduceMotion ? false : { opacity: 0, y: 22, scale: 0.985 }}
+                      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
                       viewport={{ once: true, amount: 0.15 }}
                       transition={{ duration: reduceMotion ? 0 : 0.48, delay: reduceMotion ? 0 : (index % 2) * 0.05, ease: [0.22, 1, 0.36, 1] }}
                       className="relative lg:grid lg:grid-cols-2 lg:gap-16"

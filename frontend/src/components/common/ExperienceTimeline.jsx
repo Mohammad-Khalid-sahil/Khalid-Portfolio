@@ -9,17 +9,17 @@ export default function ExperienceTimeline({ items = [], renderItem, getMeta, cl
 
   return (
     <div className={`relative mx-auto max-w-5xl ${className}`}>
-      <div aria-hidden="true" className="pointer-events-none absolute bottom-0 start-3 top-0 w-px bg-gradient-to-b from-transparent via-[var(--color-primary)]/35 to-transparent lg:start-1/2 lg:-translate-x-1/2" />
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-0 start-[11px] top-0 z-[1] w-[2px] bg-gradient-to-b from-transparent via-[var(--color-primary)]/70 to-transparent lg:start-1/2 lg:-translate-x-1/2" />
       <div className="space-y-12 lg:space-y-20">
         {items.map((item, index) => {
           const isLeft = index % 2 === 0;
           return (
             <motion.div
               key={item._id || item.id || item.slug || index}
-              initial={reduceMotion ? false : { opacity: 0, y: 18, x: isLeft ? -12 : 12 }}
-              whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, x: 0 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 22, x: isLeft ? -12 : 12, scale: 0.985 }}
+              whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, x: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.12 }}
-              transition={{ duration: reduceMotion ? 0 : 0.48, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative lg:grid lg:grid-cols-2 lg:gap-16"
             >
               <span aria-hidden="true" className="absolute start-3 top-8 z-10 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--color-surface)] bg-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20 lg:start-1/2">

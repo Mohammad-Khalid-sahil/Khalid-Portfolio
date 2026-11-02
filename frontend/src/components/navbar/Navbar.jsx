@@ -26,7 +26,7 @@ export default function Navbar() {
   const closeMobileMenu = useUIStore((s) => s.closeMobileMenu);
   const openCommandPalette = useUIStore((s) => s.openCommandPalette);
   const { data: profile } = useProfile();
-  const brandName = "SH Software";
+  const brandName = "Khalid Portfolio";
   const resumeUrl = profile?.resumeUrl || DEFAULT_RESUME_URL;
   const isHome = pathname === "/";
   const activeSection = useActiveSection(SECTION_IDS, isHome);

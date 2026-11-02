@@ -5,10 +5,10 @@ import { initialsFromName } from "@/utils/displayContent";
  * Keeps the existing identity (profile name + primary dot) with a more
  * deliberate, developer-oriented treatment.
  */
-export default function BrandMark({ name = "SH Software", showWordmark = true, size = "md", className = "" }) {
-  const initials = (name === "SH Software" ? "SH" : initialsFromName(name).slice(0, 2)) || "P";
+export default function BrandMark({ name = "Khalid Portfolio", showWordmark = true, size = "md", className = "" }) {
+  const initials = (name === "Khalid Portfolio" ? "KH" : initialsFromName(name).slice(0, 2)) || "P";
   const firstName = String(name).split(/\s+/)[0] || name;
-  const isSoftwareBrand = name === "SH Software";
+  const isPortfolioBrand = name === "Khalid Portfolio";
   const tile = size === "lg" ? "h-12 w-12 text-base" : "h-10 w-10 text-sm";
 
   return (
@@ -30,8 +30,8 @@ export default function BrandMark({ name = "SH Software", showWordmark = true, s
       </span>
       {showWordmark && (
         <span dir="ltr" className="min-w-0 truncate font-[var(--font-display)] text-[1.05rem] font-semibold tracking-tight text-[var(--color-text-primary)]">
-          {isSoftwareBrand ? (
-            <><span>SH</span><span className="ms-1 text-[var(--color-primary)]">Software</span></>
+          {isPortfolioBrand ? (
+            <><span>Khalid</span><span className="ms-1 text-[var(--color-primary)]">Portfolio</span></>
           ) : (
             <>{firstName}<span className="text-[var(--color-primary)]">.</span><span className="ms-1 hidden font-mono text-[0.7rem] font-normal text-[var(--color-text-muted)] 2xl:inline">dev</span></>
           )}

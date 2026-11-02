@@ -145,7 +145,7 @@ export default function AdminLayout() {
       >
         <div className={`border-b border-[var(--color-border)] py-5 ${desktopNavCollapsed ? "px-2 text-center md:px-2" : "px-5"}`}>
           <div className={`flex items-center gap-3 overflow-hidden whitespace-nowrap ${desktopNavCollapsed ? "md:justify-center" : ""}`}>
-            <BrandMark name="SH Software" showWordmark={!desktopNavCollapsed} />
+            <BrandMark name="Khalid Portfolio" showWordmark={!desktopNavCollapsed} />
           </div>
           {user?.name && !desktopNavCollapsed && <p className="mt-1 truncate font-mono text-xs text-[var(--color-text-muted)]">{user.name}</p>}
         </div>

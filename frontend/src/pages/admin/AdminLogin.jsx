@@ -27,7 +27,7 @@ export default function AdminLogin() {
       <AnimatedCodeBackground />
       <div className="admin-login__overlay" aria-hidden="true" />
       <div className="admin-login__content relative z-10 w-full max-w-sm rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-8">
-        <BrandMark name="SH Software" className="mb-6" />
+        <BrandMark name="Khalid Portfolio" className="mb-6" />
         <p className="font-mono text-sm text-[var(--color-primary)]">{t("admin.label")}</p>
         <h1 className="mt-1 font-[var(--font-display)] text-2xl font-semibold text-[var(--color-text-primary)]">
           {t("admin.signIn")}

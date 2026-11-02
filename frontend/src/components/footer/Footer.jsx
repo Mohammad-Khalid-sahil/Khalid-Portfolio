@@ -62,7 +62,7 @@ export default function Footer() {
       >
         {/* Brand section */}
         <motion.div variants={itemVariants}>
-          <motion.div className="flex items-center gap-3" whileHover={{ scale: 1.02 }}><BrandMark name="SH Software" size="lg" /></motion.div>
+          <motion.div className="flex items-center gap-3" whileHover={{ scale: 1.02 }}><BrandMark name="Khalid Portfolio" size="lg" /></motion.div>
           <p className="mt-4 max-w-sm text-sm leading-7 text-[var(--color-text-muted)]">{p.tagline}</p>
           
           {/* CTA Button */}
