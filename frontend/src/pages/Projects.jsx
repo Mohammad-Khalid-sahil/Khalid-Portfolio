@@ -5,7 +5,6 @@ import { FiArrowRight, FiSearch } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import PageHero from "@/components/common/PageHero";
 import ProjectCard from "@/components/cards/ProjectCard";
-import Marquee from "@/components/ui/Marquee";
 import Button from "@/components/ui/Button";
 import { useProjects } from "@/hooks/queries/useProjects";
 import { CardSkeleton } from "@/components/loaders/SectionLoader";
@@ -101,17 +100,7 @@ export default function Projects() {
             </label>
 
             <div role="group" aria-label={t("pages.projects.title")} className="w-full min-w-0 lg:w-auto">
-              <Marquee duration={24} className="ds-marquee--mobile-only">
-                {categories.map((item) => {
-                  const active = category === item.id;
-                  return (
-                    <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`min-h-12 shrink-0 whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </Marquee>
-              <div className="hidden flex-wrap justify-end gap-2.5 sm:flex">
+              <div className="flex max-w-full gap-2.5 overflow-x-auto pb-2 sm:flex-wrap sm:justify-end sm:overflow-visible">
                 {categories.map((item) => {
                 const active = category === item.id;
                 return (
@@ -121,7 +110,7 @@ export default function Projects() {
                     onClick={() => setCategory(item.id)}
                     aria-pressed={active}
                     className={[
-                      "min-h-12 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
+                      "min-h-12 shrink-0 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
                       active
                         ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20"
                         : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]",

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useProjects } from "@/hooks/queries/useProjects";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ProjectCard from "@/components/cards/ProjectCard";
-import Marquee from "@/components/ui/Marquee";
 import Button from "@/components/ui/Button";
 import { CardSkeleton } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
@@ -78,16 +77,10 @@ export default function FeaturedProjects() {
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("pages.projects.search")} aria-label={t("pages.projects.search")} className="min-h-12 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] py-3 pe-4 ps-11 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)]/40 focus:ring-4 focus:ring-[var(--color-primary)]/10" />
           </label>
           <div role="group" aria-label={t("pages.projects.title")} className="w-full min-w-0 sm:w-auto">
-            <Marquee duration={24} className="sm:hidden">
-              {categories.map((item) => {
-                const active = category === item.id;
-                return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`min-h-12 shrink-0 whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
-              })}
-            </Marquee>
-            <div className="hidden flex-wrap justify-end gap-2.5 sm:flex">
+            <div className="flex max-w-full gap-2.5 overflow-x-auto pb-2 sm:flex-wrap sm:justify-end sm:overflow-visible">
               {categories.map((item) => {
               const active = category === item.id;
-              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`flex min-h-12 shrink-0 snap-start items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
+              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`flex min-h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
               })}
             </div>
           </div>
