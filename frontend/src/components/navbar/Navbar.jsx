@@ -84,18 +84,18 @@ export default function Navbar() {
               : "border-transparent bg-transparent px-3 py-3 sm:px-4"
           }`}
         >
-          <div className="flex h-11 items-center justify-between gap-3">
-            <NavLink to="/" onClick={(event) => navigateToSection(event, "/")} aria-label={brandName} className="min-w-0 text-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]">
+          <div className="flex h-11 items-center gap-2 xl:gap-3">
+            <NavLink to="/" onClick={(event) => navigateToSection(event, "/")} aria-label={brandName} className="shrink-0 text-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]">
               <BrandMark name={brandName} />
             </NavLink>
 
-            <ul className="hidden items-center gap-0.5 rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-card)_55%,transparent)] p-1 xl:flex">
+            <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0 rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-card)_55%,transparent)] p-1 xl:flex">
               {navLinks.map((link) => (
                 <li key={link.to}>
                   <NavLink
                     to={link.to}
                     onClick={(event) => navigateToSection(event, link.to)}
-                    className="relative block rounded-full px-3.5 py-1.5 text-[0.82rem] font-medium"
+                    className="relative block rounded-full px-2 py-1.5 text-[0.82rem] font-medium 2xl:px-3.5"
                   >
                     {({ isActive }) => {
                       const active = isLinkActive(link, isActive);
@@ -119,7 +119,7 @@ export default function Navbar() {
               ))}
             </ul>
 
-            <div className="hidden items-center gap-2 xl:flex">
+            <div className="hidden shrink-0 items-center gap-1.5 xl:flex 2xl:gap-2">
               <button
                 type="button"
                 onClick={openCommandPalette}
