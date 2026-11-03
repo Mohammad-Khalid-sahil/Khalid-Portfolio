@@ -16,15 +16,28 @@ export default function ExperienceTimeline({ items = [], renderItem, getMeta, cl
           return (
             <motion.div
               key={item._id || item.id || item.slug || index}
-              initial={reduceMotion ? false : { opacity: 0, y: 22, x: isLeft ? -12 : 12, scale: 0.985 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 34, x: isLeft ? -20 : 20, scale: 0.965 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, x: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.12 }}
-              transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
+              viewport={{ once: true, amount: 0.16 }}
+              transition={{
+                type: "spring",
+                stiffness: 82,
+                damping: 17,
+                mass: 0.85,
+                delay: reduceMotion ? 0 : Math.min(index * 0.075, 0.3),
+              }}
               className="relative lg:grid lg:grid-cols-2 lg:gap-16"
             >
-              <span aria-hidden="true" className="absolute start-3 top-8 z-10 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--color-surface)] bg-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20 lg:start-1/2">
+              <motion.span
+                aria-hidden="true"
+                initial={reduceMotion ? false : { scale: 0.35, opacity: 0 }}
+                whileInView={reduceMotion ? undefined : { scale: 1, opacity: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ type: "spring", stiffness: 320, damping: 18, delay: reduceMotion ? 0 : Math.min(index * 0.075 + 0.12, 0.42) }}
+                className="absolute start-3 top-8 z-10 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--color-surface)] bg-[var(--color-primary)] shadow-[0_0_0_5px_color-mix(in_srgb,var(--color-primary)_12%,transparent),0_0_24px_color-mix(in_srgb,var(--color-primary)_55%,transparent)] lg:start-1/2"
+              >
                 <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              </span>
+              </motion.span>
 
               <div className={`hidden pt-7 lg:flex ${isLeft ? "lg:col-start-2 lg:justify-start" : "lg:col-start-1 lg:justify-end"}`}>
                 <span className="inline-flex h-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-2 text-sm font-semibold text-[var(--color-text-muted)] shadow-sm">

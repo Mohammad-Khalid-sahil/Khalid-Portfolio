@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DEFAULT_RESUME_URL } from "@/config/profileAssets";
-import { NavLink, Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { FiMenu, FiX, FiCommand, FiLock, FiArrowUpRight, FiDownload } from "react-icons/fi";
+import { FiMenu, FiX, FiCommand, FiArrowUpRight, FiDownload } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { navLinks } from "@/constants/siteData";
 import { useUIStore } from "@/store/useUIStore";
@@ -132,9 +132,6 @@ export default function Navbar() {
               </button>
               <LanguageSwitcher />
               <ThemeToggle />
-              <Link to="/admin/login" aria-label={t("common.adminLogin")} title={t("common.adminLogin")} className={iconButton}>
-                <FiLock size={14} />
-              </Link>
               {resumeUrl && (
                 <Button href={resumeUrl} download size="sm" className="ms-1">
                   {t("nav.resume")} <FiArrowUpRight className="rtl-flip" size={14} />
@@ -223,9 +220,6 @@ export default function Navbar() {
                 <button type="button" onClick={() => { closeMobileMenu(); openCommandPalette(); }} aria-label={t("common.searchWithShortcut")} className={iconButton}>
                   <FiCommand size={15} />
                 </button>
-                <Link to="/admin/login" onClick={closeMobileMenu} aria-label={t("common.adminLogin")} className={iconButton}>
-                  <FiLock size={14} />
-                </Link>
                 {resumeUrl && (
                   <Button href={resumeUrl} download size="sm" className="ms-auto">
                     <FiDownload size={14} /> {t("nav.resume")}
