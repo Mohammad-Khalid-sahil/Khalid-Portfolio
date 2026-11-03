@@ -39,6 +39,9 @@ export default function Projects() {
   const filteredProjects = projects || [];
   const featuredProjects = filteredProjects.filter((project) => project.featured);
   const showFeatured = category === "all" && !trimmedQuery && featuredProjects.length > 0;
+  const otherProjects = showFeatured
+    ? filteredProjects.filter((project) => !project.featured)
+    : filteredProjects;
 
   function renderProjectCard(project, index, featured = false) {
     return (
@@ -159,14 +162,14 @@ export default function Projects() {
                 </motion.div>
               )}
 
-              <div className="mt-14">
+              {otherProjects.length > 0 && <div className="mt-14">
                 <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4">
                   <h2 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">
                     {hasActiveFilters ? t("pages.projects.title") : t("nav.projects")}
                   </h2>
                 </div>
-                <ExperienceTimeline items={filteredProjects} getMeta={(project, index) => project.type || (typeof project.category === "object" ? project.category?.name : project.category) || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => renderProjectCard(project, index)} />
-              </div>
+                <ExperienceTimeline items={otherProjects} getMeta={(project, index) => project.type || (typeof project.category === "object" ? project.category?.name : project.category) || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => renderProjectCard(project, index, Boolean(project.featured))} />
+              </div>}
             </>
           )}
 

@@ -32,6 +32,11 @@ export default function FeaturedProjects() {
   const hasActiveFilters = category !== "all" || Boolean(trimmedQuery);
   const featured = filtered.filter((project) => project.featured);
   const showFeatured = category === "all" && !trimmedQuery && featured.length > 0;
+  const highlightedFeatured = featured.slice(0, 4);
+  const highlightedIds = new Set(highlightedFeatured.map((project) => project._id));
+  const remainingProjects = showFeatured
+    ? filtered.filter((project) => !highlightedIds.has(project._id))
+    : filtered;
 
   function projectCard(project, index, large = false) {
     return (
@@ -95,13 +100,13 @@ export default function FeaturedProjects() {
           <>
             {showFeatured && <div className="mt-14">
               <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4"><h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{t("sections.projects.title")}</h3></div>
-              <ExperienceTimeline items={featured.slice(0, 4)} getMeta={(project, index) => project.type || project.category?.name || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => projectCard(project, index, true)} />
+              <ExperienceTimeline items={highlightedFeatured} getMeta={(project, index) => project.type || project.category?.name || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => projectCard(project, index, true)} />
             </div>}
 
-            <div className="mt-14">
+            {remainingProjects.length > 0 && <div className="mt-14">
               <div className="mb-6 border-b border-[var(--color-border)]/70 pb-4"><h3 className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)]">{trimmedQuery || category !== "all" ? t("pages.projects.title") : t("nav.projects")}</h3></div>
-              <ExperienceTimeline items={filtered.slice(0, 8)} getMeta={(project, index) => project.type || project.category?.name || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => projectCard(project, index)} />
-            </div>
+              <ExperienceTimeline items={remainingProjects.slice(0, 8)} getMeta={(project, index) => project.type || project.category?.name || `#${String(index + 1).padStart(2, "0")}`} renderItem={(project, index) => projectCard(project, index, Boolean(project.featured))} />
+            </div>}
           </>
         )}
 
