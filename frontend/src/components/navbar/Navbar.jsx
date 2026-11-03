@@ -84,7 +84,7 @@ export default function Navbar() {
               : "border-transparent bg-transparent px-3 py-3 sm:px-4"
           }`}
         >
-          <div className="flex h-11 items-center gap-2 xl:gap-3">
+          <div className="flex h-11 items-center justify-between gap-2 xl:gap-3">
             <NavLink to="/" onClick={(event) => navigateToSection(event, "/")} aria-label={brandName} className="shrink-0 text-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]">
               <BrandMark name={brandName} />
             </NavLink>
