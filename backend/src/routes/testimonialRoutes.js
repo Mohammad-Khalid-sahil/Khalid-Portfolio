@@ -11,13 +11,14 @@ import { optionalProtect, protect, requirePermission } from "../middlewares/auth
 import { validate } from "../middlewares/validate.js";
 import { adminResourceListValidators, mongoIdParam } from "../validators/common.js";
 import { createTestimonialValidator, updateTestimonialValidator } from "../validators/testimonialValidator.js";
+import { testimonialLimiter } from "../middlewares/rateLimiters.js";
 
 const router = Router();
 
 router.get("/", getTestimonials);
 router.get("/admin/all", protect, requirePermission("content:read"), validate(adminResourceListValidators), getAdminTestimonials);
 router.get("/:id", validate([mongoIdParam("id")]), getTestimonial);
-router.post("/", validate(createTestimonialValidator), optionalProtect, createTestimonial);
+router.post("/", testimonialLimiter, validate(createTestimonialValidator), optionalProtect, createTestimonial);
 router.put(
   "/:id",
   protect,

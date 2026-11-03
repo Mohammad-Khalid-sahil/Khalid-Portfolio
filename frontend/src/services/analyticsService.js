@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/config/apiBaseUrl";
+import api from "@/services/api";
 const SESSION_KEY = "portfolio_analytics_session";
 
 function getSessionId() {
@@ -45,4 +46,8 @@ export function trackAnalyticsEvent(event) {
     body,
     keepalive: true,
   }).catch(() => {});
+}
+
+export function getPublicVisitorCount() {
+  return api.get("/analytics/visitors").then((response) => response.data.visitors);
 }

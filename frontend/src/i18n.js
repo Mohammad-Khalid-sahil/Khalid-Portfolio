@@ -1745,7 +1745,33 @@ Object.assign(resources.fa.translation.admin.settings, {
 Object.assign(resources.fa.translation.footer, {
   navigation: "ناوبری", built: "ساخته‌شده با React، Node.js و MongoDB.",
 });
-resources.en.translation.sections.github.rateLimited = "GitHub is rate limiting requests. Please try again shortly.";
+
+Object.assign(resources.en.translation.pages.testimonials, {
+  formEyebrow: "Share your feedback", formTitle: "What do you think?", formDescription: "Tell visitors about your experience with the website, a project, or another part of the portfolio.",
+  name: "Your name", position: "Role or position (optional)", company: "Organization (optional)", topic: "What is your feedback about?", projectName: "Project name", subject: "Page or topic",
+  rating: "Your rating", ratingValue: "{{count}} out of 5 stars", message: "Your feedback", messagePlaceholder: "Share a clear, respectful comment...", submit: "Send feedback", submitting: "Sending...", submitted: "Thank you. Your feedback has been sent for review.", submitError: "We couldn't send your feedback. Please try again later.", moderationNote: "Your feedback will appear publicly after it is reviewed and approved.",
+  topics: { website: "Website", project: "Project", services: "Services", experience: "Experience", other: "Other" },
+});
+Object.assign(resources.fa.translation.pages.testimonials, {
+  formEyebrow: "دیدگاه خود را شریک سازید", formTitle: "نظر شما چیست؟", formDescription: "تجربه‌تان از وب‌سایت، یک پروژه یا بخش دیگری از این پورتفولیو را با بازدیدکنندگان شریک سازید.",
+  name: "نام شما", position: "سمت یا وظیفه (اختیاری)", company: "سازمان (اختیاری)", topic: "دیدگاه شما دربارهٔ کدام بخش است؟", projectName: "نام پروژه", subject: "صفحه یا موضوع",
+  rating: "امتیاز شما", ratingValue: "{{count}} از ۵ ستاره", message: "دیدگاه شما", messagePlaceholder: "دیدگاه روشن و محترمانهٔ خود را بنویسید...", submit: "ارسال دیدگاه", submitting: "در حال ارسال...", submitted: "تشکر. دیدگاه شما برای بررسی فرستاده شد.", submitError: "ارسال دیدگاه ناموفق بود. لطفاً بعداً دوباره تلاش کنید.", moderationNote: "دیدگاه پس از بررسی و تأیید به‌صورت عمومی نمایش داده می‌شود.",
+  topics: { website: "وب‌سایت", project: "پروژه", services: "خدمات", experience: "تجربه", other: "بخش دیگر" },
+});
+Object.assign(resources.ps.translation.pages.testimonials, {
+  formEyebrow: "خپل نظر شریک کړئ", formTitle: "ستاسو نظر څه دی؟", formDescription: "د وېب‌پاڼې، یوې پروژې یا د پورټفولیو د بلې برخې په اړه خپله تجربه له لیدونکو سره شریکه کړئ.",
+  name: "ستاسو نوم", position: "دنده یا مقام (اختیاري)", company: "اداره (اختیاري)", topic: "ستاسو نظر د څه په اړه دی؟", projectName: "د پروژې نوم", subject: "پاڼه یا موضوع",
+  rating: "ستاسو درجه", ratingValue: "له ۵ څخه {{count}} ستوري", message: "ستاسو نظر", messagePlaceholder: "روښانه او درناوی لرونکی نظر ولیکئ...", submit: "نظر ولېږئ", submitting: "لېږل کېږي...", submitted: "مننه. ستاسو نظر د کتنې لپاره ولېږل شو.", submitError: "ستاسو نظر ونه لېږل شو. مهرباني وکړئ وروسته بیا هڅه وکړئ.", moderationNote: "نظر به تر کتنې او تایید وروسته په عامه توګه ښکاره شي.",
+  topics: { website: "وېب‌پاڼه", project: "پروژه", services: "خدمتونه", experience: "تجربه", other: "بل څه" },
+});
+resources.en.translation.footer.visitors = "Visitors";
+resources.fa.translation.footer.visitors = "بازدیدکنندگان";
+resources.ps.translation.footer.visitors = "لیدونکي";
+resources.en.translation.sections.testimonials.topics = resources.en.translation.pages.testimonials.topics;
+resources.fa.translation.sections.testimonials.topics = resources.fa.translation.pages.testimonials.topics;
+resources.ps.translation.sections.testimonials.topics = resources.ps.translation.pages.testimonials.topics;
+
+resources.en.translation.sections.github.rateLimited = "GitHub is rate limiting requests. Please try again shortly."
 resources.en.translation.admin.administration = "Administration";
 resources.fa.translation.sections.github.rateLimited = "گیت‌هاب درخواست‌ها را محدود کرده است. لطفاً کمی بعد دوباره تلاش کنید.";
 resources.ps.translation.sections.github.rateLimited = "ګیټ‌هاب غوښتنې محدودوي. مهرباني وکړئ لږ وروسته بیا هڅه وکړئ.";

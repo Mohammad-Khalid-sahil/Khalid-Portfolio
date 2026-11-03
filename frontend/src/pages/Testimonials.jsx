@@ -6,6 +6,7 @@ import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import { SectionLoader } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
 import Seo, { buildBreadcrumbSchema } from "@/components/seo/Seo";
+import TestimonialSubmissionForm from "@/components/common/TestimonialSubmissionForm";
 
 export default function Testimonials() {
   const { t } = useTranslation();
@@ -35,9 +36,9 @@ export default function Testimonials() {
 
         {!isLoading && !isError && testimonials?.length > 0 && (
         <div className={testimonials.length === 1 ? "mx-auto grid max-w-4xl gap-5" : "grid gap-5 md:grid-cols-2 lg:grid-cols-3"}>
-            {testimonials.map((t, i) => (
+            {testimonials.map((testimonial, i) => (
               <motion.blockquote
-                key={t._id}
+                key={testimonial._id}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
@@ -46,23 +47,27 @@ export default function Testimonials() {
               >
                 <span aria-hidden="true" className="absolute end-5 top-2 font-serif text-7xl leading-none text-[var(--color-primary)]/10">“</span>
                 <div className="flex gap-0.5 text-[var(--color-highlight)]">
-                  {Array.from({ length: t.rating || 5 }).map((_, idx) => (
+                  {Array.from({ length: testimonial.rating || 5 }).map((_, idx) => (
                     <FiStar key={idx} size={13} fill="currentColor" />
                   ))}
                 </div>
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-[var(--color-text-primary)]">“{t.message}”</p>
+                <p className="mt-3 text-xs font-semibold text-[var(--color-primary)]">
+                  {t(`pages.testimonials.topics.${testimonial.topic || "website"}`)}{testimonial.subject ? ` · ${testimonial.subject}` : ""}
+                </p>
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-[var(--color-text-primary)]">“{testimonial.message}”</p>
                 <footer className="mt-5 border-t border-[var(--color-border)] pt-4">
                   <p className="font-[var(--font-display)] text-sm font-semibold text-[var(--color-text-primary)]">
-                    {t.name}
+                    {testimonial.name}
                   </p>
                   <p className="font-mono text-xs text-[var(--color-text-muted)]">
-                    {t.position} {t.position && t.company && "·"} {t.company}
+                    {testimonial.position} {testimonial.position && testimonial.company && "·"} {testimonial.company}
                   </p>
                 </footer>
               </motion.blockquote>
             ))}
           </div>
         )}
+        <div className="mt-16"><TestimonialSubmissionForm /></div>
       </section>
     </>
   );

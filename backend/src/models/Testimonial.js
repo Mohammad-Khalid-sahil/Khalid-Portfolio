@@ -5,6 +5,8 @@ const testimonialSchema = new mongoose.Schema(
     name: { type: String, required: true },
     position: { type: String, default: "" },
     company: { type: String, default: "" },
+    topic: { type: String, enum: ["website", "project", "services", "experience", "other"], default: "website" },
+    subject: { type: String, default: "" },
     avatar: { type: String, default: null },
     rating: { type: Number, min: 1, max: 5, default: 5 },
     message: { type: String, required: true },

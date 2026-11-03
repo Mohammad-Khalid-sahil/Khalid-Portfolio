@@ -8,6 +8,7 @@ import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { SectionLoader } from "@/components/loaders/SectionLoader";
 import { ErrorState } from "@/components/loaders/ErrorState";
+import TestimonialSubmissionForm from "@/components/common/TestimonialSubmissionForm";
 
 export default function Testimonials() {
   const { t } = useTranslation();
@@ -30,6 +31,7 @@ export default function Testimonials() {
               <p className="text-center text-[var(--color-text-muted)]">{t("pages.testimonials.empty")}</p>
             )}
           </div>
+          <div className="mt-12"><TestimonialSubmissionForm /></div>
         </div>
       </section>
     );
@@ -109,6 +111,10 @@ export default function Testimonials() {
                       {current.position && <span>{current.position}</span>}
                       {current.position && current.company && <span> · </span>}
                       {current.company && <span>{current.company}</span>}
+                    </p>
+                    <p className="mt-2 text-xs font-medium text-[var(--color-primary)]">
+                      {t(`pages.testimonials.topics.${current.topic || "website"}`)}
+                      {current.subject ? ` · ${current.subject}` : ""}
                     </p>
                   </div>
                 </motion.footer>
@@ -196,6 +202,7 @@ export default function Testimonials() {
             </Link>
           </motion.div>
         </div>
+        <div className="mt-16"><TestimonialSubmissionForm /></div>
       </div>
     </section>
   );

@@ -5,6 +5,10 @@ export const createTestimonialValidator = [
   body("name").trim().notEmpty().withMessage("name is required").isLength({ max: 100 }),
   body("position").optional().trim().isLength({ max: 100 }),
   body("company").optional().trim().isLength({ max: 100 }),
+  body("topic").optional().isIn(["website", "project", "services", "experience", "other"]),
+  body("subject").optional({ checkFalsy: true }).trim().isLength({ max: 160 }),
+  body("subject").custom((value, { req }) => req.body.topic !== "project" || Boolean(String(value || "").trim()))
+    .withMessage("subject is required for project feedback"),
   body("message")
     .trim()
     .notEmpty()
@@ -19,6 +23,8 @@ export const updateTestimonialValidator = [
   body("name").optional().trim().isLength({ min: 1, max: 100 }),
   body("position").optional().trim().isLength({ max: 100 }),
   body("company").optional().trim().isLength({ max: 100 }),
+  body("topic").optional().isIn(["website", "project", "services", "experience", "other"]),
+  body("subject").optional({ checkFalsy: true }).trim().isLength({ max: 160 }),
   body("message").optional().trim().isLength({ min: 5, max: 1000 }),
   body("rating").optional().isInt({ min: 1, max: 5 }).toInt(),
   body("approved").optional().isBoolean().toBoolean(),

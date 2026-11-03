@@ -102,3 +102,14 @@ export const getSummary = catchAsync(async (req, res) => {
     data: { totalViews, visitors, projectViews, blogViews, topPages, devices, browsers, sources, countries, popularContent },
   });
 });
+
+export const getPublicVisitorCount = catchAsync(async (_req, res) => {
+  const sessionIds = await Analytics.distinct("sessionId", {
+    eventType: "page_view",
+    sessionId: { $ne: "" },
+  });
+  sendSuccess(res, {
+    message: "Visitor count retrieved",
+    data: { visitors: sessionIds.length },
+  });
+});
