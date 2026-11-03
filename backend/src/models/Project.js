@@ -13,7 +13,7 @@ const projectSchema = new mongoose.Schema(
     seoKeywords: [{ type: String }],
     category: {
       type: String,
-      enum: ["web", "mobile", "backend", "ai", "ui-ux", "other"],
+      enum: ["web", "mobile", "backend", "database", "ai", "ui-ux", "other"],
       default: "web",
     },
     technologies: [{ type: String }],

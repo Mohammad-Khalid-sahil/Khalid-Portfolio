@@ -1,4 +1,4 @@
-import i18n from "i18next";
+﻿import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const SUPPORTED_LANGUAGES = ["en", "fa", "ps"];
@@ -271,6 +271,7 @@ const resources = {
           web: "Web",
           mobile: "Mobile",
           backend: "Backend",
+          database: "Database",
           ai: "AI",
           uiux: "UI/UX",
         },
@@ -587,7 +588,7 @@ const resources = {
       footer: {
         navigation: "navigation",
         more: "more",
-        built: "Built with React, Node.js & MongoDB.",
+        built: "Designed & developed with care.",
       },
     },
   },
@@ -841,6 +842,7 @@ const resources = {
           web: "وب",
           mobile: "موبایل",
           backend: "بک اند",
+          database: "دیتابیس",
           ai: "هوش مصنوعی",
           uiux: "UI/UX",
         },
@@ -1011,52 +1013,52 @@ const resources = {
         profileSettings: "پروفایل و تنظیمات",
         profileTab: "پروفایل",
         settingsTab: "تنظیمات",
-        settingsUpdated: "تنظیمات تازه شول",
-        profileUpdated: "پروفایل تازه شو",
-        couldntLoadProfile: "پروفایل بار نه شو.",
-        couldntLoadSettings: "تنظیمات بار نه شول.",
+        settingsUpdated: "تنظیمات با موفقیت به‌روز شد",
+        profileUpdated: "پروفایل با موفقیت به‌روز شد",
+        couldntLoadProfile: "بارگذاری پروفایل انجام نشد.",
+        couldntLoadSettings: "بارگذاری تنظیمات انجام نشد.",
         profile: {
-          fullName: "کامل نوم",
-          professionalTitle: "حرفي عنوان",
+          fullName: "نام کامل",
+          professionalTitle: "عنوان حرفه‌ای",
           tagline: "شعار",
-          bio: "بیوګرافی",
+          bio: "زندگی‌نامه",
           specialization: "تخصص",
-          interests: "علاقې (د کاما سره جلا شوي)",
-          careerGoals: "مسلکي هدفونه",
-          profileImage: "د پروفایل انځور",
+          interests: "علاقه‌مندی‌ها (با کاما جدا کنید)",
+          careerGoals: "اهداف شغلی",
+          profileImage: "تصویر پروفایل",
           location: "موقعیت",
           resumePdf: "رزومه / CV (PDF)",
-          availableFreelance: "د فریلنس کار لپاره چمتو",
-          languagesFormat: "ژبې — یو په هر لیک، قالب: نوم|سطح (مثلاً \"English|Fluent\")",
-          socialLinks: "ټولنیز لینکونه",
+          availableFreelance: "آمادهٔ کار آزاد",
+          languagesFormat: "زبان‌ها — هر زبان در یک خط، قالب: نام|سطح (مثلاً \"English|Fluent\")",
+          socialLinks: "پیوندهای شبکه‌های اجتماعی",
           socialEnabled: "نمایش در سایت",
           socialSettingsHelp: "نشانی‌ها، نمایش و ترتیب شبکه‌های اجتماعی را مدیریت کنید.",
-          github: "ګیټ هاب",
+          github: "گیت‌هاب",
           linkedIn: "لینکدین",
-          telegram: "ټلیګرام",
+          telegram: "تلگرام",
           facebook: "فیس بوک",
           instagram: "اینستاگرام",
-          statsFormat: "شمیرنه — یو په هر لیک، قالب: عنوان|مقدار|پسوند (مثلاً \"Years Experience|3|+\")",
+          statsFormat: "آمار — هر مورد در یک خط، قالب: عنوان|مقدار|پسوند (مثلاً \"Years Experience|3|+\")",
           email: "ایمیل",
-          phone: "تلفون",
+          phone: "تلفن",
         },
         settings: {
-          siteTitle: "د سایټ عنوان",
-          siteDescription: "د سایټ توضیحات",
-          defaultLanguage: "اصلی ژبه",
-          canonicalUrl: "د سایټ رسمي آدرس",
-          metaTitle: "د متا عنوان",
-          metaDescription: "د متا توضیحات",
-          keywords: "کلیدي واژه (د کاما سره جلا شوي)",
-          ogImage: "د Open Graph انځور",
-          maintenanceMode: "د تعمیر حالت",
-          seoDefaults: "SEO پیش فرضونه",
+          siteTitle: "عنوان سایت",
+          siteDescription: "توضیحات سایت",
+          defaultLanguage: "زبان پیش‌فرض",
+          canonicalUrl: "نشانی اصلی سایت",
+          metaTitle: "عنوان متا",
+          metaDescription: "توضیحات متا",
+          keywords: "کلیدواژه‌ها (با کاما جدا کنید)",
+          ogImage: "تصویر Open Graph",
+          maintenanceMode: "حالت تعمیر و نگهداری",
+          seoDefaults: "تنظیمات پیش‌فرض SEO",
         },
       },
       footer: {
-        navigation: "ناوېګېشن",
+        navigation: "ناوبری",
         more: "بیشتر",
-        built: "له React، Node.js او MongoDB سره جوړ شوی.",
+        built: "با دقت طراحی و ساخته شده است.",
       },
     },
   },
@@ -1310,6 +1312,7 @@ const resources = {
           web: "وب",
           mobile: "موبایل",
           backend: "بک اند",
+          database: "ډیټابېس",
           ai: "هوش مصنوعی",
           uiux: "UI/UX",
         },
@@ -1478,32 +1481,32 @@ const resources = {
         label: "مدیریت",
         openNavigation: "غورنۍ پرانیستل",
         closeNavigation: "غورنۍ تړل",
-        signIn: "ورود",
-        signingIn: "در حال ورود...",
-        email: "ایمیل",
-        password: "رمز عبور",
-        passwordRequired: "رمز عبور اړین دی",
-        profileSettings: "پروفایل او تنظیمات",
+        signIn: "ننوتل",
+        signingIn: "ننوتل کېږي...",
+        email: "برېښنالیک",
+        password: "پټنوم",
+        passwordRequired: "پټنوم اړین دی",
+        profileSettings: "پروفایل او امستنې",
         profileTab: "پروفایل",
-        settingsTab: "تنظیمات",
-        settingsUpdated: "تنظیمات تازه شول",
-        profileUpdated: "پروفایل تازه شو",
-        couldntLoadProfile: "پروفایل بار نه شو.",
-        couldntLoadSettings: "تنظیمات بار نه شول.",
+        settingsTab: "امستنې",
+        settingsUpdated: "امستنې په بریالیتوب تازه شوې",
+        profileUpdated: "پروفایل په بریالیتوب تازه شو",
+        couldntLoadProfile: "پروفایل لوستل ونه شول.",
+        couldntLoadSettings: "امستنې لوستل کېدای نه شوې.",
         profile: {
-          fullName: "کامل نوم",
-          professionalTitle: "حرفي عنوان",
-          tagline: "شعار",
-          bio: "بیوګرافی",
+          fullName: "بشپړ نوم",
+          professionalTitle: "مسلکي سرلیک",
+          tagline: "لنډ شعار",
+          bio: "ژوندلیک",
           specialization: "تخصص",
-          interests: "علاقې (د کاما سره جلا شوي)",
+          interests: "لېوالتیاوې (په کامه یې جلا کړئ)",
           careerGoals: "مسلکي هدفونه",
           profileImage: "د پروفایل انځور",
-          location: "موقعیت",
+          location: "ځای",
           resumePdf: "رزومه / CV (PDF)",
-          availableFreelance: "د فریلنس کار لپاره چمتو",
-          languagesFormat: "ژبې — یو په هر لیک، قالب: نوم|سطح (مثلاً \"English|Fluent\")",
-          socialLinks: "ټولنیز لینکونه",
+          availableFreelance: "د خپلواک کار لپاره چمتو",
+          languagesFormat: "ژبې — هره ژبه په جلا کرښه، بڼه: نوم|کچه (لکه \"English|Fluent\")",
+          socialLinks: "د ټولنیزو شبکو لینکونه",
           socialEnabled: "په پورټ فولیو کې ښکاره کول",
           socialSettingsHelp: "د ټولنیزو شبکو پتې، ښکاره کېدل او ترتیب تنظیم کړئ.",
           github: "ګیټ هاب",
@@ -1511,27 +1514,27 @@ const resources = {
           telegram: "ټلیګرام",
           facebook: "فیس بوک",
           instagram: "اینستاگرام",
-          statsFormat: "شمیرنه — یو په هر لیک، قالب: عنوان|مقدار|پسوند (مثلاً \"Years Experience|3|+\")",
+          statsFormat: "شمېرې — هره شمېره په جلا کرښه، بڼه: سرلیک|ارزښت|وروستاړی (لکه \"Years Experience|3|+\")",
           email: "ایمیل",
           phone: "تلفون",
         },
         settings: {
-          siteTitle: "د سایټ عنوان",
-          siteDescription: "د سایټ توضیحات",
-          defaultLanguage: "اصلی ژبه",
-          canonicalUrl: "د سایټ رسمي آدرس",
-          metaTitle: "د متا عنوان",
-          metaDescription: "د متا توضیحات",
-          keywords: "کلیدي واژه (د کاما سره جلا شوي)",
+          siteTitle: "د وېب‌پاڼې سرلیک",
+          siteDescription: "د وېب‌پاڼې تشریح",
+          defaultLanguage: "اصلي ژبه",
+          canonicalUrl: "د وېب‌پاڼې اصلي پته",
+          metaTitle: "د مېټا سرلیک",
+          metaDescription: "د مېټا تشریح",
+          keywords: "کلیمې (په کامه یې جلا کړئ)",
           ogImage: "د Open Graph انځور",
-          maintenanceMode: "د تعمیر حالت",
-          seoDefaults: "SEO پیش فرضونه",
+          maintenanceMode: "د ساتنې حالت",
+          seoDefaults: "د SEO تلوالیز تنظیمات",
         },
       },
       footer: {
         navigation: "ناوېګېشن",
         more: "نور",
-        built: "له React، Node.js او MongoDB سره جوړ شوی.",
+        built: "په پاملرنه ډیزاین او جوړ شوی.",
       },
     },
   },
@@ -1743,24 +1746,23 @@ Object.assign(resources.fa.translation.admin.settings, {
   siteTitle: "عنوان وب‌سایت", siteDescription: "توضیحات وب‌سایت", canonicalUrl: "نشانی اصلی وب‌سایت", ogImage: "تصویر Open Graph",
 });
 Object.assign(resources.fa.translation.footer, {
-  navigation: "ناوبری", built: "ساخته‌شده با React، Node.js و MongoDB.",
+  navigation: "ناوبری", built: "با دقت طراحی و توسعه داده شده است.",
 });
-
 Object.assign(resources.en.translation.pages.testimonials, {
   formEyebrow: "Share your feedback", formTitle: "What do you think?", formDescription: "Tell visitors about your experience with the website, a project, or another part of the portfolio.",
-  name: "Your name", position: "Role or position (optional)", company: "Organization (optional)", topic: "What is your feedback about?", projectName: "Project name", subject: "Page or topic",
+  name: "Your name", position: "Role or position (optional)", company: "Organization (optional)", topic: "What is your feedback about?", projectName: "Project name", subject: "Page or topic", projectPlaceholder: "Choose a project", projectsLoading: "Loading projects...", noProjects: "There are no published projects to select yet.",
   rating: "Your rating", ratingValue: "{{count}} out of 5 stars", message: "Your feedback", messagePlaceholder: "Share a clear, respectful comment...", submit: "Send feedback", submitting: "Sending...", submitted: "Thank you. Your feedback has been sent for review.", submitError: "We couldn't send your feedback. Please try again later.", moderationNote: "Your feedback will appear publicly after it is reviewed and approved.",
   topics: { website: "Website", project: "Project", services: "Services", experience: "Experience", other: "Other" },
 });
 Object.assign(resources.fa.translation.pages.testimonials, {
   formEyebrow: "دیدگاه خود را شریک سازید", formTitle: "نظر شما چیست؟", formDescription: "تجربه‌تان از وب‌سایت، یک پروژه یا بخش دیگری از این پورتفولیو را با بازدیدکنندگان شریک سازید.",
-  name: "نام شما", position: "سمت یا وظیفه (اختیاری)", company: "سازمان (اختیاری)", topic: "دیدگاه شما دربارهٔ کدام بخش است؟", projectName: "نام پروژه", subject: "صفحه یا موضوع",
+  name: "نام شما", position: "سمت یا وظیفه (اختیاری)", company: "سازمان (اختیاری)", topic: "بازخورد شما دربارهٔ کدام پروژه است؟", projectName: "نام پروژه", subject: "صفحه یا موضوع", projectPlaceholder: "یک پروژه را انتخاب کنید", projectsLoading: "پروژه‌ها در حال بارگذاری است...", noProjects: "هنوز پروژهٔ منتشرشده‌ای برای انتخاب وجود ندارد.",
   rating: "امتیاز شما", ratingValue: "{{count}} از ۵ ستاره", message: "دیدگاه شما", messagePlaceholder: "دیدگاه روشن و محترمانهٔ خود را بنویسید...", submit: "ارسال دیدگاه", submitting: "در حال ارسال...", submitted: "تشکر. دیدگاه شما برای بررسی فرستاده شد.", submitError: "ارسال دیدگاه ناموفق بود. لطفاً بعداً دوباره تلاش کنید.", moderationNote: "دیدگاه پس از بررسی و تأیید به‌صورت عمومی نمایش داده می‌شود.",
   topics: { website: "وب‌سایت", project: "پروژه", services: "خدمات", experience: "تجربه", other: "بخش دیگر" },
 });
 Object.assign(resources.ps.translation.pages.testimonials, {
   formEyebrow: "خپل نظر شریک کړئ", formTitle: "ستاسو نظر څه دی؟", formDescription: "د وېب‌پاڼې، یوې پروژې یا د پورټفولیو د بلې برخې په اړه خپله تجربه له لیدونکو سره شریکه کړئ.",
-  name: "ستاسو نوم", position: "دنده یا مقام (اختیاري)", company: "اداره (اختیاري)", topic: "ستاسو نظر د څه په اړه دی؟", projectName: "د پروژې نوم", subject: "پاڼه یا موضوع",
+  name: "ستاسو نوم", position: "دنده یا مقام (اختیاري)", company: "اداره (اختیاري)", topic: "ستاسو نظر د کومې پروژې په اړه دی؟", projectName: "د پروژې نوم", subject: "پاڼه یا موضوع", projectPlaceholder: "یوه پروژه وټاکئ", projectsLoading: "پروژې بارېږي...", noProjects: "تر اوسه د ټاکلو لپاره خپره شوې پروژه نشته.",
   rating: "ستاسو درجه", ratingValue: "له ۵ څخه {{count}} ستوري", message: "ستاسو نظر", messagePlaceholder: "روښانه او درناوی لرونکی نظر ولیکئ...", submit: "نظر ولېږئ", submitting: "لېږل کېږي...", submitted: "مننه. ستاسو نظر د کتنې لپاره ولېږل شو.", submitError: "ستاسو نظر ونه لېږل شو. مهرباني وکړئ وروسته بیا هڅه وکړئ.", moderationNote: "نظر به تر کتنې او تایید وروسته په عامه توګه ښکاره شي.",
   topics: { website: "وېب‌پاڼه", project: "پروژه", services: "خدمتونه", experience: "تجربه", other: "بل څه" },
 });
@@ -1771,17 +1773,23 @@ resources.en.translation.sections.testimonials.topics = resources.en.translation
 resources.fa.translation.sections.testimonials.topics = resources.fa.translation.pages.testimonials.topics;
 resources.ps.translation.sections.testimonials.topics = resources.ps.translation.pages.testimonials.topics;
 
-resources.en.translation.sections.github.rateLimited = "GitHub is rate limiting requests. Please try again shortly."
+resources.en.translation.sections.github.rateLimited = "GitHub is rate limiting requests. Please try again shortly.";
 resources.en.translation.admin.administration = "Administration";
 resources.fa.translation.sections.github.rateLimited = "گیت‌هاب درخواست‌ها را محدود کرده است. لطفاً کمی بعد دوباره تلاش کنید.";
 resources.ps.translation.sections.github.rateLimited = "ګیټ‌هاب غوښتنې محدودوي. مهرباني وکړئ لږ وروسته بیا هڅه وکړئ.";
 
-Object.assign(resources.en.translation.admin, { cmsTranslationsHint: "Enter descriptive content in English. Dari and Pashto translations are generated when you save; names, URLs, and technical values stay unchanged." });
-Object.assign(resources.fa.translation.admin, { cmsTranslationsHint: "متن‌های توضیحی را به انگلیسی وارد کنید؛ هنگام ذخیره ترجمهٔ دری و پشتو ساخته می‌شود. نام‌ها، نشانی‌ها و مقادیر فنی تغییر نمی‌کنند." });
-Object.assign(resources.ps.translation.admin, { cmsTranslationsHint: "تشریحي متنونه په انګلیسي ولیکئ؛ د خوندي کولو پر مهال دري او پښتو ژباړه جوړېږي. نومونه، پتې او تخنیکي ارزښتونه نه بدلېږي." });
-Object.assign(resources.en.translation.admin, { translationUnavailableSaved: "Saved. Automatic translation is unavailable right now, so edited text will appear in English for other languages until translated." });
-Object.assign(resources.fa.translation.admin, { translationUnavailableSaved: "ذخیره شد. ترجمهٔ خودکار فعلاً در دسترس نیست؛ متنِ ویرایش‌شده تا زمان ترجمه در زبان‌های دیگر انگلیسی نمایش داده می‌شود." });
-Object.assign(resources.ps.translation.admin, { translationUnavailableSaved: "خوندي شو. اوسمهال اتومات ژباړه نه کېږي؛ بدل شوی متن به تر ژباړل کېدو پورې په نورو ژبو کې انګلیسي ښکاري." });
+Object.assign(resources.en.translation.admin, {
+  cmsTranslationsHint: "Enter English content. A free translation service creates Dari and Pashto versions when you save (up to 2,500 characters per save, with a shared daily limit). The text is sent to that provider. If translation is unavailable, your English content still saves.",
+  translationUnavailableSaved: "Saved. Free translation is temporarily unavailable, so other languages will show the English text until you save again.",
+});
+Object.assign(resources.fa.translation.admin, {
+  cmsTranslationsHint: "متن را به انگلیسی وارد کنید. هنگام ذخیره، یک سرویس رایگان نسخهٔ دری و پشتو را می‌سازد (تا ۲۵۰۰ نویسه در هر ذخیره و با محدودیت روزانه). متن برای این سرویس فرستاده می‌شود. اگر ترجمه در دسترس نباشد، متن انگلیسی ذخیره می‌شود.",
+  translationUnavailableSaved: "ذخیره شد؛ ترجمهٔ رایگان موقتاً در دسترس نیست. تا ذخیرهٔ دوباره، متن انگلیسی در زبان‌های دیگر هم نمایش داده می‌شود.",
+});
+Object.assign(resources.ps.translation.admin, {
+  cmsTranslationsHint: "متن په انګلیسي ولیکئ. د خوندي کولو پر مهال یو وړیا خدمت یې دري او پښتو ته ژباړي (په هر ځل تر ۲۵۰۰ تورو، د ورځني ګډ حد سره). متن هغه خدمت ته لېږل کېږي. که ژباړه چمتو نه وي، انګلیسي متن به خوندي شي.",
+  translationUnavailableSaved: "خوندي شو. وړیا ژباړه اوس مهال نه کېږي؛ تر بل ځل خوندي کولو پورې به په نورو ژبو کې هم انګلیسي متن ښکاره شي.",
+});
 Object.assign(resources.en.translation.admin, {
   resourceList: { search: "Search", searchPlaceholder: "Search by title, name, or description...", sort: "Sort by", defaultSort: "Default order", newest: "Newest", oldest: "Oldest", alphaAsc: "Name: A to Z", alphaDesc: "Name: Z to A", customOrder: "Display order", pageSize: "Rows", showing: "Showing {{start}}–{{end}} of {{total}}", pageLabel: "Page {{page}} of {{pages}}", previous: "Previous", next: "Next", noResults: "No records match your search." },
 });

@@ -12,7 +12,7 @@ import { ErrorState } from "@/components/loaders/ErrorState";
 import Seo, { buildBreadcrumbSchema } from "@/components/seo/Seo";
 import ExperienceTimeline from "@/components/common/ExperienceTimeline";
 
-const CATEGORY_IDS = ["all", "web", "mobile", "backend", "ai", "ui-ux", "other"];
+const CATEGORY_IDS = ["all", "web", "mobile", "backend", "database", "ai", "ui-ux", "other"];
 
 export default function Projects() {
   const { t } = useTranslation();

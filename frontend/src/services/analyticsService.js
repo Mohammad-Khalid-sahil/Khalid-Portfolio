@@ -1,23 +1,30 @@
 import { API_BASE_URL } from "@/config/apiBaseUrl";
 import api from "@/services/api";
-const SESSION_KEY = "portfolio_analytics_session";
+import { useAuthStore } from "@/store/useAuthStore";
+const VISITOR_KEY = "portfolio_analytics_visitor";
+const LEGACY_SESSION_KEY = "portfolio_analytics_session";
 
 function getSessionId() {
   try {
-    const existing = window.sessionStorage.getItem(SESSION_KEY);
+    const existing = window.localStorage.getItem(VISITOR_KEY);
     if (existing) return existing;
-    const id =
+    const id = window.sessionStorage.getItem(LEGACY_SESSION_KEY) ||
       window.crypto?.randomUUID?.() ||
       `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-    window.sessionStorage.setItem(SESSION_KEY, id);
+    window.localStorage.setItem(VISITOR_KEY, id);
     return id;
   } catch {
-    return "";
+    try {
+      return window.sessionStorage.getItem(LEGACY_SESSION_KEY) || "";
+    } catch {
+      return "";
+    }
   }
 }
 
 function canTrack() {
   if (typeof window === "undefined") return false;
+  if (useAuthStore.getState().accessToken) return false;
   return navigator.doNotTrack !== "1" && window.doNotTrack !== "1";
 }
 

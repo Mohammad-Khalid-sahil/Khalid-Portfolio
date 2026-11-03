@@ -39,6 +39,7 @@ export default function Testimonials() {
 
   const currentIndex = Math.min(index, testimonials.length - 1);
   const current = testimonials[currentIndex];
+  const currentRating = Math.min(5, Math.max(1, Number(current.rating) || 5));
 
   function next() {
     setIndex((i) => (Math.min(i, testimonials.length - 1) + 1) % testimonials.length);
@@ -80,6 +81,19 @@ export default function Testimonials() {
                   <FaQuoteLeft size={48} className="fill-current" />
                 </motion.div>
 
+                <div className="relative z-10 mb-6 flex flex-wrap items-center justify-between gap-3">
+                  <span className="inline-flex items-center rounded-full border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/10 px-3 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
+                    {t(`pages.testimonials.topics.${current.topic || "website"}`)}
+                    {current.subject ? ` · ${current.subject}` : ""}
+                  </span>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/80 px-3 py-1.5" role="img" aria-label={t("pages.testimonials.ratingValue", { count: currentRating })}>
+                    <span className="flex gap-0.5 text-[var(--color-highlight)]" aria-hidden="true">
+                      {Array.from({ length: 5 }, (_, star) => <span key={star} className={star < currentRating ? "opacity-100" : "opacity-30"}>★</span>)}
+                    </span>
+                    <span className="text-xs font-bold tabular-nums text-[var(--color-text-primary)]">{currentRating}/5</span>
+                  </div>
+                </div>
+
                 {/* Quote text */}
                 <motion.blockquote
                   initial={{ opacity: 0, y: 10 }}
@@ -111,10 +125,6 @@ export default function Testimonials() {
                       {current.position && <span>{current.position}</span>}
                       {current.position && current.company && <span> · </span>}
                       {current.company && <span>{current.company}</span>}
-                    </p>
-                    <p className="mt-2 text-xs font-medium text-[var(--color-primary)]">
-                      {t(`pages.testimonials.topics.${current.topic || "website"}`)}
-                      {current.subject ? ` · ${current.subject}` : ""}
                     </p>
                   </div>
                 </motion.footer>

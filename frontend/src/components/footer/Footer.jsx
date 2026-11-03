@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FiArrowRight, FiEye, FiMail } from "react-icons/fi";
+import { FiArrowRight, FiMail } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { navLinks } from "@/constants/siteData";
 import SocialLinks from "@/components/common/SocialLinks";
@@ -7,7 +7,6 @@ import { PROFILE_SOCIAL_KEYS } from "@/config/socialLinks";
 import BrandMark from "@/components/common/BrandMark";
 import { useProfile } from "@/hooks/queries/useProfile";
 import { cleanBrandName } from "@/utils/displayContent";
-import { useVisitorCount } from "@/hooks/queries/useVisitorCount";
 
 
 const MORE_LINKS = [
@@ -41,9 +40,8 @@ const itemVariants = {
 };
 
 export default function Footer() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { data: profile } = useProfile();
-  const { data: visitorCount } = useVisitorCount();
   const p = { ...FALLBACK, ...profile, name: cleanBrandName(profile?.name) || FALLBACK.name };
 
   return (
@@ -169,18 +167,6 @@ export default function Footer() {
       >
         <p className="flex flex-col items-center justify-center gap-3 text-center text-xs font-medium text-[var(--color-text-muted)] sm:flex-row sm:justify-between">
           <span>© {new Date().getFullYear()} {p.name}. {t("footer.built")}</span>
-          {typeof visitorCount === "number" && (
-            <span className="inline-flex items-center gap-1.5" aria-label={`${t("footer.visitors")}: ${visitorCount}`}>
-              <FiEye size={14} aria-hidden="true" />
-              <span>{t("footer.visitors")}: {new Intl.NumberFormat(i18n.language).format(visitorCount)}</span>
-            </span>
-          )}
-          <a 
-            href="/admin/login" 
-            className="text-[var(--color-text-muted)] transition-colors duration-300 hover:text-[var(--color-primary)]"
-          >
-            {t("admin.label")}
-          </a>
         </p>
       </motion.div>
     </footer>

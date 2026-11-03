@@ -50,8 +50,8 @@ export default function Hero() {
   }
 
   const reveal = (delay = 0, distance = 22) => ({
-    initial: reduce ? false : { opacity: 0, y: distance, filter: "blur(10px)" },
-    animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+    initial: reduce ? false : { opacity: 0, y: distance },
+    animate: { opacity: 1, y: 0 },
     transition: { duration: reduce ? 0 : 0.9, delay: reduce ? 0 : delay, ease: EASE },
   });
 

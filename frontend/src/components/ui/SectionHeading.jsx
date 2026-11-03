@@ -12,8 +12,8 @@ export default function SectionHeading({ eyebrow, title, description, index, ali
 
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, y: 18, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={reduce ? false : { opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
       className={`flex flex-col gap-4 ${maxWidth} ${alignment}`}

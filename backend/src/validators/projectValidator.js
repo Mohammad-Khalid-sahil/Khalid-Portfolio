@@ -1,7 +1,7 @@
 ﻿import { body, query } from "express-validator";
 import { optionalUrl, optionalStringArray, localizedTranslations, paginationValidator } from "./common.js";
 
-const PROJECT_CATEGORIES = ["web", "mobile", "backend", "ai", "ui-ux", "other"];
+const PROJECT_CATEGORIES = ["web", "mobile", "backend", "database", "ai", "ui-ux", "other"];
 
 function baseProjectFields({ requireCore }) {
   const req = (chain) => (requireCore ? chain.notEmpty() : chain.optional());

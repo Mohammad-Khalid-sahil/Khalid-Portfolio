@@ -25,7 +25,7 @@ export const resourceConfigs = {
         label: "Category",
         type: "select",
         section: "Project Identity",
-        options: ["web", "mobile", "backend", "ai", "ui-ux", "other"],
+        options: ["web", "mobile", "backend", "database", "ai", "ui-ux", "other"],
       },
       { name: "technologies", label: "Technologies (comma separated)", type: "array", section: "Project Identity" },
       { name: "featured", label: "Featured", type: "boolean", section: "Project Identity" },
