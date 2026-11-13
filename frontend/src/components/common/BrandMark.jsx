@@ -13,19 +13,18 @@ export default function BrandMark({ name = "Khalid Portfolio", showWordmark = tr
 
   return (
     <span className={`group/brand inline-flex min-w-0 items-center ${compact ? "gap-2 xl:gap-3" : "gap-3"} ${className}`}>
-      <span className={`relative grid ${tile} shrink-0 place-items-center overflow-hidden rounded-[0.85rem] text-white shadow-[0_10px_30px_-10px_var(--ds-glow)]`}>
+      <span className={`relative grid ${tile} shrink-0 place-items-center overflow-hidden rounded-[0.85rem] text-white shadow-[0_10px_30px_-10px_var(--ds-glow)] transition-transform duration-500 group-hover/brand:-rotate-3`}>
         <span aria-hidden="true" className="absolute inset-0 bg-[conic-gradient(from_140deg,var(--color-primary),var(--color-secondary),var(--color-primary))] transition-transform duration-700 group-hover/brand:rotate-180" />
-        <span aria-hidden="true" className="absolute inset-[1.5px] rounded-[0.75rem] bg-[color-mix(in_srgb,var(--color-primary)_78%,#0b0b1a)]" />
+        <span aria-hidden="true" className="absolute inset-[1.5px] rounded-[0.75rem] bg-[linear-gradient(145deg,color-mix(in_srgb,var(--color-primary)_42%,#111827),#111222_72%)]" />
         <svg aria-hidden="true" viewBox="0 0 48 48" className="brand-mark-art relative h-full w-full" fill="none">
-          <rect x="1.5" y="1.5" width="45" height="45" rx="13" stroke="white" strokeOpacity=".28" />
-          <path d="M11 16.5 6.5 24l4.5 7.5M37 16.5l4.5 7.5-4.5 7.5" stroke="white" strokeOpacity=".76" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-          <g className="brand-mark-orbit">
-            <ellipse cx="24" cy="24" rx="18" ry="8.5" transform="rotate(-38 24 24)" stroke="white" strokeOpacity=".52" strokeWidth=".8" />
-            <circle cx="40" cy="16.5" r="2.1" fill="white" />
+          <g className="origin-center animate-[spin_18s_linear_infinite] motion-reduce:animate-none" style={{ transformBox: "fill-box", transformOrigin: "center" }}>
+            <ellipse cx="24" cy="24" rx="20" ry="14" transform="rotate(-32 24 24)" stroke="white" strokeOpacity=".28" strokeWidth=".8" />
+            <circle cx="42.2" cy="16.8" r="1.55" fill="white" />
           </g>
-          <circle className="brand-mark-core" cx="24" cy="24" r="13" fill="white" fillOpacity=".12" />
-          <text x="24" y="28.1" textAnchor="middle" fill="white" fontFamily="var(--font-mono), monospace" fontSize="11" fontWeight="700" letterSpacing="-.7">{initials}</text>
-          <path className="brand-mark-glint" d="M15 8 29 8 18 40 4 40Z" fill="white" fillOpacity=".25" />
+          <path d="M17 8v3m7-3v3m7-3v3M17 37v3m7-3v3m7-3v3M8 17h3m-3 7h3m-3 7h3m26-14h3m-3 7h3m-3 7h3" stroke="white" strokeOpacity=".52" strokeWidth="1.25" strokeLinecap="round" />
+          <rect x="11" y="11" width="26" height="26" rx="7" fill="white" fillOpacity=".08" stroke="white" strokeOpacity=".72" strokeWidth="1.1" />
+          <path d="m16 19-3 5 3 5m16-10 3 5-3 5" stroke="white" strokeOpacity=".68" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="24" y="27.7" textAnchor="middle" fill="white" fontFamily="var(--font-mono), monospace" fontSize="10.5" fontWeight="700" letterSpacing="-1">{initials}</text>
         </svg>
       </span>
       {showWordmark && (
