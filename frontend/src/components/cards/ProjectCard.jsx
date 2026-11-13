@@ -115,7 +115,7 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
         </span>
         <div className="absolute inset-x-3 top-3 flex items-start justify-end gap-2">
           {showFeaturedBadge && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)] px-2.5 py-1 text-[0.7rem] font-semibold text-white shadow-[0_8px_20px_-8px_var(--ds-glow)]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)] px-2.5 py-1 text-[0.7rem] font-semibold text-[var(--color-primary-foreground)] shadow-[0_8px_20px_-8px_var(--ds-glow)]">
               <FiStar size={11} /> {t("pages.services.featured")}
             </span>
           )}
@@ -157,7 +157,7 @@ export default function ProjectCard({ project, featured = false, showFeaturedBad
         <Link
           to={"/projects/" + project.slug}
           onClick={(event) => event.stopPropagation()}
-          className="group/cta inline-flex items-center gap-2 rounded-xl bg-[var(--color-text-primary)] px-4 py-2.5 text-xs font-semibold text-[var(--color-background)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--color-primary)] hover:text-white"
+          className="group/cta inline-flex items-center gap-2 rounded-xl bg-[var(--color-text-primary)] px-4 py-2.5 text-xs font-semibold text-[var(--color-background)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--color-primary)] hover:text-[var(--color-primary-foreground)]"
         >
           {t("pages.projectDetails.caseStudy")}
           <FiArrowRight className="rtl-flip transition-transform duration-300 group-hover/cta:translate-x-0.5" size={14} />

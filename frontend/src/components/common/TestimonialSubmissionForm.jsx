@@ -98,7 +98,7 @@ export default function TestimonialSubmissionForm() {
         {status === "error" && <p role="alert" className="rounded-xl border border-[var(--color-danger)]/20 bg-[var(--color-danger)]/10 p-3 text-sm text-[var(--color-danger)] sm:col-span-2">{t("pages.testimonials.submitError")}</p>}
 
         <p className="text-xs leading-5 text-[var(--color-text-muted)] sm:col-span-2">{t("pages.testimonials.moderationNote")}</p>
-        <button type="submit" disabled={submitting || projectsLoading || projects.length === 0} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--color-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[var(--color-primary-hover)] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-60 sm:col-span-2 sm:justify-self-start">
+        <button type="submit" disabled={submitting || projectsLoading || projects.length === 0} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-[var(--color-primary-foreground)] shadow-lg shadow-[var(--color-primary)]/20 transition hover:-translate-y-0.5 hover:bg-[var(--color-primary-hover)] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-60 sm:col-span-2 sm:justify-self-start">
           <FiSend size={15} /> {submitting ? t("pages.testimonials.submitting") : t("pages.testimonials.submit")}
         </button>
       </form>

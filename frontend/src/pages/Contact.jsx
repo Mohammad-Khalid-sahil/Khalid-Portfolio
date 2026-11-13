@@ -305,7 +305,7 @@ export default function Contact() {
             disabled={isSubmitting}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] px-6 py-3.5 font-[var(--font-display)] text-sm font-bold text-white shadow-lg shadow-[var(--color-primary)]/25 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--color-primary)]/35 disabled:opacity-60"
+            className="w-full rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] px-6 py-3.5 font-[var(--font-display)] text-sm font-bold text-[var(--color-primary-foreground)] shadow-lg shadow-[var(--color-primary)]/18 transition-all duration-300 hover:shadow-xl hover:shadow-[var(--color-primary)]/22 disabled:opacity-60"
           >
             <span className="inline-flex items-center justify-center gap-2">
               {isSubmitting ? (

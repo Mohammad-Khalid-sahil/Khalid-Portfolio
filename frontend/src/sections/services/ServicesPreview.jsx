@@ -63,7 +63,7 @@ export default function ServicesPreview() {
                     {service.startingPrice && <p className="mt-6 text-sm font-semibold text-[var(--color-text-primary)]">{t("pages.services.startingAt", { price: service.startingPrice })}</p>}
                     <Link to="/contact" className="mt-auto inline-flex items-center justify-between gap-3 pt-7 text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
                       <span>{service.ctaText || t("pages.services.defaultCta")}</span>
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[var(--color-border)] transition-all duration-300 group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[var(--color-border)] transition-all duration-300 group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-[var(--color-primary-foreground)]">
                         <FiArrowUpRight className="rtl-flip transition-transform duration-300 group-hover:rotate-45" size={16} />
                       </span>
                     </Link>

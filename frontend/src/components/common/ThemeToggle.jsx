@@ -35,7 +35,7 @@ export default function ThemeToggle({ compact = false }) {
             aria-pressed={active}
             title={`${t("theme.label")}: ${t(label)}`}
             onClick={() => setTheme(value)}
-            className={`flex h-[1.85rem] w-[1.85rem] items-center justify-center rounded-[0.6rem] transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-[0_6px_16px_-6px_var(--ds-glow)] hover:bg-[var(--color-primary)]" : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text-primary)]"}`}
+            className={`flex h-[1.85rem] w-[1.85rem] items-center justify-center rounded-[0.6rem] transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-[0_6px_16px_-6px_var(--ds-glow)] hover:bg-[var(--color-primary)]" : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-text-primary)]"}`}
           >
             <Icon size={14} />
           </button>

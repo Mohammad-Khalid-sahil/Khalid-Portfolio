@@ -70,7 +70,7 @@ export default function Footer() {
             href="/contact"
             whileHover={{ scale: 1.05, x: 5 }}
             whileTap={{ scale: 0.95 }}
-            className="mt-6 inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] px-5 py-3 font-[var(--font-display)] text-sm font-bold text-white shadow-lg shadow-[var(--color-primary)]/25 transition-all hover:shadow-xl hover:shadow-[var(--color-primary)]/35"
+            className="mt-6 inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] px-5 py-3 font-[var(--font-display)] text-sm font-bold text-[var(--color-primary-foreground)] shadow-lg shadow-[var(--color-primary)]/18 transition-all hover:shadow-xl hover:shadow-[var(--color-primary)]/22"
           >
             {t("nav.contact")} <FiArrowRight className="rtl-flip" aria-hidden="true" size={16} />
           </motion.a>

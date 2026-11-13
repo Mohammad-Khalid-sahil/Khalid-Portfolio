@@ -49,7 +49,7 @@ export default function Services() {
                 <article className="ds-card ds-experience-card ds-service-card group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl">
                   <span aria-hidden="true" className="ds-service-card__glow" style={{ "--service-index": i }} />
                   <header className="flex items-start gap-4 border-b border-[var(--color-border)] p-6 sm:p-7">
-                    <div className="ds-service-card__icon grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-white">
+                    <div className="ds-service-card__icon grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors group-hover:bg-[var(--color-primary)] group-hover:text-[var(--color-primary-foreground)]">
                       <Icon size={22} />
                     </div>
                     <div className="min-w-0 flex-1">

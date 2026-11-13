@@ -85,7 +85,7 @@ export default function FeaturedProjects() {
             <div className="flex max-w-full gap-2.5 overflow-x-auto pb-2 sm:flex-wrap sm:justify-end sm:overflow-visible">
               {categories.map((item) => {
               const active = category === item.id;
-              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`flex min-h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
+              return <button key={item.id} type="button" onClick={() => setCategory(item.id)} aria-pressed={active} className={`flex min-h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition-all duration-300 ${active ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-lg shadow-[var(--color-primary)]/20" : "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)]/30 hover:text-[var(--color-primary)]"}`}>{item.label}</button>;
               })}
             </div>
           </div>
