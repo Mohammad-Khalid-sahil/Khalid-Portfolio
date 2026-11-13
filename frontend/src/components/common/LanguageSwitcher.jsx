@@ -9,7 +9,7 @@ const LANGUAGES = [
   { code: "ps", labelKey: "common.pashto" },
 ];
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ compact = false }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const language = useUIStore((s) => s.language);
@@ -43,10 +43,10 @@ export default function LanguageSwitcher() {
         title={t("common.changeLanguage")}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="flex h-9 items-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-transparent px-2.5 text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+        className={`flex h-9 items-center rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] ${compact ? "h-8 w-8 justify-center max-[400px]:h-8 max-[400px]:w-8" : "gap-1.5 px-2.5"}`}
       >
         <FiGlobe size={15} />
-        <span className="font-mono text-[0.68rem] uppercase" dir="ltr">{language}</span>
+        <span className={`font-mono text-[0.68rem] uppercase ${compact ? "sr-only" : ""}`} dir="ltr">{language}</span>
       </button>
 
       {open && (

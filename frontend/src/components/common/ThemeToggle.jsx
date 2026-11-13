@@ -8,11 +8,21 @@ const THEMES = [
   { value: "system", label: "theme.system", Icon: FiMonitor },
 ];
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ compact = false }) {
   const { t } = useTranslation();
   const theme = useUIStore((state) => state.theme);
   const setTheme = useUIStore((state) => state.setTheme);
 
+  if (compact) {
+    const activeTheme = THEMES.find(({ value }) => value === theme) || THEMES[1];
+    const ActiveIcon = activeTheme.Icon;
+    const nextTheme = THEMES[(THEMES.indexOf(activeTheme) + 1) % THEMES.length];
+    return (
+      <button type="button" aria-label={`${t("theme.label")}: ${t(activeTheme.label)}. ${t("theme.label")} ${t(nextTheme.label)}`} title={`${t("theme.label")}: ${t(activeTheme.label)}`} onClick={() => setTheme(nextTheme.value)} className="grid h-9 w-9 place-items-center rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] max-[400px]:h-8 max-[400px]:w-8">
+        <ActiveIcon size={15} />
+      </button>
+    );
+  }
   return (
     <div className="flex h-9 items-center gap-0.5 rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-card)_60%,transparent)] p-[3px] backdrop-blur">
       {THEMES.map(({ value, label, Icon }) => {

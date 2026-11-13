@@ -68,8 +68,6 @@ export default function Navbar() {
     };
   }, [mobileMenuOpen, closeMobileMenu]);
 
-  const iconButton = "grid h-9 w-9 place-items-center rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]";
-
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4 lg:px-8">
@@ -84,9 +82,9 @@ export default function Navbar() {
               : "border-transparent bg-transparent px-3 py-3 sm:px-4"
           }`}
         >
-          <div className="flex h-11 items-center justify-between gap-2 xl:gap-3">
+          <div className="flex h-11 items-center justify-between gap-1 xl:gap-3">
             <NavLink to="/" onClick={(event) => navigateToSection(event, "/")} aria-label={brandName} className="shrink-0 text-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]">
-              <BrandMark name={brandName} />
+              <BrandMark name={brandName} compact />
             </NavLink>
 
             <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0 rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-card)_55%,transparent)] p-1 xl:flex">
@@ -119,6 +117,25 @@ export default function Navbar() {
               ))}
             </ul>
 
+            <div className="flex shrink-0 items-center gap-1 max-[400px]:gap-0.5 xl:hidden">
+              <button
+                type="button"
+                onClick={openCommandPalette}
+                aria-label={t("common.searchWithShortcut")}
+                title={t("common.searchWithShortcut")}
+                className="grid h-9 w-9 place-items-center rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] max-[400px]:h-8 max-[400px]:w-8"
+              >
+                <FiCommand size={15} />
+              </button>
+              <LanguageSwitcher compact />
+              <ThemeToggle compact />
+              {resumeUrl && (
+                <a href={resumeUrl} download aria-label={t("nav.resume")} title={t("nav.resume")} className="grid h-9 w-9 place-items-center rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] max-[400px]:h-8 max-[400px]:w-8">
+                  <FiDownload size={15} />
+                </a>
+              )}
+            </div>
+
             <div className="hidden shrink-0 items-center gap-1.5 xl:flex 2xl:gap-2">
               <button
                 type="button"
@@ -141,7 +158,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              className="relative grid h-11 w-11 place-items-center rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-card)_70%,transparent)] text-[var(--color-text-primary)] transition-colors xl:hidden"
+              className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-card)_70%,transparent)] text-[var(--color-text-primary)] transition-colors max-[400px]:h-8 max-[400px]:w-8 xl:hidden"
               aria-label={t("common.toggleMenu")}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -214,18 +231,6 @@ export default function Navbar() {
                   </motion.li>
                 ))}
               </motion.ul>
-              <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[var(--color-border)] px-2 pt-3">
-                <LanguageSwitcher />
-                <ThemeToggle />
-                <button type="button" onClick={() => { closeMobileMenu(); openCommandPalette(); }} aria-label={t("common.searchWithShortcut")} className={iconButton}>
-                  <FiCommand size={15} />
-                </button>
-                {resumeUrl && (
-                  <Button href={resumeUrl} download size="sm" className="ms-auto">
-                    <FiDownload size={14} /> {t("nav.resume")}
-                  </Button>
-                )}
-              </div>
             </motion.div>
           </motion.div>
         )}

@@ -5,14 +5,14 @@ import { initialsFromName } from "@/utils/displayContent";
  * Keeps the existing identity (profile name + primary dot) with a more
  * deliberate, developer-oriented treatment.
  */
-export default function BrandMark({ name = "Khalid Portfolio", showWordmark = true, size = "md", className = "" }) {
+export default function BrandMark({ name = "Khalid Portfolio", showWordmark = true, size = "md", compact = false, className = "" }) {
   const initials = (name === "Khalid Portfolio" ? "KH" : initialsFromName(name).slice(0, 2)) || "P";
   const firstName = String(name).split(/\s+/)[0] || name;
   const isPortfolioBrand = name === "Khalid Portfolio";
-  const tile = size === "lg" ? "h-12 w-12 text-base" : "h-10 w-10 text-sm";
+  const tile = size === "lg" ? "h-12 w-12 text-base" : compact ? "h-8 w-8 text-xs xl:h-10 xl:w-10 xl:text-sm" : "h-10 w-10 text-sm";
 
   return (
-    <span className={`group/brand inline-flex min-w-0 items-center gap-3 ${className}`}>
+    <span className={`group/brand inline-flex min-w-0 items-center ${compact ? "gap-2 xl:gap-3" : "gap-3"} ${className}`}>
       <span className={`relative grid ${tile} shrink-0 place-items-center overflow-hidden rounded-[0.85rem] text-white shadow-[0_10px_30px_-10px_var(--ds-glow)]`}>
         <span aria-hidden="true" className="absolute inset-0 bg-[conic-gradient(from_140deg,var(--color-primary),var(--color-secondary),var(--color-primary))] transition-transform duration-700 group-hover/brand:rotate-180" />
         <span aria-hidden="true" className="absolute inset-[1.5px] rounded-[0.75rem] bg-[color-mix(in_srgb,var(--color-primary)_78%,#0b0b1a)]" />
@@ -29,7 +29,7 @@ export default function BrandMark({ name = "Khalid Portfolio", showWordmark = tr
         </svg>
       </span>
       {showWordmark && (
-        <span dir="ltr" className="min-w-0 truncate font-[var(--font-display)] text-[1.05rem] font-semibold tracking-tight text-[var(--color-text-primary)]">
+        <span dir="ltr" className={`min-w-0 truncate font-[var(--font-display)] font-semibold tracking-tight text-[var(--color-text-primary)] ${compact ? "max-[400px]:max-w-[4.5rem] text-[0.84rem] sm:text-[0.95rem] xl:max-w-none xl:text-[1.05rem]" : "text-[1.05rem]"}`}>
           {isPortfolioBrand ? (
             <><span>Khalid</span><span className="ms-1 text-[var(--color-primary)]">Portfolio</span></>
           ) : (
